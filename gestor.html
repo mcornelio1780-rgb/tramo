@@ -102,13 +102,36 @@ footer{background:var(--ink);color:#8496A8;padding:30px 0;font-family:var(--mono
 footer a{color:var(--paper)}
 @media(max-width:900px){.grid{grid-template-columns:1fr}.r3{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+/* --- portón de acceso (auth) --- */
+.gate{position:fixed;inset:0;background:var(--paper);z-index:80;display:none;align-items:center;justify-content:center;padding:24px}
+body.locked .gate{display:flex}
+body.locked .wrap,body.locked footer{display:none}
+.gate-card{background:var(--card);border:1.5px solid var(--ink);border-radius:var(--r);max-width:410px;width:100%;box-shadow:6px 6px 0 var(--seal);padding:26px}
+.gate-brand{display:flex;align-items:center;gap:9px;margin-bottom:16px}
+.gate-brand svg{width:28px;height:28px}.gate-brand b{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:.15em}
+.gate h3{font-family:var(--display);font-weight:800;font-size:22px;margin:0 0 6px;letter-spacing:-.02em}
+.gate p.gs{color:var(--ink-soft);font-size:14px;margin:0 0 18px}
+.gate-tabs{display:flex;gap:4px;margin-bottom:16px;border:1.5px solid var(--ink);border-radius:100px;padding:3px}
+.gate-tabs button{flex:1;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;padding:8px;border:0;background:transparent;border-radius:100px;cursor:pointer;color:var(--muted)}
+.gate-tabs button.on{background:var(--ink);color:var(--paper)}
+.gate .msg{font-size:13px;padding:10px 12px;border-radius:var(--r);margin-bottom:12px;display:none}
+.gate .msg.on{display:block}
+.gate .msg.err{background:rgba(206,43,82,.08);border-left:3px solid var(--seal);color:var(--seal)}
+.gate .msg.ok{background:rgba(15,107,88,.08);border-left:3px solid var(--jade);color:var(--jade)}
+.gate .alt{text-align:center;margin-top:14px;font-size:13px}
+.gate .alt button{background:none;border:0;color:var(--ink-soft);text-decoration:underline;cursor:pointer;font-family:var(--body);font-size:13px;width:auto;padding:0}
+.userbox{display:flex;align-items:center;gap:9px}
+.userbox .em{font-family:var(--mono);font-size:11px;color:#8FA39B;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn.logout{width:auto;display:inline-block;padding:6px 12px;font-size:12px;background:transparent;color:var(--paper);border-color:rgba(255,255,255,.35)}
+.btn.logout:hover{background:var(--seal);border-color:var(--seal);color:#fff}
 </style>
 </head>
-<body>
+<body class="locked">
 <nav><div class="nav-in">
   <a class="brand" href="index.html"><svg viewBox="0 0 40 40"><path d="M7 9v22M33 9v22M7 20h8M25 20h8" stroke="#E9EAE3" stroke-width="3" stroke-linecap="round"/><path d="M20 13l5 7-5 7-5-7z" fill="#CE2B52"/></svg><b>TRAMO</b></a>
   <span class="tagpro" id="planBadge">PRO</span>
   <div class="langsw"><button data-l="es">ES</button><button data-l="en">EN</button><button data-l="pt">PT</button></div>
+  <div class="userbox" id="userBox" style="display:none"><span class="em" id="navEmail"></span><button class="btn logout" id="navLogout"></button></div>
   <a class="lnk" href="index.html" data-i="nav.back"></a>
 </div></nav>
 
@@ -227,9 +250,29 @@ footer a{color:var(--paper)}
   </div></div>
 </div>
 
+<div class="gate" id="gate">
+  <div class="gate-card">
+    <div class="gate-brand"><svg viewBox="0 0 40 40"><path d="M7 9v22M33 9v22M7 20h8M25 20h8" stroke="#111C2E" stroke-width="3" stroke-linecap="round"/><path d="M20 13l5 7-5 7-5-7z" fill="#CE2B52"/></svg><b>TRAMO</b></div>
+    <h3 id="gateTitle"></h3>
+    <p class="gs" id="gateSub"></p>
+    <div id="gateAuth">
+      <div class="gate-tabs"><button id="gtLogin" class="on"></button><button id="gtSignup"></button></div>
+      <div class="msg" id="gateMsg"></div>
+      <div class="f"><label class="lb" id="lbEmail"></label><input type="email" id="auEmail" autocomplete="email"></div>
+      <div class="f"><label class="lb" id="lbPass"></label><input type="password" id="auPass" autocomplete="current-password"></div>
+      <button class="btn" id="auSubmit"></button>
+      <div class="alt"><button id="auMagic"></button></div>
+    </div>
+    <div id="gateLocal" style="display:none">
+      <div class="msg ok on" id="gateLocalMsg"></div>
+      <button class="btn" id="auLocal"></button>
+    </div>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 <footer><div class="wrap"><span data-i="foot.note"></span> · <a href="index.html" data-i="foot.calc"></a></div></footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
 const store={mem:{},get(k){try{return localStorage.getItem(k)}catch(e){return this.mem[k]??null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){this.mem[k]=v}}};
 const LANGS=["es","en","pt"];
@@ -238,6 +281,26 @@ if(!LANGS.includes(lang))lang="en";
 let LI=LANGS.indexOf(lang);
 const L={
 "nav.back":["← Calculadora","← Calculator","← Calculadora"],
+"au.gateTitle":["Entra a tu gestor","Sign in to your manager","Entre no seu gestor"],
+"au.gateSub":["Tus gastos quedan ligados a tu cuenta. Crea una cuenta o inicia sesión para continuar.","Your expenses are tied to your account. Create an account or sign in to continue.","Seus gastos ficam ligados à sua conta. Crie uma conta ou entre para continuar."],
+"au.login":["Iniciar sesión","Sign in","Entrar"],
+"au.signup":["Crear cuenta","Sign up","Criar conta"],
+"au.email":["Correo","Email","E-mail"],
+"au.pass":["Contraseña","Password","Senha"],
+"au.enter":["Entrar","Enter","Entrar"],
+"au.create":["Crear cuenta","Create account","Criar conta"],
+"au.logout":["Cerrar sesión","Log out","Sair"],
+"au.magic":["Enviarme un enlace mágico","Email me a magic link","Enviar-me um link mágico"],
+"au.magicSent":["Te enviamos un enlace a tu correo. Ábrelo para entrar.","We sent a link to your email. Open it to sign in.","Enviamos um link para seu e-mail. Abra-o para entrar."],
+"au.checkMail":["Cuenta creada. Revisa tu correo para confirmarla y luego inicia sesión.","Account created. Check your email to confirm it, then sign in.","Conta criada. Verifique seu e-mail para confirmá-la e depois entre."],
+"au.needBoth":["Pon tu correo y tu contraseña.","Enter your email and password.","Coloque seu e-mail e sua senha."],
+"au.passShort":["La contraseña necesita al menos 6 caracteres.","Password needs at least 6 characters.","A senha precisa de ao menos 6 caracteres."],
+"au.welcome":["Sesión iniciada","Signed in","Sessão iniciada"],
+"au.bye":["Sesión cerrada","Signed out","Sessão encerrada"],
+"au.localTitle":["Modo local (sin cuenta)","Local mode (no account)","Modo local (sem conta)"],
+"au.localSub":["Todavía no conectas tu base de datos (Supabase), así que las cuentas están desactivadas. Puedes probar el gestor en este navegador; los datos no se sincronizan entre dispositivos.","You haven't connected your database (Supabase) yet, so accounts are off. You can try the manager in this browser; data won't sync across devices.","Você ainda não conectou seu banco (Supabase), então as contas estão desativadas. Pode testar o gestor neste navegador; os dados não sincronizam entre dispositivos."],
+"au.localBtn":["Entrar en modo local","Enter local mode","Entrar em modo local"],
+"au.error":["No se pudo completar. Revisa los datos e intenta de nuevo.","Couldn't complete. Check the details and try again.","Não foi possível. Verifique os dados e tente de novo."],
 "h1":["Tu presupuesto, día por día.","Your budget, day by day.","Seu orçamento, dia a dia."],
 "sub":["Esta es la parte que se paga. Carga tu viaje, anota lo que gastas en cualquier moneda y el número de arriba te dice cuánto puedes gastar hoy sin quedarte corto antes del vuelo de vuelta.","This is the part you pay for. Load your trip, log what you spend in any currency, and the number above tells you how much you can spend today without running short before the flight home.","Esta é a parte que se paga. Carregue sua viagem, anote o que gasta em qualquer moeda e o número acima diz quanto você pode gastar hoje sem ficar sem dinheiro antes do voo de volta."],
 "tab.mgr":["Gestor","Manager","Gestor"],"tab.profile":["Perfil","Profile","Perfil"],"tab.billing":["Facturación","Billing","Faturamento"],
@@ -563,6 +626,116 @@ document.querySelectorAll(".langsw button").forEach(b=>b.addEventListener("click
   applyLang();
 })();
 applyLang();
+</script>
+
+<script>
+/* ===================== Autenticación con Supabase =====================
+   Exige cuenta antes de usar el gestor. Si Supabase no está configurado
+   (sin variables de entorno), cae a un "modo local" para no bloquear el sitio.
+   La URL y la clave anon son públicas por diseño; las entrega /api/config. */
+(function(){
+  let sb=null, USER=null, mode="login";
+  const byId=document.getElementById.bind(document);
+
+  function msg(text,kind){const m=byId("gateMsg");m.textContent=text;m.className="msg on "+(kind||"err");}
+  function clearMsg(){const m=byId("gateMsg");m.className="msg";m.textContent="";}
+
+  function refreshGate(){
+    const local=byId("gateLocal").style.display!=="none"&&byId("gateAuth").style.display==="none";
+    if(local){ byId("gateTitle").textContent=t("au.localTitle"); byId("gateSub").textContent=""; byId("gateLocalMsg").textContent=t("au.localSub"); byId("auLocal").textContent=t("au.localBtn"); }
+    else{ byId("gateTitle").textContent=t("au.gateTitle"); byId("gateSub").textContent=t("au.gateSub"); }
+    byId("gtLogin").textContent=t("au.login");
+    byId("gtSignup").textContent=t("au.signup");
+    byId("lbEmail").textContent=t("au.email");
+    byId("lbPass").textContent=t("au.pass");
+    byId("auMagic").textContent=t("au.magic");
+    byId("auSubmit").textContent=mode==="login"?t("au.enter"):t("au.create");
+    byId("navLogout").textContent=t("au.logout");
+  }
+
+  function showApp(){
+    document.body.classList.remove("locked");
+    if(USER){
+      byId("userBox").style.display="flex";
+      byId("navEmail").textContent=USER.email||"";
+      const mail=byId("pf_mail");
+      if(mail){mail.value=USER.email||mail.value;mail.readOnly=true;mail.style.background="#EFEFE9";}
+      try{const d=JSON.parse(store.get("tramo_perfil")||"{}");d.pf_mail=USER.email;store.set("tramo_perfil",JSON.stringify(d));}catch(e){}
+    }
+  }
+  function showGate(){
+    USER=null; byId("userBox").style.display="none";
+    document.body.classList.add("locked");
+    byId("gateAuth").style.display=""; byId("gateLocal").style.display="none";
+    setMode("login"); clearMsg(); refreshGate();
+  }
+  function showLocal(){
+    document.body.classList.add("locked");
+    byId("gateAuth").style.display="none"; byId("gateLocal").style.display="";
+    refreshGate();
+  }
+  function setMode(m){
+    mode=m;
+    byId("gtLogin").classList.toggle("on",m==="login");
+    byId("gtSignup").classList.toggle("on",m==="signup");
+    byId("auPass").autocomplete=m==="login"?"current-password":"new-password";
+    clearMsg(); refreshGate();
+  }
+
+  async function submit(){
+    if(!sb)return;
+    const email=byId("auEmail").value.trim(), pass=byId("auPass").value;
+    if(!email||!pass){msg(t("au.needBoth"));return;}
+    if(pass.length<6){msg(t("au.passShort"));return;}
+    byId("auSubmit").disabled=true;
+    try{
+      if(mode==="login"){
+        const {error}=await sb.auth.signInWithPassword({email,password:pass});
+        if(error)throw error; /* SIGNED_IN → showApp */
+      }else{
+        const {data,error}=await sb.auth.signUp({email,password:pass});
+        if(error)throw error;
+        if(!data.session)msg(t("au.checkMail"),"ok"); /* si no hay sesión, falta confirmar correo */
+      }
+    }catch(e){msg((e&&e.message)||t("au.error"));}
+    finally{byId("auSubmit").disabled=false;}
+  }
+  async function magic(){
+    if(!sb)return;
+    const email=byId("auEmail").value.trim();
+    if(!email){msg(t("au.needBoth"));return;}
+    try{
+      const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.href.split("#")[0]}});
+      if(error)throw error;
+      msg(t("au.magicSent"),"ok");
+    }catch(e){msg((e&&e.message)||t("au.error"));}
+  }
+
+  byId("gtLogin").addEventListener("click",()=>setMode("login"));
+  byId("gtSignup").addEventListener("click",()=>setMode("signup"));
+  byId("auSubmit").addEventListener("click",submit);
+  byId("auMagic").addEventListener("click",magic);
+  byId("auEmail").addEventListener("keydown",e=>{if(e.key==="Enter")byId("auPass").focus();});
+  byId("auPass").addEventListener("keydown",e=>{if(e.key==="Enter")submit();});
+  byId("auLocal").addEventListener("click",()=>document.body.classList.remove("locked"));
+  byId("navLogout").addEventListener("click",async()=>{if(sb)await sb.auth.signOut();toast(t("au.bye"));showGate();});
+  document.querySelectorAll(".langsw button").forEach(b=>b.addEventListener("click",()=>{if(document.body.classList.contains("locked"))refreshGate();}));
+
+  async function init(){
+    document.body.classList.add("locked");
+    refreshGate();
+    let cfg=null;
+    try{const r=await fetch("/api/config");if(r.ok)cfg=await r.json();}catch(e){}
+    if(!cfg||!cfg.url||!cfg.anonKey||!window.supabase){showLocal();return;}
+    try{ sb=window.supabase.createClient(cfg.url,cfg.anonKey); }
+    catch(e){ showLocal(); return; }
+    sb.auth.onAuthStateChange((ev,session)=>{
+      if(session&&session.user){USER=session.user;if(ev==="SIGNED_IN")toast(t("au.welcome"));showApp();}
+      else if(ev==="INITIAL_SESSION"||ev==="SIGNED_OUT"){showGate();}
+    });
+  }
+  init();
+})();
 </script>
 </body>
 </html>
