@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TRAMO — Gestor de presupuesto</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M7 9v22M33 9v22M7 20h8M25 20h8' stroke='%23111C2E' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M20 13l5 7-5 7-5-7z' fill='%23CE2B52'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=Public+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#111C2E;--ink-soft:#33415A;--muted:#6E7A8C;--paper:#E9EAE3;--card:#FBFBF8;--line:#C7CABE;--line-strong:#9AA096;--seal:#CE2B52;--jade:#0F6B58;--mint:#4BD6A8;--ochre:#B08429;
+--display:"Bricolage Grotesque","Arial Black",sans-serif;--body:"Public Sans",system-ui,sans-serif;--mono:"JetBrains Mono",monospace;--r:3px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.5}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+nav{background:var(--ink);color:var(--paper);padding:12px 0}
+.nav-in{max-width:1120px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--paper);margin-right:auto}
+.brand svg{width:26px;height:26px}.brand b{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:.15em}
+nav a.lnk{color:#8FA39B;text-decoration:none;font-size:13.5px}nav a.lnk:hover{color:var(--mint)}
+.tagpro{font-family:var(--mono);font-size:10px;letter-spacing:.16em;border:1px solid var(--mint);color:var(--mint);padding:3px 8px;border-radius:100px}
+.langsw{display:flex;border:1px solid rgba(255,255,255,.3);border-radius:100px;overflow:hidden}
+.langsw button{font-family:var(--mono);font-size:10px;letter-spacing:.1em;font-weight:700;padding:4px 9px;border:0;background:transparent;cursor:pointer;color:#8FA39B}
+.langsw button.on{background:var(--mint);color:var(--ink)}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(1.8rem,4vw,2.6rem);letter-spacing:-.03em;line-height:1;margin:30px 0 6px}
+.sub{color:var(--ink-soft);margin:0 0 22px;max-width:64ch}
+.tabs{display:flex;border-bottom:1.5px solid var(--ink);margin-bottom:24px;flex-wrap:wrap}
+.tab{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;padding:12px 20px;background:transparent;border:0;border-bottom:3px solid transparent;cursor:pointer;color:var(--muted)}
+.tab.on{color:var(--ink);border-bottom-color:var(--seal)}
+.tab:hover{color:var(--ink)}
+.view{display:none}.view.on{display:block}
+.grid{display:grid;grid-template-columns:340px 1fr;gap:22px;align-items:start;padding-bottom:60px}
+.grid1{padding-bottom:60px;max-width:820px}
+.card{background:var(--card);border:1.5px solid var(--ink);border-radius:var(--r);margin-bottom:18px}
+.card h2{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;background:var(--ink);color:var(--paper);margin:0;padding:10px 15px;font-weight:700;display:flex;justify-content:space-between;gap:10px}
+.pad{padding:16px 15px}
+label.lb{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:700}
+input,select{width:100%;font-family:var(--mono);font-size:14px;padding:9px 10px;border:1.5px solid var(--line-strong);background:#fff;color:var(--ink);border-radius:var(--r)}
+select{font-family:var(--body)}
+input:focus,select:focus,button:focus-visible,a:focus-visible{outline:2.5px solid var(--seal);outline-offset:2px}
+.f{margin-bottom:13px}.r2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.r3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.btn{font-family:var(--body);font-weight:700;font-size:14px;border:1.5px solid var(--ink);background:var(--ink);color:var(--card);padding:10px 16px;border-radius:var(--r);cursor:pointer;width:100%;text-decoration:none;display:block;text-align:center}
+.btn:hover{background:var(--seal);border-color:var(--seal)}
+.btn.gh{background:transparent;color:var(--ink)}.btn.gh:hover{color:#fff}
+.btn.sm{width:auto;display:inline-block;padding:7px 14px;font-size:13px}
+.today{background:var(--ink);color:var(--paper);padding:22px;border-radius:var(--r);display:flex;gap:26px;flex-wrap:wrap;align-items:flex-end;justify-content:space-between}
+.today .big{font-family:var(--display);font-weight:800;font-size:clamp(2.6rem,7vw,4rem);line-height:.9;letter-spacing:-.04em;color:var(--mint)}
+.today .lb2{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#8496A8;margin-bottom:6px}
+.today .side{text-align:right;font-family:var(--mono);font-size:12.5px;color:#A9B6C4;line-height:1.9}
+.today .side b{color:var(--paper)}
+.status{margin-top:12px;padding:13px 15px;border-left:3px solid;font-size:14.5px;background:var(--card)}
+.status b{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:3px}
+.s-ok{border-color:var(--jade)}.s-ok b{color:var(--jade)}
+.s-wr{border-color:var(--ochre)}.s-wr b{color:var(--ochre)}
+.s-bd{border-color:var(--seal)}.s-bd b{color:var(--seal)}
+.env{padding:12px 0;border-bottom:1px dashed var(--line)}
+.env:last-child{border-bottom:0}
+.env-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.env-nm{font-weight:600;font-size:14.5px}
+.env-nm em{font-style:normal;font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;display:block}
+.env-am{font-family:var(--mono);font-size:13px;color:var(--ink-soft);white-space:nowrap}
+.pb{height:6px;background:#DEDFD6;border-radius:3px;margin-top:7px;overflow:hidden}
+.pb i{display:block;height:100%;border-radius:3px;transition:width .3s}
+.mini{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-top:4px;line-height:1.5}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);text-align:left;padding:6px 8px 6px 0;border-bottom:1.5px solid var(--ink)}
+td{padding:8px 8px 8px 0;border-bottom:1px dashed var(--line)}
+td.n,th.n{font-family:var(--mono);text-align:right;white-space:nowrap;padding-right:0}
+.del{background:none;border:0;color:var(--seal);cursor:pointer;font-family:var(--mono);font-size:14px;padding:0 4px;width:auto}
+.spark{display:flex;align-items:flex-end;gap:3px;height:56px;margin:14px 0 4px}
+.spark i{flex:1;background:var(--jade);border-radius:1px 1px 0 0;min-height:2px}
+.spark i.over{background:var(--seal)}
+.sim{background:rgba(206,43,82,.06);border:1.5px dashed var(--seal);padding:14px;margin-top:16px;border-radius:var(--r);font-size:14px}
+.sim b{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--seal);display:block;margin-bottom:5px}
+.switch{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px dashed var(--line);gap:14px}
+.switch:last-child{border-bottom:0}
+.switch .t{font-size:14.5px}.switch .t small{display:block;color:var(--muted);font-size:12.5px}
+.sw{position:relative;width:44px;height:24px;flex:none}
+.sw input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:2}
+.sw i{position:absolute;inset:0;background:var(--line-strong);border-radius:100px;transition:.2s}
+.sw i::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:.2s}
+.sw input:checked+i{background:var(--jade)}
+.sw input:checked+i::after{transform:translateX(20px)}
+.planbox{border:1.5px solid var(--ink);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;background:var(--card)}
+.planbox.on{background:var(--ink);color:var(--paper);box-shadow:5px 5px 0 var(--seal)}
+.planbox .pn{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.planbox.on .pn{color:var(--mint)}
+.planbox .pp{font-family:var(--display);font-weight:800;font-size:30px;letter-spacing:-.03em;margin:6px 0 2px;line-height:1}
+.planbox .pp span{font-family:var(--body);font-size:12.5px;font-weight:400;letter-spacing:0;color:var(--muted)}
+.planbox .pd{font-size:13px;color:var(--ink-soft);margin:6px 0 14px;flex:1}
+.planbox.on .pd{color:#A9B6C4}
+.state{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--jade);flex:none}
+.cardline{display:flex;align-items:center;gap:14px;padding:14px;border:1.5px solid var(--line-strong);border-radius:var(--r);background:#fff}
+.chipimg{width:44px;height:30px;border-radius:3px;background:linear-gradient(135deg,#111C2E,#33415A);position:relative;flex:none}
+.chipimg::after{content:"";position:absolute;top:9px;left:6px;width:12px;height:9px;background:var(--ochre);border-radius:2px}
+.warnbox{border-left:3px solid var(--ochre);background:rgba(176,132,41,.08);padding:13px 15px;font-size:13.5px;margin-top:14px}
+.warnbox b{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ochre);display:block;margin-bottom:4px}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(80px);background:var(--ink);color:var(--mint);font-family:var(--mono);font-size:12.5px;letter-spacing:.1em;padding:12px 22px;border-radius:100px;opacity:0;transition:.25s;z-index:60;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+footer{background:var(--ink);color:#8496A8;padding:30px 0;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;line-height:1.9}
+footer a{color:var(--paper)}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.r3{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<nav><div class="nav-in">
+  <a class="brand" href="index.html"><svg viewBox="0 0 40 40"><path d="M7 9v22M33 9v22M7 20h8M25 20h8" stroke="#E9EAE3" stroke-width="3" stroke-linecap="round"/><path d="M20 13l5 7-5 7-5-7z" fill="#CE2B52"/></svg><b>TRAMO</b></a>
+  <span class="tagpro" id="planBadge">PRO</span>
+  <div class="langsw"><button data-l="es">ES</button><button data-l="en">EN</button><button data-l="pt">PT</button></div>
+  <a class="lnk" href="index.html" data-i="nav.back"></a>
+</div></nav>
+
+<div class="wrap">
+  <h1 data-i="h1"></h1>
+  <p class="sub" data-i="sub"></p>
+  <div class="tabs">
+    <button class="tab on" data-v="v-gestor" data-i="tab.mgr"></button>
+    <button class="tab" data-v="v-perfil" data-i="tab.profile"></button>
+    <button class="tab" data-v="v-pago" data-i="tab.billing"></button>
+  </div>
+
+  <div class="view on" id="v-gestor"><div class="grid">
+    <div>
+      <section class="card"><h2 data-i="trip.title"></h2><div class="pad">
+        <div class="f"><label class="lb" data-i="trip.city"></label><input type="text" id="ciudad" value="Medellín"></div>
+        <div class="r2">
+          <div class="f"><label class="lb" data-i="trip.total"></label><input type="number" id="total" value="4500" step="50"></div>
+          <div class="f"><label class="lb" data-i="trip.days"></label><input type="number" id="dtot" value="45" min="1"></div>
+        </div>
+        <div class="r2">
+          <div class="f"><label class="lb" data-i="trip.today"></label><input type="number" id="dhoy" value="12" min="1"></div>
+          <div class="f"><label class="lb" data-i="trip.cushion"></label><input type="number" id="colchon" value="10" min="0" max="40"></div>
+        </div>
+        <button class="btn" onclick="recalc()" data-i="trip.update"></button>
+      </div></section>
+      <section class="card"><h2><span data-i="add.title"></span><span id="fxBadge" style="font-size:9px;letter-spacing:.1em"></span></h2><div class="pad">
+        <div class="f"><label class="lb" data-i="add.cat"></label><select id="gcat"></select></div>
+        <div class="f" id="subWrap" style="display:none"><label class="lb" id="subLb"></label><select id="gsub"></select></div>
+        <div class="r2">
+          <div class="f"><label class="lb" data-i="add.amount"></label><input type="number" id="gmon" value="20" step="0.5"></div>
+          <div class="f"><label class="lb" data-i="add.cur"></label><select id="gcur"></select></div>
+        </div>
+        <div class="r2">
+          <div class="f"><label class="lb" data-i="add.day"></label><input type="number" id="gdia" value="12" min="1"></div>
+          <div class="f"><label class="lb" data-i="add.eq"></label><input type="text" id="gusd" readonly style="background:#EFEFE9"></div>
+        </div>
+        <div class="f"><label class="lb" data-i="add.note"></label><input type="text" id="gnot"></div>
+        <button class="btn" onclick="addGasto()" data-i="add.btn"></button>
+      </div></section>
+    </div>
+    <div>
+      <div class="today">
+        <div><div class="lb2" id="todayLb"></div><div class="big" id="hoy">$0</div></div>
+        <div class="side" id="sideBox"></div>
+      </div>
+      <div class="status" id="status"></div>
+      <section class="card" style="margin-top:18px"><h2><span data-i="env.title"></span><span id="pctTotal"></span></h2><div class="pad" id="sobres"></div></section>
+      <section class="card"><h2 data-i="traj.title"></h2><div class="pad">
+        <div class="spark" id="spark"></div>
+        <p class="mini" data-i="traj.legend"></p>
+        <div class="sim" id="sim"></div>
+      </div></section>
+      <section class="card"><h2><span data-i="mov.title"></span><span id="nMov"></span></h2><div class="pad">
+        <table><thead><tr><th data-i="mov.day"></th><th data-i="mov.cat"></th><th data-i="mov.detail"></th><th class="n" data-i="mov.orig"></th><th class="n">USD</th><th></th></tr></thead><tbody id="tb"></tbody></table>
+      </div></section>
+    </div>
+  </div></div>
+
+  <div class="view" id="v-perfil"><div class="grid1">
+    <section class="card"><h2 data-i="pf.title"></h2><div class="pad">
+      <div class="r2">
+        <div class="f"><label class="lb" data-i="pf.name"></label><input type="text" id="pf_nombre"></div>
+        <div class="f"><label class="lb" data-i="pf.mail"></label><input type="email" id="pf_mail"></div>
+      </div>
+      <div class="r3">
+        <div class="f"><label class="lb" data-i="pf.country"></label><select id="pf_pais"></select></div>
+        <div class="f"><label class="lb" data-i="pf.code"></label><select id="pf_cod"></select></div>
+        <div class="f"><label class="lb" data-i="pf.wa"></label><input type="tel" id="pf_tel"></div>
+      </div>
+      <div class="r2">
+        <div class="f"><label class="lb" data-i="pf.cur"></label><select id="pf_moneda"></select></div>
+        <div class="f"><label class="lb" data-i="pf.pass"></label><select id="pf_pass"></select></div>
+      </div>
+      <button class="btn" onclick="guardarPerfil()" data-i="pf.save"></button>
+    </div></section>
+    <section class="card"><h2 data-i="nt.title"></h2><div class="pad">
+      <div class="switch"><div class="t" data-ih="nt.mail"></div><label class="sw"><input type="checkbox" id="pf_nmail" checked><i></i></label></div>
+      <div class="switch"><div class="t" data-ih="nt.wa"></div><label class="sw"><input type="checkbox" id="pf_nwa"><i></i></label></div>
+      <div class="switch"><div class="t" data-ih="nt.rec"></div><label class="sw"><input type="checkbox" id="pf_nrec" checked><i></i></label></div>
+      <div class="r2" style="margin-top:16px">
+        <div class="f"><label class="lb" data-i="nt.thr"></label><input type="number" id="pf_umbral" value="85" min="50" max="100"></div>
+        <div class="f"><label class="lb" data-i="nt.dev"></label><input type="number" id="pf_desvio" value="3" min="1" max="30"></div>
+      </div>
+      <button class="btn gh" onclick="guardarPerfil()" data-i="nt.save"></button>
+      <div class="warnbox" data-ih="nt.warn"></div>
+    </div></section>
+    <section class="card"><h2 data-i="dp.title"></h2><div class="pad">
+      <p style="font-size:14px;margin:0 0 14px;color:var(--ink-soft)" data-i="dp.p"></p>
+      <div class="r2">
+        <button class="btn gh" onclick="exportar()" data-i="dp.export"></button>
+        <button class="btn gh" onclick="borrarTodo()" style="border-color:var(--seal);color:var(--seal)" data-i="dp.delete"></button>
+      </div>
+    </div></section>
+  </div></div>
+
+  <div class="view" id="v-pago"><div class="grid1">
+    <section class="card"><h2><span data-i="bl.plan"></span><span id="planEstado"></span></h2><div class="pad">
+      <div class="state" style="margin-bottom:16px"><span class="dot"></span><span id="planLinea"></span></div>
+      <div class="r3" id="planes"></div>
+    </div></section>
+    <section class="card"><h2 data-i="bl.method"></h2><div class="pad">
+      <div class="cardline"><div class="chipimg"></div>
+        <div style="flex:1"><div style="font-weight:600;font-size:14.5px" id="cardNum"></div><div class="mini" id="cardExp"></div></div>
+        <button class="btn sm gh" onclick="checkout('metodo')" data-i="bl.update"></button></div>
+      <div class="warnbox" data-ih="bl.pci"></div>
+    </div></section>
+    <section class="card"><h2><span data-i="bl.history"></span><span id="totPagado"></span></h2><div class="pad">
+      <table><thead><tr><th data-i="bl.date"></th><th data-i="bl.concept"></th><th data-i="bl.via"></th><th class="n" data-i="bl.amount"></th><th class="n" data-i="bl.status"></th></tr></thead><tbody id="pagos"></tbody></table>
+      <p class="mini" style="margin-top:12px" data-i="bl.receipt"></p>
+    </div></section>
+    <section class="card"><h2 data-i="bl.cancelT"></h2><div class="pad">
+      <p style="font-size:14px;margin:0 0 14px;color:var(--ink-soft)" data-i="bl.cancelP"></p>
+      <button class="btn gh" style="border-color:var(--seal);color:var(--seal)" onclick="toast(t('bl.cancelled'))" data-i="bl.cancelB"></button>
+    </div></section>
+  </div></div>
+</div>
+
+<div class="toast" id="toast"></div>
+<footer><div class="wrap"><span data-i="foot.note"></span> · <a href="index.html" data-i="foot.calc"></a></div></footer>
+
+<script>
+const store={mem:{},get(k){try{return localStorage.getItem(k)}catch(e){return this.mem[k]??null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){this.mem[k]=v}}};
+const LANGS=["es","en","pt"];
+let lang=store.get("tramo_lang")||(navigator.language||"es").slice(0,2).toLowerCase();
+if(!LANGS.includes(lang))lang="en";
+let LI=LANGS.indexOf(lang);
+const L={
+"nav.back":["← Calculadora","← Calculator","← Calculadora"],
+"h1":["Tu presupuesto, día por día.","Your budget, day by day.","Seu orçamento, dia a dia."],
+"sub":["Esta es la parte que se paga. Carga tu viaje, anota lo que gastas en cualquier moneda y el número de arriba te dice cuánto puedes gastar hoy sin quedarte corto antes del vuelo de vuelta.","This is the part you pay for. Load your trip, log what you spend in any currency, and the number above tells you how much you can spend today without running short before the flight home.","Esta é a parte que se paga. Carregue sua viagem, anote o que gasta em qualquer moeda e o número acima diz quanto você pode gastar hoje sem ficar sem dinheiro antes do voo de volta."],
+"tab.mgr":["Gestor","Manager","Gestor"],"tab.profile":["Perfil","Profile","Perfil"],"tab.billing":["Facturación","Billing","Faturamento"],
+"trip.title":["El viaje","The trip","A viagem"],
+"trip.city":["Destino actual","Current destination","Destino atual"],
+"trip.total":["Presupuesto total (USD)","Total budget (USD)","Orçamento total (USD)"],
+"trip.days":["Días totales","Total days","Dias totais"],
+"trip.today":["Día actual","Current day","Dia atual"],
+"trip.cushion":["Colchón (%)","Cushion (%)","Colchão (%)"],
+"trip.update":["Actualizar plan","Update plan","Atualizar plano"],
+"add.title":["Anotar gasto","Log expense","Anotar gasto"],
+"add.cat":["Categoría","Category","Categoria"],
+"add.amount":["Monto","Amount","Valor"],
+"add.cur":["Moneda","Currency","Moeda"],
+"add.day":["Día","Day","Dia"],
+"add.eq":["Equivale a","Equals","Equivale a"],
+"add.note":["Nota","Note","Nota"],
+"add.notePh":["almuerzo, bus a Guatapé, coworking…","lunch, bus to Guatapé, coworking…","almoço, ônibus para Guatapé, coworking…"],
+"add.btn":["Anotar gasto","Log expense","Anotar gasto"],
+"add.saved":["Gasto anotado","Expense logged","Gasto anotado"],
+"add.needAmount":["Pon un monto","Enter an amount","Coloque um valor"],
+"fx.live":["TIPO DE CAMBIO DEL DÍA","TODAY'S EXCHANGE RATE","TAXA DE CÂMBIO DO DIA"],
+"fx.back":["TIPO DE CAMBIO DE RESPALDO","FALLBACK EXCHANGE RATE","TAXA DE CÂMBIO DE RESERVA"],
+"today.lb":["Puedes gastar hoy — día {a} de {b}","You can spend today — day {a} of {b}","Você pode gastar hoje — dia {a} de {b}"],
+"side.left":["Restante real","Actually left","Restante real"],
+"side.days":["Días por delante","Days ahead","Dias pela frente"],
+"side.rate":["Ritmo actual","Current burn","Ritmo atual"],
+"st.okT":["Vas bien","You're on track","Você vai bem"],
+"st.okB":["A este ritmo terminas con {s} sin usar, más el colchón de {c}. Podrías estirar el viaje {d} días extra o subir el estándar {p} por día.","At this rate you finish with {s} unspent, plus the {c} cushion. You could stretch the trip {d} extra days or raise your standard by {p} a day.","Nesse ritmo você termina com {s} sem usar, mais o colchão de {c}. Poderia esticar a viagem {d} dias extras ou subir o padrão em {p} por dia."],
+"st.badT":["Alerta de trayectoria","Trajectory alert","Alerta de trajetória"],
+"st.wrT":["Ajuste necesario","Adjustment needed","Ajuste necessário"],
+"st.badB":["A {r}/día te quedas corto <strong>{f} día{s} antes</strong> del vuelo de vuelta. Tres salidas: bajar a {n}/día desde hoy, recortar {f} días del viaje, o mudarte a una ciudad {p}% más barata.","At {r}/day you run short <strong>{f} day{s} before</strong> the flight home. Three ways out: drop to {n}/day from today, cut {f} days from the trip, or move to a city {p}% cheaper.","A {r}/dia você fica curto <strong>{f} dia{s} antes</strong> do voo de volta. Três saídas: baixar para {n}/dia a partir de hoje, cortar {f} dias da viagem, ou mudar para uma cidade {p}% mais barata."],
+"env.title":["Sobres","Envelopes","Envelopes"],
+"env.of":["de","of","de"],
+"env.used":["{p}% usado · lo esperado al día {d} es {e}%","{p}% used · expected by day {d} is {e}%","{p}% usado · o esperado no dia {d} é {e}%"],
+"env.over":["pasó tu umbral de {u}%","past your {u}% threshold","passou seu limite de {u}%"],
+"env.ahead":["vas {n} puntos arriba","{n} points ahead","{n} pontos acima"],
+"env.pct":["{p}% DEL TOTAL","{p}% OF TOTAL","{p}% DO TOTAL"],
+"traj.title":["Trayectoria de gasto","Spending trajectory","Trajetória de gasto"],
+"traj.legend":["Cada barra es un día. Rojo = por encima del límite diario de ese momento.","Each bar is a day. Red = above that day's limit.","Cada barra é um dia. Vermelho = acima do limite diário daquele momento."],
+"sim.title":["Simulador de cambio de ciudad","City-switch simulator","Simulador de troca de cidade"],
+"sim.body":["Si mañana te mudas a una ciudad ~32% más barata (de {c} a Cuenca o Chiang Mai), tu ritmo pasa a {r}/día y ganas <strong>{d} días</strong> con el mismo dinero. Descuenta el traslado: anótalo en el sobre de Traslados antes de decidir.","If you move tomorrow to a city ~32% cheaper (from {c} to Cuenca or Chiang Mai), your burn drops to {r}/day and you gain <strong>{d} days</strong> on the same money. Subtract the trip itself: log it under Intercity travel before deciding.","Se amanhã você mudar para uma cidade ~32% mais barata (de {c} para Cuenca ou Chiang Mai), seu ritmo cai para {r}/dia e você ganha <strong>{d} dias</strong> com o mesmo dinheiro. Desconte o deslocamento: anote em Deslocamentos antes de decidir."],
+"mov.title":["Movimientos","Transactions","Movimentos"],
+"mov.day":["Día","Day","Dia"],"mov.cat":["Categoría","Category","Categoria"],
+"mov.detail":["Detalle","Detail","Detalhe"],"mov.orig":["Original","Original","Original"],
+"mov.count":["{n} REGISTROS","{n} RECORDS","{n} REGISTROS"],
+"c.estadia":["Estadía","Housing","Moradia"],
+"c.traslados":["Traslados entre ciudades","Intercity travel","Deslocamentos entre cidades"],
+"c.transporte":["Transporte local","Local transport","Transporte local"],
+"c.comida":["Comida","Food","Comida"],
+"c.cowork":["Coworking e internet","Coworking and internet","Coworking e internet"],
+"c.ocio":["Ocio y salidas","Leisure and going out","Lazer e saídas"],
+"c.imprevistos":["Imprevistos y salud","Emergencies and health","Imprevistos e saúde"],
+"sl.traslados":["Medio de traslado","Mode of travel","Meio de deslocamento"],
+"sl.transporte":["Tipo de transporte","Type of transport","Tipo de transporte"],
+"s.vuelo":["Vuelo interno o regional","Domestic or regional flight","Voo interno ou regional"],
+"s.bus_larga":["Bus interprovincial","Long-distance bus","Ônibus interestadual"],
+"s.tren":["Tren","Train","Trem"],
+"s.ferry":["Ferry o barco","Ferry or boat","Ferry ou barco"],
+"s.auto":["Auto compartido o alquiler largo","Ride share or long rental","Carona ou aluguel longo"],
+"s.equipaje":["Equipaje extra","Extra baggage","Bagagem extra"],
+"s.metro":["Metro","Metro","Metrô"],
+"s.bus":["Bus urbano","City bus","Ônibus urbano"],
+"s.taxi":["Taxi o app","Taxi or app","Táxi ou app"],
+"s.moto":["Moto o scooter","Motorbike or scooter","Moto ou scooter"],
+"s.bici":["Bicicleta","Bicycle","Bicicleta"],
+"s.otro":["Otro","Other","Outro"],
+"pf.title":["Datos de la cuenta","Account details","Dados da conta"],
+"pf.name":["Nombre completo","Full name","Nome completo"],
+"pf.mail":["Correo","Email","E-mail"],
+"pf.country":["País de residencia","Country of residence","País de residência"],
+"pf.code":["Código","Code","Código"],
+"pf.wa":["WhatsApp","WhatsApp","WhatsApp"],
+"pf.cur":["Moneda que más usas","Currency you use most","Moeda que mais usa"],
+"pf.pass":["Pasaporte (para límites de estadía)","Passport (for stay limits)","Passaporte (para limites de estadia)"],
+"pf.save":["Guardar perfil","Save profile","Salvar perfil"],
+"pf.saved":["Perfil guardado","Profile saved","Perfil salvo"],
+"pf.needTel":["Para avisos por WhatsApp necesitas número","WhatsApp alerts need a number","Para avisos por WhatsApp precisa de número"],
+"nt.title":["Avisos","Alerts","Avisos"],
+"nt.mail":["Correo<small>Resumen semanal y alertas de trayectoria.</small>","Email<small>Weekly summary and trajectory alerts.</small>","E-mail<small>Resumo semanal e alertas de trajetória.</small>"],
+"nt.wa":["WhatsApp<small>Solo alertas urgentes: sobre agotado o desvío grave. Requiere número verificado.</small>","WhatsApp<small>Urgent alerts only: envelope emptied or serious drift. Verified number required.</small>","WhatsApp<small>Só alertas urgentes: envelope esgotado ou desvio grave. Requer número verificado.</small>"],
+"nt.rec":["Recordatorio diario para anotar gastos<small>Una notificación al final del día.</small>","Daily reminder to log expenses<small>One notification at the end of the day.</small>","Lembrete diário para anotar gastos<small>Uma notificação no fim do dia.</small>"],
+"nt.thr":["Avisar cuando un sobre pase el","Alert when an envelope passes","Avisar quando um envelope passar de"],
+"nt.dev":["Avisar si me quedo corto más de (días)","Alert if I run short by more than (days)","Avisar se eu ficar curto mais de (dias)"],
+"nt.save":["Guardar avisos","Save alerts","Salvar avisos"],
+"nt.warn":["<b>Nota de implementación</b>Los avisos por WhatsApp requieren la API de WhatsApp Business con plantillas aprobadas y tienen costo por mensaje. Al lanzar, activa solo correo y deja WhatsApp para clientes anuales, cuando el margen lo aguante.","<b>Implementation note</b>WhatsApp alerts need the WhatsApp Business API with approved templates and cost money per message. At launch, enable email only and keep WhatsApp for annual customers, once the margin supports it.","<b>Nota de implementação</b>Os avisos por WhatsApp exigem a API do WhatsApp Business com modelos aprovados e custam por mensagem. No lançamento, ative só e-mail e deixe o WhatsApp para clientes anuais, quando a margem permitir."],
+"dp.title":["Datos y privacidad","Data and privacy","Dados e privacidade"],
+"dp.p":["Tus gastos son tuyos. Puedes descargarlos o borrar la cuenta cuando quieras, sin escribirle a nadie.","Your expenses are yours. Download them or delete your account whenever you want, without emailing anyone.","Seus gastos são seus. Pode baixá-los ou apagar a conta quando quiser, sem escrever para ninguém."],
+"dp.export":["Descargar mis datos (CSV)","Download my data (CSV)","Baixar meus dados (CSV)"],
+"dp.delete":["Borrar todos mis datos","Delete all my data","Apagar todos os meus dados"],
+"dp.confirm":["Esto borra tus gastos y tu perfil de este navegador. ¿Seguro?","This deletes your expenses and profile from this browser. Are you sure?","Isso apaga seus gastos e seu perfil deste navegador. Tem certeza?"],
+"dp.done":["Datos borrados","Data deleted","Dados apagados"],
+"dp.csv":["CSV descargado","CSV downloaded","CSV baixado"],
+"bl.plan":["Tu plan","Your plan","Seu plano"],
+"bl.active":["ACTIVO","ACTIVE","ATIVO"],
+"bl.noMethod":["SIN MÉTODO DE PAGO","NO PAYMENT METHOD","SEM MÉTODO DE PAGAMENTO"],
+"bl.lifetime":["Fundador — acceso vitalicio · sin cobros futuros","Founder — lifetime access · no future charges","Fundador — acesso vitalício · sem cobranças futuras"],
+"bl.next":["{n} — {p}{per} · próximo cobro {d}","{n} — {p}{per} · next charge {d}","{n} — {p}{per} · próxima cobrança {d}"],
+"bl.current":["Tu plan actual","Your current plan","Seu plano atual"],
+"bl.switch":["Cambiar a este","Switch to this","Mudar para este"],
+"bl.method":["Método de pago","Payment method","Método de pagamento"],
+"bl.update":["Actualizar","Update","Atualizar"],
+"bl.card":["Tarjeta terminada en {n}","Card ending in {n}","Cartão terminado em {n}"],
+"bl.noCard":["Sin método de pago guardado","No payment method saved","Sem método de pagamento salvo"],
+"bl.cardExp":["Vence 09/29 · renovación automática activa","Expires 09/29 · auto-renewal on","Vence 09/29 · renovação automática ativa"],
+"bl.addCard":["Añade uno para activar la renovación automática.","Add one to turn on auto-renewal.","Adicione um para ativar a renovação automática."],
+"bl.pci":["<b>Cómo se cobra de verdad</b>TRAMO nunca guarda ni ve números de tarjeta. El botón abre el checkout alojado del proveedor de pago, que es quien almacena la tarjeta y devuelve un identificador. Construir tu propio formulario de tarjeta te mete en cumplimiento PCI y no vale la pena.","<b>How billing actually works</b>TRAMO never stores or sees card numbers. The button opens the payment provider's hosted checkout, which stores the card and returns an identifier. Building your own card form puts you in PCI scope and isn't worth it.","<b>Como a cobrança funciona de verdade</b>O TRAMO nunca guarda nem vê números de cartão. O botão abre o checkout hospedado do provedor de pagamento, que armazena o cartão e devolve um identificador. Construir seu próprio formulário de cartão te coloca em conformidade PCI e não vale a pena."],
+"bl.history":["Historial de pagos","Payment history","Histórico de pagamentos"],
+"bl.date":["Fecha","Date","Data"],"bl.concept":["Concepto","Item","Item"],
+"bl.via":["Método","Method","Método"],"bl.amount":["Monto","Amount","Valor"],
+"bl.status":["Estado","Status","Status"],"bl.paid":["Pagado","Paid","Pago"],
+"bl.empty":["Todavía no hay pagos. Aparecerán aquí en cuanto se conecte la pasarela.","No payments yet. They'll appear here once the gateway is connected.","Ainda não há pagamentos. Vão aparecer aqui assim que a pasarela for conectada."],
+"bl.count":["{n} PAGOS","{n} PAYMENTS","{n} PAGAMENTOS"],
+"bl.receipt":["Cada pago genera un comprobante que llega al correo de tu perfil.","Every payment generates a receipt sent to the email in your profile.","Cada pagamento gera um comprovante enviado para o e-mail do seu perfil."],
+"bl.cancelT":["Cancelar","Cancel","Cancelar"],
+"bl.cancelP":["Cancelas cuando quieras y sigues usando Pro hasta el final del período pagado. Los primeros 14 días son con devolución completa, sin preguntas.","Cancel whenever you want and keep Pro until the end of the paid period. The first 14 days come with a full refund, no questions.","Cancele quando quiser e continue usando o Pro até o fim do período pago. Os primeiros 14 dias têm devolução total, sem perguntas."],
+"bl.cancelB":["Cancelar suscripción","Cancel subscription","Cancelar assinatura"],
+"bl.cancelled":["Suscripción marcada para cancelar al final del período","Subscription set to cancel at period end","Assinatura marcada para cancelar no fim do período"],
+"bl.checkout":["Se abriría el checkout seguro del proveedor para {n} ({p}{per}).\n\nTRAMO nunca recibe el número de tarjeta.\n\n¿Simular un pago exitoso?","The provider's secure checkout would open for {n} ({p}{per}).\n\nTRAMO never receives the card number.\n\nSimulate a successful payment?","O checkout seguro do provedor seria aberto para {n} ({p}{per}).\n\nO TRAMO nunca recebe o número do cartão.\n\nSimular um pagamento bem-sucedido?"],
+"bl.methodOk":["Método de pago actualizado","Payment method updated","Método de pagamento atualizado"],
+"bl.planOk":["Plan activado","Plan activated","Plano ativado"],
+"p.pro":["Pro mensual","Pro monthly","Pro mensal"],
+"p.proD":["Gestor completo. Cancelas cuando vuelves.","Full manager. Cancel when you get back.","Gestor completo. Cancele quando voltar."],
+"p.anual":["Pro anual","Pro annual","Pro anual"],
+"p.anualD":["Dos meses gratis frente al mensual. Incluye avisos por WhatsApp.","Two months free versus monthly. Includes WhatsApp alerts.","Dois meses grátis frente ao mensal. Inclui avisos por WhatsApp."],
+"p.fundador":["Fundador","Founder","Fundador"],
+"p.fundadorD":["Pro de por vida. 100 cupos, sin renovaciones.","Pro for life. 100 spots, no renewals.","Pro vitalício. 100 vagas, sem renovações."],
+"per.mo":["/mes","/mo","/mês"],"per.yr":["/año","/year","/ano"],"per.once":["pago único","one-time","pagamento único"],
+"foot.note":["Los datos viven solo en este navegador hasta que conectes la base de datos.","Data lives only in this browser until you connect the database.","Os dados ficam só neste navegador até você conectar o banco de dados."],
+"foot.calc":["Calculadora","Calculator","Calculadora"]
+};
+const t=(k,p)=>{const a=L[k];let s=a?(a[LI]??a[0]):k;if(p)for(const x in p)s=s.split("{"+x+"}").join(p[x]);return s;};
+const $=i=>document.getElementById(i);
+function toast(x){const e=$("toast");e.textContent=x;e.classList.add("on");setTimeout(()=>e.classList.remove("on"),2600);}
+
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on"));
+  document.querySelectorAll(".view").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on");$(b.dataset.v).classList.add("on");window.scrollTo({top:0,behavior:"smooth"});}));
+
+const CATS=[
+ {k:"estadia",pct:.38,c:"#0F6B58"},
+ {k:"traslados",pct:.09,c:"#4A7FC1",sub:["vuelo","bus_larga","tren","ferry","auto","equipaje"]},
+ {k:"transporte",pct:.06,c:"#7FA8E3",sub:["metro","bus","taxi","moto","bici","otro"]},
+ {k:"comida",pct:.21,c:"#B08429"},
+ {k:"cowork",pct:.08,c:"#8B5FB0"},
+ {k:"ocio",pct:.12,c:"#CE2B52"},
+ {k:"imprevistos",pct:.06,c:"#6E7A8C"}];
+const CUR=[["USD","US Dollar"],["PEN","Sol"],["EUR","Euro"],["COP","Peso COP"],["MXN","Peso MXN"],["BRL","Real"],["ARS","Peso ARS"],["CLP","Peso CLP"],["GBP","Pound"],["THB","Baht"],["IDR","Rupiah"],["VND","Dong"],["TRY","Lira"],["ZAR","Rand"],["AUD","AUD"],["JPY","Yen"],["RWF","Franc RWF"],["KES","Shilling"],["MAD","Dirham"],["INR","Rupee"]];
+let RATES={USD:1,PEN:3.75,EUR:.92,COP:4050,MXN:18.2,BRL:5.45,ARS:1180,CLP:945,GBP:.78,THB:34.5,IDR:16200,VND:25400,TRY:39.5,ZAR:18.3,AUD:1.52,JPY:152,RWF:1330,KES:129,MAD:9.8,INR:86};
+let fxLive=false;
+const PAISES=["PE","CO","MX","AR","CL","BR","EC","UY","BO","PY","VE","CR","PA","GT","ES","US","PT","GB","DE","FR","IT","RW","ZA","IN","TH","ID","AU","CA","OT"];
+const CODS=[["+51","PE"],["+57","CO"],["+52","MX"],["+54","AR"],["+56","CL"],["+55","BR"],["+593","EC"],["+598","UY"],["+591","BO"],["+595","PY"],["+506","CR"],["+507","PA"],["+34","ES"],["+1","US"],["+351","PT"],["+44","GB"],["+49","DE"],["+33","FR"],["+250","RW"],["+27","ZA"],["+91","IN"],["+66","TH"],["+62","ID"],["+61","AU"]];
+let RN=null;
+const cn=cc=>{try{RN=RN||new Intl.DisplayNames([lang],{type:"region"});return cc==="OT"?"—":(RN.of(cc)||cc);}catch(e){return cc;}};
+
+let gastos=[
+ {d:1,k:"estadia",m:550,cur:"USD",n:"alquiler mes 1"},{d:1,k:"cowork",m:120,cur:"USD",n:"coworking"},
+ {d:1,k:"comida",m:105000,cur:"COP",n:"mercado"},{d:2,k:"comida",m:88000,cur:"COP",n:""},
+ {d:2,k:"transporte",m:32000,cur:"COP",s:"metro",n:""},{d:3,k:"comida",m:31,cur:"USD",n:""},
+ {d:3,k:"ocio",m:40,cur:"USD",n:""},{d:4,k:"comida",m:19,cur:"USD",n:""},{d:5,k:"comida",m:24,cur:"USD",n:""},
+ {d:5,k:"transporte",m:12,cur:"USD",s:"taxi",n:""},{d:6,k:"traslados",m:65,cur:"USD",s:"bus_larga",n:"Guatapé"},
+ {d:6,k:"comida",m:34,cur:"USD",n:""},{d:7,k:"comida",m:18,cur:"USD",n:""},{d:8,k:"comida",m:21,cur:"USD",n:""},
+ {d:8,k:"imprevistos",m:48,cur:"USD",n:""},{d:9,k:"comida",m:27,cur:"USD",n:""},{d:9,k:"ocio",m:35,cur:"USD",n:""},
+ {d:10,k:"comida",m:23,cur:"USD",n:""},{d:10,k:"transporte",m:9,cur:"USD",s:"bus",n:""},
+ {d:11,k:"comida",m:29,cur:"USD",n:""},{d:11,k:"ocio",m:52,cur:"USD",n:""},{d:12,k:"comida",m:16,cur:"USD",n:""}];
+const usd=g=>g.m/(RATES[g.cur||"USD"]||1);
+const loc=()=>lang==="en"?"en-US":lang==="pt"?"pt-BR":"es-PE";
+const money=n=>"$"+(Math.round(n*100)/100).toLocaleString(loc(),{minimumFractionDigits:n%1?2:0,maximumFractionDigits:2});
+
+function pintaSub(){
+  const c=CATS.find(x=>x.k===$("gcat").value);
+  if(c.sub){$("subWrap").style.display="";$("subLb").textContent=t("sl."+c.k);
+    $("gsub").innerHTML=c.sub.map(k=>`<option value="${k}">${t("s."+k)}</option>`).join("");}
+  else $("subWrap").style.display="none";
+}
+function pintaEquiv(){$("gusd").value="$"+((+$("gmon").value||0)/(RATES[$("gcur").value]||1)).toFixed(2)+" USD";}
+function addGasto(){
+  const m=+$("gmon").value;if(!m){toast(t("add.needAmount"));return;}
+  const c=CATS.find(x=>x.k===$("gcat").value);
+  gastos.push({d:+$("gdia").value,k:c.k,s:c.sub?$("gsub").value:undefined,m,cur:$("gcur").value,n:$("gnot").value.trim()});
+  $("gnot").value="";recalc();toast(t("add.saved"));
+}
+function delGasto(i){gastos.splice(i,1);recalc();}
+
+function recalc(){
+  const total=+$("total").value,dtot=+$("dtot").value,dhoy=Math.min(+$("dhoy").value,dtot),col=+$("colchon").value/100;
+  $("gdia").value=dhoy;
+  $("todayLb").textContent=t("today.lb",{a:dhoy,b:dtot});
+  const disp=total*(1-col);
+  const gastado=gastos.reduce((a,g)=>a+usd(g),0);
+  const hoyG=gastos.filter(g=>g.d===dhoy).reduce((a,g)=>a+usd(g),0);
+  const antes=gastos.filter(g=>g.d<dhoy).reduce((a,g)=>a+usd(g),0);
+  const rest=disp-antes,quedan=Math.max(1,dtot-dhoy+1);
+  const puede=rest/quedan-hoyG,ritmo=dhoy>1?antes/(dhoy-1):antes,plan=disp/dtot;
+  $("hoy").textContent=money(Math.max(0,puede));
+  $("hoy").style.color=puede<0?"#FF6B8A":puede<plan*.5?"#F0B95B":"var(--mint)";
+  $("sideBox").innerHTML=`${t("side.left")}: <b>${money(disp-gastado)}</b><br>${t("side.days")}: <b>${quedan}</b><br>${t("side.rate")}: <b>${money(ritmo)}</b>/día`;
+  const proy=antes+ritmo*quedan,st=$("status"),umbDes=+($("pf_desvio").value||3);
+  if(proy<=disp*.97){
+    const sob=disp-proy;st.className="status s-ok";
+    st.innerHTML=`<b>${t("st.okT")}</b>${t("st.okB",{s:money(sob),c:money(total*col),d:Math.floor(sob/Math.max(ritmo,1)),p:money(sob/quedan)})}`;
+  }else{
+    const f=quedan-Math.floor(rest/Math.max(ritmo,1)),nl=rest/quedan;
+    st.className=f>umbDes?"status s-bd":"status s-wr";
+    st.innerHTML=`<b>${f>umbDes?t("st.badT"):t("st.wrT")}</b>${t("st.badB",{r:money(ritmo),f,s:f===1?"":"s",n:money(nl),p:Math.round((1-nl/Math.max(ritmo,1))*100)})}`;
+  }
+  const umb=+($("pf_umbral").value||85);
+  $("sobres").innerHTML=CATS.map(c=>{
+    const asig=disp*c.pct,gs=gastos.filter(g=>g.k===c.k),uso=gs.reduce((a,g)=>a+usd(g),0);
+    const p=asig?Math.min(100,uso/asig*100):0,esp=Math.min(100,dhoy/dtot*100);
+    const det=c.sub?Object.entries(gs.reduce((o,g)=>{const k=g.s||"otro";o[k]=(o[k]||0)+usd(g);return o;},{}))
+      .sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${t("s."+k)} ${money(v)}`).join(" · "):"";
+    return `<div class="env"><div class="env-top"><span class="env-nm">${t("c."+c.k)}${det?`<em>${det}</em>`:""}</span>
+      <span class="env-am">${money(uso)} <span style="color:var(--muted)">${t("env.of")} ${money(asig)}</span></span></div>
+      <div class="pb"><i style="width:${p}%;background:${p>100?"var(--seal)":c.c}"></i></div>
+      <div class="mini">${t("env.used",{p:p.toFixed(0),d:dhoy,e:esp.toFixed(0)})}${p>umb?` · <span style="color:var(--seal)">${t("env.over",{u:umb})}</span>`:p>esp+12?` · <span style="color:var(--ochre)">${t("env.ahead",{n:(p-esp).toFixed(0)})}</span>`:""}</div></div>`;
+  }).join("");
+  $("pctTotal").textContent=t("env.pct",{p:(gastado/disp*100).toFixed(0)});
+  let bars="";
+  for(let d=1;d<=dhoy;d++){const v=gastos.filter(g=>g.d===d).reduce((a,g)=>a+usd(g),0);
+    bars+=`<i class="${v>plan?"over":""}" style="height:${Math.max(2,Math.min(100,v/(plan*2.4)*100))}%" title="${d}: ${money(v)}"></i>`;}
+  $("spark").innerHTML=bars;
+  const nd=ritmo*.68,dx=Math.floor(rest/Math.max(nd,1))-Math.floor(rest/Math.max(ritmo,1));
+  $("sim").innerHTML=`<b>${t("sim.title")}</b>${t("sim.body",{c:$("ciudad").value.split(",")[0],r:money(nd),d:Math.max(0,dx)})}`;
+  $("tb").innerHTML=gastos.map((g,i)=>({...g,i})).sort((a,b)=>b.d-a.d||b.i-a.i).map(g=>{
+    const c=CATS.find(c=>c.k===g.k),det=[g.s?t("s."+g.s):"",g.n].filter(Boolean).join(" · ")||"—";
+    return `<tr><td class="n" style="text-align:left">${g.d}</td>
+      <td><span style="display:inline-block;width:8px;height:8px;background:${c.c};transform:rotate(45deg);margin-right:7px"></span>${t("c."+c.k)}</td>
+      <td style="color:var(--muted)">${det}</td>
+      <td class="n" style="color:var(--muted)">${(g.cur||"USD")==="USD"?"—":g.m.toLocaleString(loc())+" "+g.cur}</td>
+      <td class="n">${money(usd(g))}</td>
+      <td style="text-align:right"><button class="del" onclick="delGasto(${g.i})">×</button></td></tr>`;}).join("");
+  $("nMov").textContent=t("mov.count",{n:gastos.length});
+}
+["total","dtot","dhoy","colchon","ciudad","pf_umbral","pf_desvio"].forEach(i=>$(i).addEventListener("input",recalc));
+["gmon","gcur"].forEach(i=>$(i).addEventListener("input",pintaEquiv));
+$("gcat").addEventListener("change",pintaSub);
+
+const PF=["pf_nombre","pf_mail","pf_pais","pf_cod","pf_tel","pf_moneda","pf_pass","pf_umbral","pf_desvio"];
+const PFC=["pf_nmail","pf_nwa","pf_nrec"];
+function guardarPerfil(){
+  const d={};PF.forEach(k=>d[k]=$(k).value);PFC.forEach(k=>d[k]=$(k).checked);
+  if(d.pf_nwa&&!d.pf_tel){toast(t("pf.needTel"));return;}
+  store.set("tramo_perfil",JSON.stringify(d));recalc();toast(t("pf.saved"));
+}
+function exportar(){
+  const f=[["day","category","subtype","amount","currency","usd","note"]]
+    .concat(gastos.map(g=>[g.d,g.k,g.s||"",g.m,g.cur||"USD",usd(g).toFixed(2),(g.n||"").replace(/,/g," ")]));
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([f.map(r=>r.join(",")).join("\n")],{type:"text/csv"}));
+  a.download="tramo-gastos.csv";a.click();toast(t("dp.csv"));
+}
+function borrarTodo(){
+  if(!confirm(t("dp.confirm")))return;
+  gastos=[];store.set("tramo_perfil","{}");PF.forEach(k=>{if($(k).type!=="number")$(k).value="";});recalc();toast(t("dp.done"));
+}
+
+const PLANES=[{k:"pro",pr:"$9",per:"per.mo",ciclo:"m"},{k:"anual",pr:"$49",per:"per.yr",ciclo:"a"},{k:"fundador",pr:"$79",per:"per.once",ciclo:"u"}];
+let plan=new URLSearchParams(location.search).get("plan")||store.get("tramo_plan")||"pro";
+if(plan==="aterrizaje")plan="pro";
+let metodo=store.get("tramo_metodo")||"";
+function proximo(c){const d=new Date();c==="a"?d.setFullYear(d.getFullYear()+1):d.setMonth(d.getMonth()+1);
+  return d.toLocaleDateString(loc(),{day:"2-digit",month:"short",year:"numeric"});}
+function pintaPago(){
+  store.set("tramo_plan",plan);
+  const p=PLANES.find(x=>x.k===plan)||PLANES[0];
+  $("planBadge").textContent=p.k==="fundador"?t("p.fundador").toUpperCase():"PRO";
+  $("planEstado").textContent=metodo?t("bl.active"):t("bl.noMethod");
+  $("planLinea").textContent=p.ciclo==="u"?t("bl.lifetime"):t("bl.next",{n:t("p."+p.k),p:p.pr,per:t(p.per),d:proximo(p.ciclo)});
+  $("planes").innerHTML=PLANES.map(x=>`<div class="planbox${x.k===plan?" on":""}">
+    <span class="pn">${t("p."+x.k)}</span><div class="pp">${x.pr} <span>${t(x.per)}</span></div>
+    <p class="pd">${t("p."+x.k+"D")}</p>
+    ${x.k===plan?`<button class="btn" disabled style="opacity:.6;cursor:default">${t("bl.current")}</button>`
+    :`<button class="btn gh" onclick="cambiarPlan('${x.k}')">${t("bl.switch")}</button>`}</div>`).join("");
+  $("cardNum").textContent=metodo?t("bl.card",{n:metodo}):t("bl.noCard");
+  $("cardExp").textContent=metodo?t("bl.cardExp"):t("bl.addCard");
+  const pg=JSON.parse(store.get("tramo_pagos")||"[]");
+  $("pagos").innerHTML=pg.length?pg.map(x=>`<tr><td class="n" style="text-align:left">${x.f}</td><td>${t("p."+x.k)}</td><td style="color:var(--muted)">${x.m}</td><td class="n">${x.a}</td><td class="n" style="color:var(--jade)">${t("bl.paid")}</td></tr>`).join("")
+    :`<tr><td colspan="5" style="color:var(--muted);padding:16px 0">${t("bl.empty")}</td></tr>`;
+  $("totPagado").textContent=pg.length?t("bl.count",{n:pg.length}):"";
+}
+function cambiarPlan(k){plan=k;pintaPago();checkout("plan");}
+function checkout(q){
+  const p=PLANES.find(x=>x.k===plan);
+  if(!confirm(t("bl.checkout",{n:t("p."+p.k),p:p.pr,per:t(p.per)})))return;
+  metodo="4242";store.set("tramo_metodo",metodo);
+  const pg=JSON.parse(store.get("tramo_pagos")||"[]");
+  pg.unshift({f:new Date().toLocaleDateString(loc(),{day:"2-digit",month:"short",year:"numeric"}),k:p.k,m:"•••• 4242",a:p.pr});
+  store.set("tramo_pagos",JSON.stringify(pg));
+  pintaPago();toast(q==="metodo"?t("bl.methodOk"):t("bl.planOk"));
+}
+
+function applyLang(){
+  document.documentElement.lang=lang;RN=null;
+  document.querySelectorAll("[data-i]").forEach(e=>e.textContent=t(e.dataset.i));
+  document.querySelectorAll("[data-ih]").forEach(e=>e.innerHTML=t(e.dataset.ih));
+  document.querySelectorAll(".langsw button").forEach(b=>b.classList.toggle("on",b.dataset.l===lang));
+  $("gnot").placeholder=t("add.notePh");
+  const gc=$("gcat").value;
+  $("gcat").innerHTML=CATS.map(c=>`<option value="${c.k}">${t("c."+c.k)}</option>`).join("");
+  if(gc)$("gcat").value=gc;
+  $("gcur").innerHTML=CUR.map(([k,n])=>`<option value="${k}">${k} — ${n}</option>`).join("");
+  $("pf_moneda").innerHTML=CUR.map(([k,n])=>`<option value="${k}">${k} — ${n}</option>`).join("");
+  $("pf_pais").innerHTML=PAISES.map(c=>`<option value="${c}">${cn(c)}</option>`).join("");
+  $("pf_pass").innerHTML=PAISES.map(c=>`<option value="${c}">${cn(c)}</option>`).join("");
+  $("pf_cod").innerHTML=CODS.map(([c,p])=>`<option value="${c}">${c} ${p}</option>`).join("");
+  try{const d=JSON.parse(store.get("tramo_perfil")||"{}");
+    PF.forEach(k=>{if(d[k]!=null)$(k).value=d[k];});PFC.forEach(k=>{if(d[k]!=null)$(k).checked=d[k];});}catch(e){}
+  $("fxBadge").textContent=fxLive?t("fx.live"):t("fx.back");
+  $("fxBadge").style.color=fxLive?"var(--mint)":"var(--ochre)";
+  pintaSub();pintaEquiv();pintaPago();recalc();
+}
+document.querySelectorAll(".langsw button").forEach(b=>b.addEventListener("click",()=>{
+  lang=b.dataset.l;LI=LANGS.indexOf(lang);store.set("tramo_lang",lang);applyLang();}));
+
+(async function fx(){
+  try{const c=new AbortController(),tm=setTimeout(()=>c.abort(),5000);
+    const r=await fetch("https://open.er-api.com/v6/latest/USD",{signal:c.signal});clearTimeout(tm);
+    const j=await r.json();
+    if(j&&j.rates){CUR.forEach(([k])=>{if(j.rates[k])RATES[k]=j.rates[k];});fxLive=true;}
+  }catch(e){}
+  applyLang();
+})();
+applyLang();
+</script>
+</body>
+</html>

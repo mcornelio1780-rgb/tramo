@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TRAMO — Plan de negocio y ruta a los primeros $3,000</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M7 9v22M33 9v22M7 20h8M25 20h8' stroke='%23111C2E' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M20 13l5 7-5 7-5-7z' fill='%23CE2B52'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=Public+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#111C2E;--ink-soft:#33415A;--muted:#6E7A8C;--paper:#E9EAE3;--card:#FBFBF8;--line:#C7CABE;--line-strong:#9AA096;--seal:#CE2B52;--jade:#0F6B58;--mint:#4BD6A8;--ochre:#B08429;
+--display:"Bricolage Grotesque","Arial Black",sans-serif;--body:"Public Sans",system-ui,sans-serif;--mono:"JetBrains Mono",monospace;--r:3px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.55;font-size:16px}
+.wrap{max-width:1000px;margin:0 auto;padding:0 24px}
+nav{background:var(--ink);color:var(--paper);padding:12px 0;position:sticky;top:0;z-index:20}
+.nav-in{max-width:1000px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--paper);margin-right:auto}
+.brand svg{width:26px;height:26px}.brand b{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:.15em}
+nav a.lnk{color:#8FA39B;text-decoration:none;font-size:13px}nav a.lnk:hover{color:var(--mint)}
+.doc-head{padding:44px 0 30px;border-bottom:1.5px solid var(--ink)}
+.kick{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--seal);font-weight:700}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(2.1rem,5vw,3.4rem);letter-spacing:-.035em;line-height:.98;margin:14px 0 12px}
+.lede{font-size:18px;color:var(--ink-soft);max-width:62ch;margin:0}
+h2{font-family:var(--display);font-weight:800;font-size:clamp(1.5rem,3vw,2.1rem);letter-spacing:-.025em;line-height:1.05;margin:0 0 6px}
+h3{font-family:var(--display);font-weight:700;font-size:18px;margin:0 0 6px;letter-spacing:-.01em}
+section{padding:44px 0;border-bottom:1px solid var(--line)}
+.snum{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--muted);display:block;margin-bottom:8px}
+p{margin:0 0 14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.box{background:var(--card);border:1.5px solid var(--ink);border-radius:var(--r);padding:18px}
+.box.dark{background:var(--ink);color:var(--paper)}.box.dark h3{color:var(--mint)}
+.box.dash{background:transparent;border-style:dashed;border-color:var(--seal)}
+.mono-lb{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700;display:block;margin-bottom:6px}
+.big{font-family:var(--display);font-weight:800;font-size:38px;letter-spacing:-.035em;line-height:1}
+.big.mint{color:var(--jade)}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:14px 0}
+th{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 10px 8px 0;border-bottom:1.5px solid var(--ink)}
+td{padding:9px 10px 9px 0;border-bottom:1px dashed var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:var(--mono);white-space:nowrap;padding-right:0}
+tr.tot td{border-bottom:0;border-top:1.5px solid var(--ink);font-weight:700;font-family:var(--mono)}
+ul{margin:0 0 14px;padding-left:20px}li{margin-bottom:7px}
+ul.clean{list-style:none;padding:0}
+ul.clean li{padding-left:22px;position:relative}
+ul.clean li::before{content:"";position:absolute;left:0;top:8px;width:8px;height:8px;background:var(--seal);transform:rotate(45deg)}
+.week{display:grid;grid-template-columns:112px 1fr;gap:20px;border-top:1.5px solid var(--ink);padding:20px 0}
+.week .wl{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+.week .wl span{display:block;font-family:var(--display);font-size:26px;letter-spacing:-.03em;margin-top:4px;color:var(--seal)}
+.tagline{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.tag{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line-strong);padding:4px 9px;border-radius:100px;color:var(--ink-soft)}
+input[type=number]{font-family:var(--mono);font-size:14px;padding:8px 10px;border:1.5px solid var(--line-strong);background:#fff;border-radius:var(--r);width:100%}
+input:focus{outline:2.5px solid var(--seal);outline-offset:2px}
+.simrow{display:grid;grid-template-columns:1fr 90px 100px;gap:12px;align-items:center;padding:9px 0;border-bottom:1px dashed var(--line)}
+.simrow .lb{font-size:14px}
+.simrow .lb small{display:block;color:var(--muted);font-family:var(--mono);font-size:10.5px}
+.simrow .out{font-family:var(--mono);text-align:right;font-size:15px}
+.meter{height:26px;background:#DEDFD6;border-radius:var(--r);overflow:hidden;display:flex;margin:16px 0 6px}
+.meter i{display:block;height:100%}
+.q{font-family:var(--display);font-size:19px;line-height:1.35;border-left:3px solid var(--seal);padding-left:18px;margin:0 0 8px;font-weight:700;letter-spacing:-.01em}
+.callout{background:var(--ink);color:var(--paper);padding:24px;border-radius:var(--r);margin:20px 0}
+.callout .q{color:var(--paper);border-color:var(--mint)}
+.callout p{color:#A9B6C4;margin:0}
+code{font-family:var(--mono);font-size:13px;background:#DEDFD6;padding:2px 5px;border-radius:2px}
+pre{background:var(--ink);color:#B8C4D0;font-family:var(--mono);font-size:12.5px;padding:16px;border-radius:var(--r);overflow-x:auto;line-height:1.65}
+pre b{color:var(--mint);font-weight:400}
+.risk .r1{display:grid;grid-template-columns:1fr 1.4fr;gap:16px;border-left:3px solid var(--ochre);padding:12px 0 12px 16px;background:rgba(176,132,41,.06);margin-bottom:10px}
+.risk .r1 b{font-size:14.5px}
+footer{background:var(--ink);color:#8496A8;padding:34px 0;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;line-height:1.9}
+footer a{color:var(--paper)}
+@media(max-width:820px){.grid2,.grid3{grid-template-columns:1fr}.week{grid-template-columns:1fr;gap:8px}.simrow{grid-template-columns:1fr 70px 90px}.risk .r1{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<nav><div class="nav-in">
+  <a class="brand" href="index.html"><svg viewBox="0 0 40 40"><path d="M7 9v22M33 9v22M7 20h8M25 20h8" stroke="#E9EAE3" stroke-width="3" stroke-linecap="round"/><path d="M20 13l5 7-5 7-5-7z" fill="#CE2B52"/></svg><b>TRAMO</b></a>
+  <a class="lnk" href="#nombre">Nombre</a><a class="lnk" href="#modelo">Modelo</a><a class="lnk" href="#ruta">Ruta a $3,000</a>
+  <a class="lnk" href="#apis">APIs</a><a class="lnk" href="#infra">Infraestructura</a><a class="lnk" href="punto-equilibrio.html">Punto de equilibrio</a><a class="lnk" href="#semanas">4 semanas</a><a class="lnk" href="#roadmap">Roadmap</a><a class="lnk" href="index.html">← Producto</a>
+</div></nav>
+
+<div class="wrap">
+<header class="doc-head">
+  <span class="kick">Documento interno · V2 · Julio 2026</span>
+  <h1>Cómo TRAMO hace $3,000 en cuatro semanas con $0 de presupuesto.</h1>
+  <p class="lede">Un producto que ya funciona, búsqueda gratis sin límite como motor de distribución, y el cobro puesto exactamente donde está el valor recurrente: administrar el dinero durante el viaje.</p>
+</header>
+
+<section id="nombre">
+  <span class="snum">01 — LA MARCA</span>
+  <h2>Por qué TRAMO.</h2>
+  <p>En español, <strong>tramo</strong> significa dos cosas a la vez y las dos son el producto: un trecho de camino y una banda de valores. En finanzas se habla de tramos de precio; en viaje, del tramo Lima–Lisboa. El nombre carga la tesis sin explicarla, tiene cinco letras, se pronuncia igual en inglés y no hay que deletrearlo por teléfono.</p>
+  <h3 style="margin-top:22px">Las que quedaron en la mesa</h3>
+  <table>
+    <thead><tr><th>Nombre</th><th>Qué evoca</th><th>Por qué no ganó</th></tr></thead>
+    <tbody>
+      <tr><td><b>ESCALA</b></td><td>Parada técnica de un vuelo y escala de medición</td><td>Doble sentido precioso, pero "escalar" arrastra jerga de startup B2B y despista</td></tr>
+      <tr><td><b>SALDO</b></td><td>Lo que te queda; convertir saldo en días</td><td>Suena a banco. Bueno para producto financiero, frío para viaje</td></tr>
+      <tr><td><b>SEXTANTE</b></td><td>Instrumento para ubicarte con datos incompletos</td><td>Metáfora perfecta, palabra larga y difícil de teclear</td></tr>
+      <tr><td><b>ATERRIZA</b></td><td>Bajar a tierra el plan y el presupuesto</td><td>Es un verbo: obliga a conjugar y no funciona fuera del español</td></tr>
+      <tr><td><b>BRÚJULA</b></td><td>Orientación</td><td>Demasiado usado en viajes y con tilde, que complica el dominio</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:14.5px;color:var(--ink-soft)">La marca gráfica no cambia: el corchete de medición con el rombo al centro ya era un tramo dibujado. Ahora el nombre y el símbolo dicen lo mismo. Paleta y tipografías se mantienen.</p>
+</section>
+
+<section id="modelo">
+  <span class="snum">02 — MODELO DE NEGOCIO</span>
+  <h2>Buscar es gratis e ilimitado. Gestionar se paga.</h2>
+  <p>Cambio de fondo frente a la versión anterior: se elimina el límite de dos búsquedas. Cualquiera compara todos los destinos que quiera, sin cuenta y sin contador. Es una decisión de distribución, no de generosidad.</p>
+  <div class="grid2">
+    <div class="box dark"><h3>Lo que ganamos regalando la búsqueda</h3><ul class="clean" style="font-size:14.5px;color:#A9B6C4">
+      <li style="color:#A9B6C4">Nada frena al usuario, así que la tasa de gente que llega a ver un resultado sube de 38% a más de 45%</li>
+      <li style="color:#A9B6C4">El resultado es compartible: capturas de "45 días en Medellín con $4,000" circulan solas</li>
+      <li style="color:#A9B6C4">Las páginas por ciudad quedan totalmente indexables, sin muro que bloquee al buscador</li>
+      <li style="color:#A9B6C4">Cada búsqueda gratis genera clics de afiliado en seguro, eSIM y vuelo</li>
+    </ul></div>
+    <div class="box dash"><h3>Lo que perdemos y cómo se compensa</h3><ul class="clean" style="font-size:14.5px">
+      <li>Se cae la captura de correo forzada: pasa de ~20% a ~12%. Se compensa con volumen y con un motivo honesto para dejarlo, que es recibir el plan y avisos de cambio de precio</li>
+      <li>La conversión por visita baja. Da igual: el negocio se mide en ventas absolutas, no en tasa</li>
+      <li>Toda la carga de conversión recae en el gestor, así que el gestor tiene que ser bueno de verdad. Eso es una ventaja, no un problema: obliga a construir lo correcto</li>
+    </ul></div>
+  </div>
+  <table>
+    <thead><tr><th>Flujo</th><th>Qué es</th><th class="n">Precio</th><th class="n">Margen</th><th>Cuándo</th></tr></thead>
+    <tbody>
+      <tr><td><b>1. Pago único</b></td><td>Miembro Fundador (Pro vitalicio, 100 cupos) y Plan Aterrizaje (destino resuelto)</td><td class="n">$79 / $39</td><td class="n">~94%</td><td>Semana 1</td></tr>
+      <tr><td><b>2. Suscripción</b></td><td>Pro: gestor con sobres, alertas, multi-moneda, avisos</td><td class="n">$9/mes · $49/año</td><td class="n">~92%</td><td>Semana 2</td></tr>
+      <tr><td><b>3. Afiliados</b></td><td>Seguro de nómada, eSIM, banco multi-moneda, alojamiento, vuelos</td><td class="n">4–30%</td><td class="n">100%</td><td>Semana 1</td></tr>
+      <tr><td><b>4. B2B (después)</b></td><td>Colivings y coworkings destacados, marcados como pauta</td><td class="n">$99/mes</td><td class="n">~97%</td><td>Mes 3+</td></tr>
+    </tbody>
+  </table>
+  <p><strong>El afiliado sube de categoría.</strong> Con búsqueda ilimitada y sin muro, el volumen de usuarios gratis se multiplica y cada uno pasa por una pantalla que ya calculó su seguro, su eSIM y su vuelo. Travelpayouts, que es la fuente de datos de vuelo recomendada más abajo, es a la vez una red de afiliados: la misma integración que mejora el cálculo genera comisión. Regla dura: la recomendación se declara siempre y nunca altera el orden de las ciudades.</p>
+</section>
+
+<section id="ruta">
+  <span class="snum">03 — LA RUTA A LOS $3,000</span>
+  <h2>Setenta y cinco ventas. Ni una más.</h2>
+  <p>Mueve los números y mira qué combinación te deja tranquilo. La barra es la meta.</p>
+  <div class="box">
+    <div class="simrow" style="border-bottom:1.5px solid var(--ink);padding-bottom:6px">
+      <span class="mono-lb" style="margin:0">Producto</span><span class="mono-lb" style="margin:0;text-align:right">Unidades</span><span class="mono-lb" style="margin:0;text-align:right">Ingreso</span>
+    </div>
+    <div class="simrow"><div class="lb">Miembro Fundador<small>PAGO ÚNICO $79</small></div><input type="number" id="q1" value="25" min="0" max="100"><div class="out" id="o1"></div></div>
+    <div class="simrow"><div class="lb">Plan Aterrizaje<small>PAGO ÚNICO $39</small></div><input type="number" id="q2" value="16" min="0"><div class="out" id="o2"></div></div>
+    <div class="simrow"><div class="lb">Pro mensual<small>$9 — primer mes</small></div><input type="number" id="q3" value="30" min="0"><div class="out" id="o3"></div></div>
+    <div class="simrow"><div class="lb">Pro anual<small>$49</small></div><input type="number" id="q4" value="4" min="0"><div class="out" id="o4"></div></div>
+    <div class="simrow"><div class="lb">Afiliados<small>SEGURO · ESIM · BANCO · VUELOS</small></div><input type="number" id="q5" value="180" min="0"><div class="out" id="o5"></div></div>
+    <div class="meter" id="meter"></div>
+    <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--muted)"><span id="pctTxt"></span><span>META $3,000</span></div>
+    <div class="grid3" style="margin-top:18px">
+      <div><span class="mono-lb">Ingreso bruto</span><div class="big" id="bruto"></div></div>
+      <div><span class="mono-lb">Neto tras pasarela</span><div class="big mint" id="neto"></div></div>
+      <div><span class="mono-lb">Visitas necesarias</span><div class="big" id="visitas"></div><span class="mono-lb" style="margin-top:6px">A 1.5% DE CONVERSIÓN</span></div>
+    </div>
+  </div>
+  <h3 style="margin-top:26px">El embudo sin muro</h3>
+  <table>
+    <thead><tr><th>Etapa</th><th class="n">Tasa</th><th class="n">Volumen</th><th>Qué la mueve</th></tr></thead>
+    <tbody>
+      <tr><td>Visitas a la landing</td><td class="n">—</td><td class="n">5,000</td><td>Video corto, comunidades, páginas por ciudad</td></tr>
+      <tr><td>Hacen un cálculo</td><td class="n">46%</td><td class="n">2,300</td><td>Calculadora en el hero, sin registro ni contador</td></tr>
+      <tr><td>Dejan correo (voluntario)</td><td class="n">12%</td><td class="n">276</td><td>"Te mando el plan y te aviso si sube el vuelo"</td></tr>
+      <tr><td>Entran al gestor</td><td class="n">9%</td><td class="n">207</td><td>Botón desde el resultado, con datos ya cargados</td></tr>
+      <tr><td>Compran algo</td><td class="n">36%</td><td class="n">75</td><td>El gestor demuestra el valor antes de cobrar</td></tr>
+      <tr class="tot"><td>Conversión total</td><td class="n">1.5%</td><td class="n">75 ventas</td><td>≈ $3,065 + afiliados</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:14.5px;color:var(--ink-soft)">5,000 visitas en 28 días son 178 al día. Suena a más que antes porque lo es: al quitar el muro subimos el volumen necesario pero bajamos la fricción en cada paso. Un solo video con 150,000 reproducciones cubre la mitad del mes.</p>
+</section>
+
+<section id="apis">
+  <span class="snum">04 — DATOS Y APIS</span>
+  <h2>Por qué el vuelo ahora es una banda y no un número.</h2>
+  <p>La versión anterior decía que Lima–Lisboa costaba $880 cuando el precio real ronda los $1,100. Un error de $220 son cuatro días de comida: suficiente para que el usuario deje de confiar en todo el cálculo. Se arregló en dos capas.</p>
+  <div class="grid2">
+    <div class="box"><h3>Capa 1 — Banda local recalibrada</h3>
+      <p style="font-size:14.5px">Cada par de zonas tiene un piso y un techo, ajustados por tres modificadores que el usuario elige: anticipación de compra (−10% a +30%), temporada (−14% a +22%) y tipo de pasaje (ida y vuelta o solo ida). Cada ciudad tiene además un factor de qué tan caro es llegar a su aeropuerto.</p>
+      <p style="font-size:14.5px;margin:0"><strong>Verificación:</strong> Lima–Lisboa devuelve ahora una banda de $950 a $1,349, con precio típico de $1,130. El dato observado era $1,100.</p>
+    </div>
+    <div class="box dark"><h3>Capa 2 — Precio en vivo</h3>
+      <p style="font-size:14.5px;color:#A9B6C4">Con las funciones desplegadas, el navegador pide el precio real solo para los ocho destinos más probables de esa búsqueda. El resto usa la banda local. Así el cálculo mejora sin quemar la cuota.</p>
+      <p style="font-size:14.5px;color:#A9B6C4;margin:0"><strong style="color:var(--mint)">Regla de honestidad:</strong> para decidir si alcanza usamos el techo de la banda con el presupuesto mínimo. El resultado nunca promete días que no existen.</p>
+    </div>
+  </div>
+  <h3 style="margin-top:24px">Qué se puede conectar de verdad</h3>
+  <table>
+    <thead><tr><th>Fuente</th><th>Para qué</th><th class="n">Costo real</th><th>Veredicto</th></tr></thead>
+    <tbody>
+      <tr><td><b>Google Flights</b></td><td>—</td><td class="n">No existe</td><td>Google cerró su API pública de vuelos y nunca la reemplazó. Hay que ir por un intermediario</td></tr>
+      <tr><td><b>SerpApi</b><br><span style="color:var(--muted);font-size:12.5px">motor google_flights</span></td><td>Devuelve el precio más bajo y el rango típico de la ruta: exactamente la banda que el producto necesita</td><td class="n">250 gratis/mes<br>luego $25/mes</td><td><strong>Primera opción.</strong> Es lo más cercano a "los precios de Google"</td></tr>
+      <tr><td><b>Travelpayouts</b></td><td>Precios en caché y programa de afiliados en la misma cuenta</td><td class="n">Gratis<br>+ comisión</td><td><strong>Segunda opción y fuente de ingreso.</strong> Se activa como respaldo automático</td></tr>
+      <tr><td><b>Google Maps Platform</b><br><span style="color:var(--muted);font-size:12.5px">Places + Routes</span></td><td>Autocompletado de ciudades y distancias terrestres para estimar bus, tren y ferry</td><td class="n">Crédito mensual<br>gratuito</td><td><strong>Sí, con caché de 7 días.</strong> El autocompletado dispara una llamada por tecla si no se controla</td></tr>
+      <tr><td><b>Tipo de cambio</b></td><td>Convertir gastos en soles, pesos o baht dentro del gestor</td><td class="n">$0, sin clave</td><td><strong>Ya está conectado</strong> en el gestor, con tabla de respaldo si falla</td></tr>
+      <tr><td><b>Amadeus</b></td><td>Búsqueda y reserva de vuelos</td><td class="n">Capa gratuita</td><td>Evitar por ahora: su plan de autoservicio está marcado como migración pendiente en 2026</td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <p class="q">La clave nunca va en el HTML. Va en una variable de entorno de Netlify, y el navegador habla con tu función, no con el proveedor.</p>
+    <p>Si pones la clave en el archivo del navegador, cualquiera la lee en cinco segundos y te consume la cuota. Por eso el proyecto incluye <code>netlify/functions/flights.js</code> y <code>places.js</code>: hacen de intermediario, cachean 12 horas y devuelven solo la banda.</p>
+  </div>
+  <h3>Cuota: por qué las 250 búsquedas gratis alcanzan para lanzar</h3>
+  <p style="font-size:14.5px">La consulta se cachea por ruta, tipo de pasaje y ventana de compra durante 12 horas. Cien personas buscando Lima–Lisboa el mismo día consumen una sola llamada. Con 2,300 cálculos al mes y un patrón normal de destinos, el consumo real ronda las 150–220 rutas únicas: entra en el plan gratuito. Cuando lo pases, el escalón son $25 al mes, y para entonces ya hay ingreso que lo pague.</p>
+</section>
+
+<section id="infra">
+  <span class="snum">04B — INFRAESTRUCTURA Y DATOS</span>
+  <h2>Dónde vive esto y cómo se guardan los datos.</h2>
+  <h3>La decisión de hosting, con la letra chica leída</h3>
+  <p>El plan gratuito de Vercel restringe el uso a proyectos personales sin fin de lucro y define uso comercial como cualquier despliegue que solicite o procese pagos de sus visitantes. TRAMO cobra desde el primer día, así que ese plan queda descartado y tocaría el de pago, veinte dólares al mes. Netlify permite cobrar en su capa gratuita. El proyecto viene con configuración para los dos, sin cambiar una línea de código.</p>
+  <table>
+    <thead><tr><th>Opción</th><th class="n">Costo mes 1</th><th>Permite cobrar gratis</th><th>Veredicto</th></tr></thead>
+    <tbody>
+      <tr><td><b>Netlify</b></td><td class="n">$0</td><td>Sí</td><td><strong>Recomendado para lanzar.</strong> El repositorio ya trae netlify.toml y las funciones</td></tr>
+      <tr><td><b>Cloudflare Pages</b></td><td class="n">$0</td><td>Sí</td><td>Alternativa sólida si el tráfico crece mucho</td></tr>
+      <tr><td><b>Vercel</b></td><td class="n">$20</td><td>No en el plan gratuito</td><td>Excelente producto, pero aquí es un costo evitable el primer mes</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:14.5px;color:var(--ink-soft)">Los tres se conectan igual: repositorio en GitHub, importar el proyecto, pegar las claves como variables de entorno. Cambiar de uno a otro después es cuestión de minutos, así que esta decisión no encierra a nadie.</p>
+
+  <h3 style="margin-top:26px">Supabase: qué guarda y cómo</h3>
+  <p>Hoy los datos viven solo en el navegador de cada persona. Eso sirve para probar, pero se pierde al cambiar de dispositivo y hace imposible cobrar una suscripción. Supabase resuelve las tres cosas que faltan — cuentas, base de datos y permisos — en su capa gratuita, que aguanta muy por encima del volumen del primer año.</p>
+  <table>
+    <thead><tr><th>Tabla</th><th>Qué guarda</th><th>Quién puede verla</th></tr></thead>
+    <tbody>
+      <tr><td><code>perfiles</code></td><td>Nombre, correo, teléfono, país, moneda base, umbrales de aviso</td><td>Solo su dueño</td></tr>
+      <tr><td><code>planes</code></td><td>Un viaje: destino, presupuesto, días, colchón, fechas</td><td>Solo su dueño</td></tr>
+      <tr><td><code>gastos</code></td><td>Cada movimiento con categoría, subtipo, moneda original y equivalente en dólares</td><td>Solo su dueño</td></tr>
+      <tr><td><code>suscripciones</code></td><td>Plan activo, estado, próximo cobro, identificador del proveedor de pago</td><td>Solo su dueño, escribe el webhook</td></tr>
+      <tr><td><code>pagos</code></td><td>Historial de cobros para la pestaña de facturación</td><td>Solo su dueño, escribe el webhook</td></tr>
+      <tr><td><code>cache_vuelos</code></td><td>Banda de precio por ruta y fecha de consulta</td><td>Pública para leer</td></tr>
+      <tr><td><code>aportes_costos</code></td><td>Correcciones de costo de vida enviadas por usuarios Pro</td><td>Pública tras revisión</td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <p class="q">La regla que no se negocia: seguridad a nivel de fila activada en todas las tablas de usuario, desde la primera.</p>
+    <p>Sin eso, cualquiera con la clave pública puede leer los gastos de todos. El archivo <code>supabase/schema.sql</code> del repositorio ya trae las tablas y las políticas escritas: se pega en el editor SQL de Supabase y queda listo.</p>
+  </div>
+  <p style="font-size:14.5px"><strong>Por qué la caché de vuelos vive en la base y no solo en memoria:</strong> las funciones sin servidor se apagan y se reinician todo el tiempo, y con ellas se borra la memoria. Guardando la banda en una tabla, cien personas que buscan la misma ruta el mismo día consumen una sola consulta a la API en lugar de cien. Es la diferencia entre entrar en el plan gratuito y no entrar.</p>
+</section>
+
+<section id="unit">
+  <span class="snum">05 — UNIT ECONOMICS</span>
+  <h2>El negocio funciona o no funciona en esta tabla.</h2>
+  <div class="grid2">
+    <div>
+      <table>
+        <thead><tr><th>Métrica</th><th class="n">Valor</th></tr></thead>
+        <tbody>
+          <tr><td>Ticket promedio</td><td class="n">$41</td></tr>
+          <tr><td>Costo variable por venta<br><span style="color:var(--muted);font-size:12.5px">pasarela 5% + $0.50</span></td><td class="n">$2.55</td></tr>
+          <tr><td>Infraestructura por usuario/mes</td><td class="n">$0.04</td></tr>
+          <tr><td>Margen bruto</td><td class="n">92%</td></tr>
+          <tr><td>CAC en dinero</td><td class="n">$0</td></tr>
+          <tr><td>CAC en tiempo<br><span style="color:var(--muted);font-size:12.5px">~1.2 h por venta a $12/h</span></td><td class="n">$14</td></tr>
+          <tr><td>LTV Pro mensual<br><span style="color:var(--muted);font-size:12.5px">retención estimada 5 meses</span></td><td class="n">$45</td></tr>
+          <tr><td>LTV Fundador</td><td class="n">$79</td></tr>
+          <tr class="tot"><td>LTV / CAC</td><td class="n">3.2x – 5.6x</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="box dark"><span class="mono-lb" style="color:var(--mint)">Punto de equilibrio</span>
+        <div class="big" style="color:var(--mint)">1 venta</div>
+        <p style="font-size:14.5px;color:#A9B6C4;margin:10px 0 0">Los costos fijos del mes son el dominio: unos $11. Todo lo demás corre en capa gratuita, APIs incluidas. La primera venta de $39 ya deja el mes en positivo. La pregunta deja de ser si sobrevivimos y pasa a ser si crece.</p>
+      </div>
+      <div class="box" style="margin-top:14px"><span class="mono-lb">Estructura de costos mes 1</span>
+        <table style="margin:0">
+          <tr><td>Dominio (.com, anual)</td><td class="n">$11</td></tr>
+          <tr><td>Hosting y funciones (Netlify)</td><td class="n">$0</td></tr>
+          <tr><td>Base de datos y autenticación</td><td class="n">$0</td></tr>
+          <tr><td>API de vuelos (250 gratis)</td><td class="n">$0</td></tr>
+          <tr><td>Google Maps (crédito gratuito)</td><td class="n">$0</td></tr>
+          <tr><td>Correo transaccional y analítica</td><td class="n">$0</td></tr>
+          <tr class="tot"><td>Total fijo</td><td class="n">$11</td></tr>
+        </table>
+      </div>
+      <p style="font-size:13.5px;color:var(--muted);margin-top:12px">Tesorería: verifica qué pasarela acepta tu país de residencia como vendedor. Las que actúan como vendedor registrado resuelven impuestos internacionales y pagan a cuentas multi-moneda, que es la vía más simple desde LatAm.</p>
+    </div>
+  </div>
+</section>
+
+<section id="sprint15">
+  <span class="snum">05B — EL SPRINT DE 15 DÍAS</span>
+  <h2>La meta corta: $3,000 a $5,000 en quince días.</h2>
+  <p>El plan de cuatro semanas de abajo sigue siendo la ruta completa. Este sprint es la versión comprimida, y comprimir cambia el mix: en quince días no da tiempo de construir recurrencia, así que casi todo el ingreso tiene que venir de pagos únicos.</p>
+  <div class="grid2">
+    <div class="box dark"><h3>Qué se empuja</h3><ul class="clean" style="font-size:14.5px;color:#A9B6C4">
+      <li style="color:#A9B6C4">Fundador a $79 con cupos que se agotan de verdad: es lo único que entrega en 15 días el valor de una anualidad</li>
+      <li style="color:#A9B6C4">Plan Aterrizaje a $39 a quien ya calculó y sigue dudando: máxima intención de compra</li>
+      <li style="color:#A9B6C4">Venta a mano todos los días: es la única palanca que controlas al 100%</li>
+    </ul></div>
+    <div class="box dash"><h3>Qué se posterga</h3><ul class="clean" style="font-size:14.5px">
+      <li>Páginas por ciudad y posicionamiento orgánico: rinden en meses, no en días</li>
+      <li>Avisos por WhatsApp: cuestan por mensaje y no venden nada en la primera quincena</li>
+      <li>La app en tiendas: la web instalable cubre lo mismo sin costo ni revisión</li>
+    </ul></div>
+  </div>
+  <table>
+    <thead><tr><th>Día</th><th>Qué pasa</th><th class="n">Acumulado objetivo</th></tr></thead>
+    <tbody>
+      <tr><td><b>1–2</b></td><td>Dominio, despliegue, pasarela probada con una compra real de $1. Cero venta pública.</td><td class="n">$0</td></tr>
+      <tr><td><b>3–5</b></td><td>Mensajes uno a uno a tu red. Primeros videos publicados. Primeros fundadores.</td><td class="n">$600</td></tr>
+      <tr><td><b>6–9</b></td><td>Comunidades y publicación diaria. Se dobla el formato de video que mejor retuvo.</td><td class="n">$1,800</td></tr>
+      <tr><td><b>10–13</b></td><td>Lanzamiento público concentrado. Contador real de cupos.</td><td class="n">$3,200</td></tr>
+      <tr><td><b>14–15</b></td><td>Cierre con fecha. Último empujón a quienes calcularon y no compraron.</td><td class="n">$4,000+</td></tr>
+    </tbody>
+  </table>
+  <div class="callout"><p class="q">La regla del día 7: si no llevas el 25% de la meta, el problema es la oferta, no el volumen.</p>
+  <p>Cambiar la oferta cuesta un día. Seguir empujando una oferta que no convierte cuesta los ocho que quedan. El modelo completo, con tus propios números, está en <a href="punto-equilibrio.html" style="color:var(--mint)">la calculadora de punto de equilibrio</a>.</p></div>
+</section>
+
+<section id="semanas">
+  <span class="snum">06 — LAS CUATRO SEMANAS</span>
+  <h2>Qué se hace cada semana y cuánto tiene que entrar.</h2>
+  <div class="week"><div class="wl">Semana 1<span>$250</span></div><div>
+    <h3>Montar y preventa silenciosa</h3>
+    <ul style="font-size:14.5px">
+      <li>Dominio, despliegue en Netlify, correo de marca, analítica. Único gasto del mes: ~$11.</li>
+      <li>Crear la cuenta de la API de vuelos y la de afiliados. Pegar la URL de funciones en el panel de fuentes y confirmar que la etiqueta cambia a "precio en vivo".</li>
+      <li>Pasarela con vendedor registrado. Producto Fundador creado y probado con una compra real de $1.</li>
+      <li>Grabar y programar los primeros 14 videos de una sentada.</li>
+      <li>Lista de 60 contactos que viajan. Mensaje uno a uno, no difusión.</li>
+      <li><strong>Meta:</strong> 3 fundadores vendidos a conocidos + 40 correos.</li>
+    </ul>
+    <div class="tagline"><span class="tag">Sin público</span><span class="tag">Validar el cobro</span></div>
+  </div></div>
+  <div class="week"><div class="wl">Semana 2<span>$700</span></div><div>
+    <h3>Publicar diario y entrar a las comunidades</h3>
+    <ul style="font-size:14.5px">
+      <li>Video diario en las tres plataformas. Se mide qué formato retiene y se repite ese.</li>
+      <li>Seis comunidades. Diez respuestas útiles antes de mencionar el producto.</li>
+      <li>Primera secuencia de correos: plan guardado → caso de uso → oferta fundador con cupos.</li>
+      <li>Activar seguro y eSIM como afiliados; ambos aparecen dentro del resultado gratuito.</li>
+      <li><strong>Meta:</strong> $700 acumulados, 120 correos, 6 entrevistas con compradores.</li>
+    </ul>
+  </div></div>
+  <div class="week"><div class="wl">Semana 3<span>$1,700</span></div><div>
+    <h3>Lanzamiento público y prueba de precio</h3>
+    <ul style="font-size:14.5px">
+      <li>Día concentrado en plataformas de producto. Todo el tráfico va a la calculadora, no a una página de espera.</li>
+      <li>Publicar el contador real de cupos fundador. La escasez tiene que ser verdadera.</li>
+      <li>Reclutar 10 creadores afiliados con 30% de comisión.</li>
+      <li>Publicar las primeras 15 páginas por ciudad para empezar a acumular tráfico orgánico.</li>
+      <li><strong>Meta:</strong> $1,700 acumulados y el primer usuario que anota gastos 7 días seguidos.</li>
+    </ul>
+  </div></div>
+  <div class="week"><div class="wl">Semana 4<span>$3,000</span></div><div>
+    <h3>Doblar lo que funcionó y cerrar</h3>
+    <ul style="font-size:14.5px">
+      <li>Apagar todo canal bajo el 15% del total. Todo el tiempo al que más trajo.</li>
+      <li>Cierre real de cupos fundador con fecha. Después el precio sube a $99 y se queda ahí.</li>
+      <li>Empujar Plan Aterrizaje a quien calculó pero no compró: resuelve la ansiedad, no solo la duda.</li>
+      <li><strong>Meta:</strong> $3,000+ cobrados, 40 planes activos en el gestor, decisión con datos.</li>
+    </ul>
+  </div></div>
+</section>
+
+<section id="northstar">
+  <span class="snum">07 — MÉTRICA NORTE</span>
+  <h2>Una sola métrica manda.</h2>
+  <div class="callout">
+    <p class="q">Planes activos gestionados: personas que anotaron al menos tres gastos en los últimos siete días.</p>
+    <p>No son visitas, ni búsquedas, ni registros. Con búsqueda ilimitada, el tráfico deja de ser señal de nada: cualquiera puede calcular veinte veces sin valer un dólar. La única métrica que se mueve cuando el producto hace su trabajo es esta. Meta al día 30: <strong>40</strong>.</p>
+  </div>
+  <table>
+    <thead><tr><th>Resultado clave (28 días)</th><th class="n">Meta</th><th>Cómo se mide</th></tr></thead>
+    <tbody>
+      <tr><td>Ingreso cobrado y liquidado</td><td class="n">$3,000</td><td>Panel de la pasarela, no promesas</td></tr>
+      <tr><td>Planes activos gestionados</td><td class="n">40</td><td>Evento de gasto anotado en base de datos</td></tr>
+      <tr><td>Correos en lista</td><td class="n">250</td><td>Confirmados, no importados</td></tr>
+      <tr><td>Entrevistas con compradores</td><td class="n">10</td><td>15 minutos, grabadas</td></tr>
+      <tr><td>Rutas con precio en vivo</td><td class="n">150</td><td>Registro de caché de la función</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="riesgos">
+  <span class="snum">08 — RIESGOS</span>
+  <h2>Lo que puede matar esto, y qué se hace.</h2>
+  <div class="risk">
+    <div class="r1"><div><b>Sin muro, nadie paga</b><br><span style="font-size:13.5px;color:var(--muted)">Probabilidad media · Impacto alto</span></div><div style="font-size:14.5px">Es el riesgo que introduce este cambio y hay que mirarlo de frente. La defensa no es volver a poner el muro: es que el gestor sea obviamente mejor que una hoja de cálculo. Si a la semana 3 hay más de 1,500 cálculos y menos de 15 ventas, el problema es el gestor y ahí se invierte el tiempo, no en cerrar la búsqueda.</div></div>
+    <div class="r1"><div><b>Los precios envejecen y pierdes credibilidad</b><br><span style="font-size:13.5px;color:var(--muted)">Probabilidad alta · Impacto alto</span></div><div style="font-size:14.5px">Mostrar siempre bandas con fecha y etiqueta de origen, nunca precios exactos sin contexto. Convertir la debilidad en foso: cada usuario Pro puede corregir el costo de su ciudad y a los seis meses la base es propia y aportada por gente que vive ahí.</div></div>
+    <div class="r1"><div><b>La cuota de la API se dispara</b><br><span style="font-size:13.5px;color:var(--muted)">Probabilidad media · Impacto bajo</span></div><div style="font-size:14.5px">Caché de 12 horas, llamada solo a los 8 destinos más probables, y degradación silenciosa a la banda local si la cuota se agota. El usuario nunca ve un error: ve una etiqueta distinta. Peor escenario, $25 al mes.</div></div>
+    <div class="r1"><div><b>Cero tracción de video en dos semanas</b><br><span style="font-size:13.5px;color:var(--muted)">Probabilidad media · Impacto alto</span></div><div style="font-size:14.5px">Plan B desde el día uno: venta directa por mensaje en comunidades de trabajo remoto y alianza con 3 creadores medianos a comisión alta. Con 75 ventas de meta, la venta a mano es matemáticamente viable.</div></div>
+    <div class="r1"><div><b>Reclamos por un cálculo que salió mal</b><br><span style="font-size:13.5px;color:var(--muted)">Probabilidad baja · Impacto alto</span></div><div style="font-size:14.5px">Términos claros: estimaciones de planificación, no asesoría financiera ni migratoria. Devolución sin preguntas dentro de 14 días. Un reembolso cuesta $9; una mala reseña cuesta mucho más.</div></div>
+  </div>
+</section>
+
+<section id="roadmap">
+  <span class="snum">09 — DE HTML A APP</span>
+  <h2>El orden de construcción, y por qué es ese.</h2>
+  <p>Ninguna fase se paga con dinero que todavía no entró. Las tiendas cuestan $99 al año en Apple y $25 únicos en Google: eso lo paga la venta número tres, no antes.</p>
+  <table>
+    <thead><tr><th>Fase</th><th>Qué se construye</th><th class="n">Cuándo</th><th class="n">Costo</th></tr></thead>
+    <tbody>
+      <tr><td><b>0 — Hoy</b></td><td>Landing, calculadora con banda de vuelo y gestor con perfil y facturación. Funciones de API listas para desplegar.</td><td class="n">Listo</td><td class="n">$0</td></tr>
+      <tr><td><b>1 — Publicar</b></td><td>GitHub, luego Netlify (o Cloudflare Pages). Configurar las claves como variables de entorno y pegar la URL en el panel de fuentes.</td><td class="n">Día 1</td><td class="n">$11</td></tr>
+      <tr><td><b>2 — Cuentas y cobro</b></td><td>Framework web, base de datos con autenticación, pasarela conectada, gestor guardando de verdad.</td><td class="n">Días 2–10</td><td class="n">$0</td></tr>
+      <tr><td><b>3 — App instalable</b></td><td>Aplicación web progresiva: se instala desde el navegador y anota gastos sin conexión. Cubre el 90% de lo que la gente llama "app".</td><td class="n">Días 11–20</td><td class="n">$0</td></tr>
+      <tr><td><b>4 — Tiendas</b></td><td>Envoltura nativa del mismo código para App Store y Google Play.</td><td class="n">Mes 2</td><td class="n">$124</td></tr>
+      <tr><td><b>5 — Datos propios</b></td><td>Aportes de usuarios, alertas de variación de precio por ruta y por ciudad.</td><td class="n">Mes 3</td><td class="n">$0–25</td></tr>
+    </tbody>
+  </table>
+  <h3 style="margin-top:24px">Instrucción de arranque para Cursor</h3>
+  <p style="font-size:14.5px">Pega esto con <code>index.html</code>, <code>gestor.html</code> y la carpeta <code>netlify/</code> en el contexto. La lógica ya está escrita y probada: no se reescribe, se mueve.</p>
+  <pre><b># Contexto</b>
+Tengo tres HTML funcionando y dos funciones de Netlify:
+- index.html: landing + calculadora. Lógica en JS plano: CITIES, FLY, DOM,
+  flightBand(), flightFor(), maxDays(), costOf().
+- gestor.html: gestor con sobres, subtipos de transporte, perfil, facturación.
+- netlify/functions/flights.js y places.js: proxy de APIs con caché.
+
+<b># Objetivo</b>
+Migrar a Next.js (App Router) + TypeScript + Tailwind conservando
+exactamente el diseño y la lógica. Nada de rediseñar.
+
+<b># Tareas, en orden</b>
+1. Extraer CITIES, FLY, DOM, ORIGENES y las funciones a /lib/tramo.ts con
+   tipos. Tests: flightBand(LIM,LIS,medio/media/rt) debe dar low 950 y
+   high 1349; maxDays debe coincidir con la versión HTML en 5 casos.
+2. Portar la landing a componentes. Conservar los tokens de :root tal cual.
+3. Mover flights.js y places.js a /app/api/*/route.ts. Añadir caché en
+   base de datos además de la caché en memoria: la instancia se recicla.
+4. Supabase: auth por correo mágico. Tablas usuarios, planes, gastos,
+   perfil, con RLS por usuario. El gestor persiste de verdad.
+5. Pasarela con vendedor registrado + webhook que marca al usuario como Pro
+   y escribe en la tabla de pagos que ya existe en la pestaña Facturación.
+6. Generar /ciudad/[slug] para las 46 ciudades desde los mismos datos,
+   renderizado en servidor, con la banda de vuelo desde el origen detectado.
+
+<b># Restricciones</b>
+- Sin librerías de UI. Sin tocar paleta ni tipografías.
+- Las claves solo en variables de entorno del servidor.
+- Un commit por paso, con la app funcionando entre pasos.</pre>
+  <p style="font-size:14.5px;margin-top:14px"><strong>Por qué las páginas por ciudad:</strong> son la única fuente de tráfico gratuito que sigue creciendo cuando dejas de publicar videos. Y ahora que no hay muro, el buscador las indexa completas. Cuarenta y seis páginas generadas desde los mismos datos, respondiendo "cuántos días te alcanzan en X con Y dólares". Trabajo de una tarde, renta durante años.</p>
+</section>
+
+<section id="legal" style="border-bottom:0">
+  <span class="snum">10 — LO MÍNIMO LEGAL Y LA DECISIÓN</span>
+  <h2>Lo justo para cobrar sin problemas.</h2>
+  <div class="grid2">
+    <div class="box"><h3>Antes de la primera venta</h3><ul class="clean" style="font-size:14.5px">
+      <li>Términos de servicio y política de privacidad publicados</li>
+      <li>Aviso visible: estimaciones de planificación, no asesoría financiera ni migratoria</li>
+      <li>Política de devolución de 14 días, escrita y honrada</li>
+      <li>Declaración de enlaces de afiliado donde aparecen</li>
+      <li>Nunca guardar números de tarjeta: solo checkout alojado del proveedor</li>
+    </ul></div>
+    <div class="box"><h3>Cuando pase de $3,000</h3><ul class="clean" style="font-size:14.5px">
+      <li>Formalizar la actividad económica y emitir comprobantes</li>
+      <li>Registrar la marca TRAMO en la clase de software y servicios en línea</li>
+      <li>Contrato simple de afiliados con los creadores</li>
+      <li>Revisar tratamiento de datos si guardas gastos y teléfonos de usuarios</li>
+    </ul></div>
+  </div>
+  <p style="font-size:13.5px;color:var(--muted);margin-top:14px">Checklist operativo, no asesoría legal. Las obligaciones dependen de tu país de residencia fiscal y del país donde se registre la pasarela.</p>
+  <h3 style="margin-top:28px">Qué se hace mañana</h3>
+  <ul class="clean" style="font-size:16px">
+    <li><strong>Hoy:</strong> registrar el dominio y subir estos archivos a Netlify. Menos de una hora.</li>
+    <li><strong>Mañana:</strong> crear la cuenta de la API de vuelos, pegar la clave como variable de entorno y confirmar que la etiqueta del resultado dice "precio en vivo".</li>
+    <li><strong>Día 3:</strong> crear el producto Fundador en la pasarela y hacerte una compra de prueba de $1. Si el dinero no llega a tu cuenta, no hay negocio que planificar.</li>
+    <li><strong>Día 4:</strong> grabar 14 videos de una sentada, con la calculadora en pantalla y un destino distinto cada uno.</li>
+    <li><strong>Día 7:</strong> revisar si hay 3 fundadores vendidos. Si no los hay, el problema es la oferta y se cambia antes de invertir un mes en distribución.</li>
+  </ul>
+  <div class="callout"><p class="q">La meta no es tener razón. Es tener setenta y cinco ventas y saber por qué llegaron.</p></div>
+</section>
+</div>
+
+<footer><div class="wrap">
+TRAMO&lt;&lt;PLAN&lt;DE&lt;NEGOCIO&lt;&lt;V3&lt;&lt;JUL2026&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;<br>
+<a href="index.html">Producto</a> · <a href="gestor.html">Gestor</a> · <a href="punto-equilibrio.html">Punto de equilibrio</a> · Documento interno, no distribuir
+</div></footer>
+
+<script>
+const $=i=>document.getElementById(i);
+const P={q1:79,q2:39,q3:9,q4:49,q5:1};
+function calc(){
+  let t=0;
+  ["q1","q2","q3","q4","q5"].forEach((k,i)=>{
+    const v=(+$(k).value||0)*P[k]; t+=v;
+    $("o"+(i+1)).textContent="$"+v.toLocaleString("es-PE");
+  });
+  const ventas=["q1","q2","q3","q4"].reduce((a,k)=>a+(+$(k).value||0),0);
+  const neto=t-(ventas*0.5+t*0.05);
+  $("bruto").textContent="$"+Math.round(t).toLocaleString("es-PE");
+  $("neto").textContent="$"+Math.round(neto).toLocaleString("es-PE");
+  $("visitas").textContent=Math.round(ventas/0.015).toLocaleString("es-PE");
+  const p=Math.min(100,t/3000*100);
+  $("meter").innerHTML=`<i style="width:${p}%;background:${t>=3000?'#0F6B58':'#CE2B52'}"></i>`;
+  $("pctTxt").textContent=Math.round(p)+"% DE LA META"+(t>=3000?" — CUMPLIDA":"");
+}
+["q1","q2","q3","q4","q5"].forEach(k=>$(k).addEventListener("input",calc));
+calc();
+</script>
+</body>
+</html>

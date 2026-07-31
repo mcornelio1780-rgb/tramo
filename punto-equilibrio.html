@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TRAMO — Punto de equilibrio y sprint de 15 días</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M7 9v22M33 9v22M7 20h8M25 20h8' stroke='%23111C2E' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M20 13l5 7-5 7-5-7z' fill='%23CE2B52'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=Public+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#111C2E;--ink-soft:#33415A;--muted:#6E7A8C;--paper:#E9EAE3;--card:#FBFBF8;--line:#C7CABE;--line-strong:#9AA096;--seal:#CE2B52;--jade:#0F6B58;--mint:#4BD6A8;--ochre:#B08429;
+--display:"Bricolage Grotesque","Arial Black",sans-serif;--body:"Public Sans",system-ui,sans-serif;--mono:"JetBrains Mono",monospace;--r:3px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.55}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+nav{background:var(--ink);color:var(--paper);padding:12px 0;position:sticky;top:0;z-index:20}
+.nav-in{max-width:1080px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--paper);margin-right:auto}
+.brand svg{width:26px;height:26px}.brand b{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:.15em}
+nav a.lnk{color:#8FA39B;text-decoration:none;font-size:13px}nav a.lnk:hover{color:var(--mint)}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(2rem,4.6vw,3rem);letter-spacing:-.035em;line-height:1;margin:36px 0 10px}
+h2{font-family:var(--display);font-weight:800;font-size:clamp(1.4rem,2.8vw,1.9rem);letter-spacing:-.025em;margin:0 0 6px}
+h3{font-family:var(--display);font-weight:700;font-size:17px;margin:0 0 8px}
+.kick{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--seal);font-weight:700}
+.lede{font-size:17px;color:var(--ink-soft);max-width:66ch;margin:0 0 8px}
+section{padding:40px 0;border-bottom:1px solid var(--line)}
+.snum{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--muted);display:block;margin-bottom:8px}
+.card{background:var(--card);border:1.5px solid var(--ink);border-radius:var(--r);padding:18px;margin-bottom:16px}
+.card.dark{background:var(--ink);color:var(--paper)}
+.card h4{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 12px;font-weight:700}
+.card.dark h4{color:var(--mint)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.row{display:grid;grid-template-columns:1fr 96px;gap:12px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line)}
+.row:last-child{border-bottom:0}
+.row .lb{font-size:14px}.row .lb small{display:block;color:var(--muted);font-family:var(--mono);font-size:10.5px;line-height:1.5}
+input{width:100%;font-family:var(--mono);font-size:14px;padding:8px 9px;border:1.5px solid var(--line-strong);background:#fff;border-radius:var(--r);text-align:right}
+input:focus,button:focus-visible{outline:2.5px solid var(--seal);outline-offset:2px}
+.out{font-family:var(--mono);font-size:15px;text-align:right}
+.kpi{border:1.5px solid var(--ink);border-radius:var(--r);padding:16px;background:var(--card)}
+.kpi .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700;display:block;margin-bottom:8px;line-height:1.5}
+.kpi .v{font-family:var(--display);font-weight:800;font-size:33px;letter-spacing:-.035em;line-height:1}
+.kpi .n{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-top:7px;line-height:1.5}
+.kpi.good .v{color:var(--jade)}.kpi.bad .v{color:var(--seal)}.kpi.warn .v{color:var(--ochre)}
+.kpi.hero{background:var(--ink);color:var(--paper)}
+.kpi.hero .k{color:var(--mint)}.kpi.hero .v{color:var(--mint)}.kpi.hero .n{color:#8496A8}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:12px 0}
+th{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 10px 8px 0;border-bottom:1.5px solid var(--ink)}
+td{padding:8px 10px 8px 0;border-bottom:1px dashed var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:var(--mono);white-space:nowrap;padding-right:0}
+tr.tot td{border-bottom:0;border-top:1.5px solid var(--ink);font-weight:700;font-family:var(--mono)}
+.meter{height:26px;background:#DEDFD6;border-radius:var(--r);overflow:hidden;display:flex;margin:14px 0 6px}
+.meter i{display:block;height:100%;transition:width .3s}
+.mlab{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.presets button{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;padding:8px 14px;border:1.5px solid var(--ink);background:transparent;border-radius:100px;cursor:pointer}
+.presets button:hover,.presets button.on{background:var(--ink);color:var(--paper)}
+.days15{display:grid;grid-template-columns:repeat(15,1fr);gap:3px;margin:14px 0 6px;height:90px;align-items:flex-end}
+.days15 i{background:var(--jade);border-radius:1px 1px 0 0;min-height:3px;position:relative}
+.days15 i.w{background:var(--ochre)}
+.days15 i.s{background:var(--seal)}
+.dlabs{display:grid;grid-template-columns:repeat(15,1fr);gap:3px;font-family:var(--mono);font-size:8.5px;color:var(--muted);text-align:center}
+.note{border-left:3px solid var(--ochre);background:rgba(176,132,41,.08);padding:13px 15px;font-size:14px;margin-top:14px}
+.note b{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ochre);display:block;margin-bottom:4px}
+.note.g{border-color:var(--jade);background:rgba(15,107,88,.08)}.note.g b{color:var(--jade)}
+.note.r{border-color:var(--seal);background:rgba(206,43,82,.07)}.note.r b{color:var(--seal)}
+.free{font-family:var(--mono);font-size:10px;letter-spacing:.1em;padding:2px 7px;border-radius:100px;border:1px solid var(--jade);color:var(--jade)}
+.paid{font-family:var(--mono);font-size:10px;letter-spacing:.1em;padding:2px 7px;border-radius:100px;border:1px solid var(--seal);color:var(--seal)}
+footer{background:var(--ink);color:#8496A8;padding:32px 0;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;line-height:1.9}
+footer a{color:var(--paper)}
+@media(max-width:860px){.g2,.g3,.g4{grid-template-columns:1fr}.days15,.dlabs{grid-template-columns:repeat(5,1fr)}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<nav><div class="nav-in">
+  <a class="brand" href="index.html"><svg viewBox="0 0 40 40"><path d="M7 9v22M33 9v22M7 20h8M25 20h8" stroke="#E9EAE3" stroke-width="3" stroke-linecap="round"/><path d="M20 13l5 7-5 7-5-7z" fill="#CE2B52"/></svg><b>TRAMO</b></a>
+  <a class="lnk" href="#costos">Costos</a><a class="lnk" href="#equilibrio">Equilibrio</a>
+  <a class="lnk" href="#sprint">Sprint 15 días</a><a class="lnk" href="#cac">CAC</a>
+  <a class="lnk" href="plan-negocio.html">Plan de negocio</a><a class="lnk" href="index.html">← Producto</a>
+</div></nav>
+
+<div class="wrap">
+  <span class="kick" style="display:block;margin-top:36px">Documento interno · Modelo financiero</span>
+  <h1>Cuántos usuarios necesito, cuánto me cuesta cada uno, y en qué día dejo de perder dinero.</h1>
+  <p class="lede">Todo lo de abajo es editable. Los valores que vienen cargados son el escenario base con las tarifas reales de julio de 2026. Cambia lo que quieras y los resultados se recalculan solos.</p>
+
+  <div class="presets" id="presets">
+    <button data-p="cons">Conservador</button>
+    <button data-p="base" class="on">Base</button>
+    <button data-p="agr">Agresivo</button>
+  </div>
+</div>
+
+<div class="wrap">
+<section id="costos">
+  <span class="snum">01 — QUÉ CUESTA MANTENER ESTO PRENDIDO</span>
+  <h2>La tecnología es casi gratis hasta que tienes tracción.</h2>
+  <p style="color:var(--ink-soft);max-width:70ch">Esa es la ventaja real de este negocio: puedes cobrar antes de gastar. Lo único que se paga desde el día uno es el dominio. Todo lo demás tiene capa gratuita suficiente para las primeras mil personas.</p>
+  <div class="g2">
+    <div class="card">
+      <h4>Costos fijos mensuales (USD)</h4>
+      <div class="row"><div class="lb">Dominio<small>~$11 AL AÑO, PRORRATEADO</small></div><input type="number" id="c_dom" value="1" step="0.5"></div>
+      <div class="row"><div class="lb">Hosting y funciones<small>NETLIFY GRATIS PERMITE COBRAR · VERCEL HOBBY NO</small></div><input type="number" id="c_host" value="0" step="1"></div>
+      <div class="row"><div class="lb">Base de datos y autenticación<small>SUPABASE CAPA GRATUITA</small></div><input type="number" id="c_db" value="0" step="1"></div>
+      <div class="row"><div class="lb">API de vuelos<small>250 CONSULTAS GRATIS/MES · LUEGO $25</small></div><input type="number" id="c_api" value="0" step="1"></div>
+      <div class="row"><div class="lb">Correo transaccional<small>CAPA GRATUITA HASTA ~3,000 CORREOS</small></div><input type="number" id="c_mail" value="0" step="1"></div>
+      <div class="row"><div class="lb">Herramientas de desarrollo<small>EDITOR CON IA, OPCIONAL</small></div><input type="number" id="c_tools" value="20" step="5"></div>
+      <div class="row"><div class="lb">Otros<small>ANALÍTICA, DISEÑO, IMPREVISTOS</small></div><input type="number" id="c_otros" value="0" step="5"></div>
+      <div class="row" style="border-top:1.5px solid var(--ink);padding-top:12px"><div class="lb"><strong>Total fijo mensual</strong></div><div class="out" id="o_fijo"></div></div>
+    </div>
+    <div>
+      <div class="card">
+        <h4>Costo variable por venta</h4>
+        <div class="row"><div class="lb">Comisión de pasarela (%)<small>VENDEDOR REGISTRADO, TÍPICO 5%</small></div><input type="number" id="c_pct" value="5" step="0.5"></div>
+        <div class="row"><div class="lb">Fijo por transacción (USD)</div><input type="number" id="c_fix" value="0.5" step="0.1"></div>
+        <div class="row"><div class="lb">Infraestructura por usuario/mes<small>CÓMPUTO Y ALMACENAMIENTO</small></div><input type="number" id="c_inf" value="0.04" step="0.01"></div>
+      </div>
+      <div class="card">
+        <h4>Precios</h4>
+        <div class="row"><div class="lb">Pro mensual</div><input type="number" id="p_pro" value="9" step="1"></div>
+        <div class="row"><div class="lb">Pro anual</div><input type="number" id="p_anual" value="49" step="1"></div>
+        <div class="row"><div class="lb">Fundador (vitalicio)</div><input type="number" id="p_fund" value="79" step="1"></div>
+        <div class="row"><div class="lb">Plan Aterrizaje (único)</div><input type="number" id="p_ater" value="39" step="1"></div>
+      </div>
+    </div>
+  </div>
+  <h3 style="margin-top:22px">Dónde están los escalones reales</h3>
+  <table>
+    <thead><tr><th>Servicio</th><th>Capa gratuita</th><th class="n">Primer escalón</th><th>Cuándo lo pisas</th></tr></thead>
+    <tbody>
+      <tr><td>Hosting y funciones</td><td><span class="free">GRATIS</span> con uso comercial permitido en Netlify</td><td class="n">$19/mes</td><td>Muy lejos: el sitio es estático y liviano</td></tr>
+      <tr><td>Hosting alternativo</td><td><span class="paid">OJO</span> el plan gratuito de Vercel prohíbe cobrar</td><td class="n">$20/mes</td><td>El día que enciendes el pago</td></tr>
+      <tr><td>Base de datos y auth</td><td><span class="free">GRATIS</span> hasta ~50,000 usuarios activos</td><td class="n">$25/mes</td><td>Muy lejos para este volumen</td></tr>
+      <tr><td>API de vuelos</td><td><span class="free">250/mes</span> con caché de 12 h</td><td class="n">$25/mes</td><td>Alrededor de 3,000 cálculos mensuales</td></tr>
+      <tr><td>Correo transaccional</td><td><span class="free">~3,000/mes</span></td><td class="n">$20/mes</td><td>Cuando pases de 400 usuarios activos</td></tr>
+      <tr><td>Avisos por WhatsApp</td><td><span class="paid">DESDE $0</span> pero se cobra por conversación</td><td class="n">~$0.03–0.08 c/u</td><td>Desde el primer mensaje: actívalo solo en el plan anual</td></tr>
+      <tr><td>Tiendas de apps</td><td><span class="paid">NO HAY</span></td><td class="n">$99/año + $25</td><td>Solo cuando la web instalable ya no alcance</td></tr>
+    </tbody>
+  </table>
+  <div class="note"><b>La decisión de hosting</b>El plan gratuito de Vercel restringe el uso a proyectos personales sin fin de lucro, y define uso comercial como cualquier despliegue que procese pagos de visitantes. Con TRAMO cobrando, ese plan queda descartado desde el día uno y tocaría el de $20 al mes. Netlify permite cobrar en su capa gratuita. Por eso el proyecto viene con configuración para los dos, pero el despliegue recomendado es Netlify hasta que el ingreso justifique cambiar.</div>
+</section>
+
+<section id="equilibrio">
+  <span class="snum">02 — PUNTO DE EQUILIBRIO</span>
+  <h2>Cuántos clientes hacen falta para no perder dinero.</h2>
+  <div class="card">
+    <h4>Mezcla de ventas: de cada 100 clientes, cuántos compran qué</h4>
+    <div class="g4">
+      <div class="row" style="grid-template-columns:1fr 70px"><div class="lb">Pro mensual</div><input type="number" id="m_pro" value="40"></div>
+      <div class="row" style="grid-template-columns:1fr 70px"><div class="lb">Pro anual</div><input type="number" id="m_anual" value="10"></div>
+      <div class="row" style="grid-template-columns:1fr 70px"><div class="lb">Fundador</div><input type="number" id="m_fund" value="30"></div>
+      <div class="row" style="grid-template-columns:1fr 70px"><div class="lb">Aterrizaje</div><input type="number" id="m_ater" value="20"></div>
+    </div>
+    <p class="out" style="text-align:left;font-size:12px;color:var(--muted);margin:8px 0 0" id="o_mixWarn"></p>
+  </div>
+  <div class="g4">
+    <div class="kpi hero"><span class="k">Punto de equilibrio</span><div class="v" id="o_be"></div><div class="n" id="o_beN"></div></div>
+    <div class="kpi"><span class="k">Ticket promedio</span><div class="v" id="o_ticket"></div><div class="n">Primer pago de un cliente típico</div></div>
+    <div class="kpi"><span class="k">Margen de contribución</span><div class="v" id="o_margen"></div><div class="n" id="o_margenN"></div></div>
+    <div class="kpi"><span class="k">Ingreso recurrente por 100 clientes</span><div class="v" id="o_mrr"></div><div class="n">Lo que sigue entrando cada mes</div></div>
+  </div>
+  <div class="note g" id="beNote"></div>
+</section>
+
+<section id="cac">
+  <span class="snum">03 — CUÁNTO CUESTA CONSEGUIR UN CLIENTE</span>
+  <h2>Sin dinero, el CAC se paga con horas.</h2>
+  <p style="color:var(--ink-soft);max-width:70ch">No gastas en publicidad, pero tu tiempo tiene precio. Si no lo cuentas, el modelo miente: te vas a creer que el CAC es cero mientras trabajas ochenta horas gratis. Pon aquí lo que vale tu hora y cuántas dedicas por semana.</p>
+  <div class="g2">
+    <div class="card">
+      <h4>Tu tiempo</h4>
+      <div class="row"><div class="lb">Valor de tu hora (USD)<small>LO QUE COBRARÍAS POR ESE TIEMPO</small></div><input type="number" id="h_val" value="12" step="1"></div>
+      <div class="row"><div class="lb">Horas por semana en el proyecto</div><input type="number" id="h_sem" value="35" step="1"></div>
+      <div class="row"><div class="lb">Gasto en publicidad al mes (USD)</div><input type="number" id="h_ads" value="0" step="10"></div>
+      <div class="row"><div class="lb">Clientes nuevos al mes</div><input type="number" id="h_cli" value="75" step="5"></div>
+    </div>
+    <div class="card">
+      <h4>Retención</h4>
+      <div class="row"><div class="lb">Meses que dura un cliente mensual<small>VIAJE PROMEDIO DE UN NÓMADA</small></div><input type="number" id="r_meses" value="5" step="1"></div>
+      <div class="row"><div class="lb">Renovación del plan anual (%)</div><input type="number" id="r_anual" value="45" step="5"></div>
+      <div class="row"><div class="lb">Compradores de Aterrizaje que pasan a Pro (%)</div><input type="number" id="r_ater" value="22" step="1"></div>
+    </div>
+  </div>
+  <div class="g4" style="margin-top:16px">
+    <div class="kpi"><span class="k">CAC real</span><div class="v" id="o_cac"></div><div class="n" id="o_cacN"></div></div>
+    <div class="kpi"><span class="k">LTV con margen</span><div class="v" id="o_ltv"></div><div class="n">Valor total de un cliente promedio</div></div>
+    <div class="kpi" id="k_ratio"><span class="k">LTV / CAC</span><div class="v" id="o_ratio"></div><div class="n" id="o_ratioN"></div></div>
+    <div class="kpi"><span class="k">Recuperas el CAC en</span><div class="v" id="o_payback"></div><div class="n">Desde el primer pago del cliente</div></div>
+  </div>
+  <div class="note" id="cacNote"></div>
+</section>
+
+<section id="sprint">
+  <span class="snum">04 — EL SPRINT DE 15 DÍAS</span>
+  <h2>De $3,000 a $5,000 en quince días.</h2>
+  <p style="color:var(--ink-soft);max-width:70ch">Quince días es la mitad del plazo del plan de negocio, así que el mix cambia: no hay tiempo de construir recurrencia. Casi todo el ingreso tiene que venir de pagos únicos, y eso significa Fundador y Aterrizaje empujados con urgencia real.</p>
+  <div class="g2">
+    <div class="card">
+      <h4>Tu meta</h4>
+      <div class="row"><div class="lb">Meta de ingreso (USD)</div><input type="number" id="s_meta" value="4000" step="250"></div>
+      <div class="row"><div class="lb">Días de venta<small>LOS PRIMEROS 2 SON DE MONTAJE</small></div><input type="number" id="s_dias" value="13" step="1"></div>
+      <div class="row"><div class="lb">Visitas que puedes traer por día</div><input type="number" id="s_vis" value="260" step="20"></div>
+      <div class="row"><div class="lb">Conversión visita → pago (%)</div><input type="number" id="s_conv" value="1.5" step="0.1"></div>
+      <div class="row"><div class="lb">Ventas a mano por día<small>MENSAJES DIRECTOS, TU RED, COMUNIDADES</small></div><input type="number" id="s_mano" value="1.5" step="0.5"></div>
+    </div>
+    <div>
+      <div class="g2">
+        <div class="kpi hero"><span class="k">Ventas totales necesarias</span><div class="v" id="o_sVentas"></div><div class="n" id="o_sVentasN"></div></div>
+        <div class="kpi"><span class="k">Ventas por día</span><div class="v" id="o_sDia"></div><div class="n">Ritmo constante requerido</div></div>
+      </div>
+      <div class="g2" style="margin-top:14px">
+        <div class="kpi"><span class="k">Lo que puedes generar</span><div class="v" id="o_sCap"></div><div class="n" id="o_sCapN"></div></div>
+        <div class="kpi" id="k_sGap"><span class="k">Brecha</span><div class="v" id="o_sGap"></div><div class="n" id="o_sGapN"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h4>Ingreso acumulado día a día</h4>
+    <div class="days15" id="s_bars"></div>
+    <div class="dlabs" id="s_labs"></div>
+    <div class="meter" id="s_meter"></div>
+    <div class="mlab"><span id="s_pct"></span><span id="s_metaLb"></span></div>
+  </div>
+  <div class="note r" id="sprintNote"></div>
+  <h3 style="margin-top:26px">El mix que hace posible los 15 días</h3>
+  <table>
+    <thead><tr><th>Palanca</th><th>Por qué funciona en 15 días</th><th class="n">Aporte esperado</th></tr></thead>
+    <tbody id="mixTable"></tbody>
+  </table>
+  <div class="note"><b>La regla del día 7</b>Si al séptimo día no llevas al menos el 25% de la meta, el problema no es el volumen: es la oferta o el precio. Parar y cambiar la oferta cuesta un día; seguir empujando una oferta que no convierte cuesta los ocho días que quedan.</div>
+</section>
+
+<section id="conclu" style="border-bottom:0">
+  <span class="snum">05 — LO QUE DICE EL MODELO</span>
+  <h2 id="veredictoH"></h2>
+  <p class="lede" id="veredictoP"></p>
+  <div class="g3" style="margin-top:20px">
+    <div class="card dark"><h4>Si todo sale mal</h4><p style="font-size:14px;margin:0;color:#A9B6C4" id="esc1"></p></div>
+    <div class="card"><h4>Escenario cargado</h4><p style="font-size:14px;margin:0;color:var(--ink-soft)" id="esc2"></p></div>
+    <div class="card"><h4>Si el video pega</h4><p style="font-size:14px;margin:0;color:var(--ink-soft)" id="esc3"></p></div>
+  </div>
+</section>
+</div>
+
+<footer><div class="wrap">TRAMO&lt;&lt;MODELO&lt;FINANCIERO&lt;&lt;V1&lt;&lt;<br>
+<a href="index.html">Producto</a> · <a href="gestor.html">Gestor</a> · <a href="plan-negocio.html">Plan de negocio</a> · Documento interno</div></footer>
+
+<script>
+const $=i=>document.getElementById(i);
+const n=i=>+$(i).value||0;
+const m$=v=>"$"+Math.round(v).toLocaleString("es-PE");
+const m2=v=>"$"+(Math.round(v*100)/100).toLocaleString("es-PE",{minimumFractionDigits:2,maximumFractionDigits:2});
+
+const PRESETS={
+ cons:{s_vis:120,s_conv:1.0,s_mano:1,h_cli:40,r_meses:3,m_pro:45,m_anual:5,m_fund:20,m_ater:30,s_meta:3000},
+ base:{s_vis:260,s_conv:1.5,s_mano:1.5,h_cli:75,r_meses:5,m_pro:40,m_anual:10,m_fund:30,m_ater:20,s_meta:4000},
+ agr:{s_vis:600,s_conv:2.2,s_mano:2.5,h_cli:140,r_meses:7,m_pro:35,m_anual:15,m_fund:35,m_ater:15,s_meta:5000}
+};
+document.querySelectorAll("#presets button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll("#presets button").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on");
+  const p=PRESETS[b.dataset.p];for(const k in p)$(k).value=p[k];
+  calc();
+}));
+
+function calc(){
+  /* ---------- costos ---------- */
+  const fijo=n("c_dom")+n("c_host")+n("c_db")+n("c_api")+n("c_mail")+n("c_tools")+n("c_otros");
+  $("o_fijo").textContent=m$(fijo);
+  const pct=n("c_pct")/100,fix=n("c_fix"),inf=n("c_inf");
+
+  /* ---------- mezcla ---------- */
+  const mix={pro:n("m_pro"),anual:n("m_anual"),fund:n("m_fund"),ater:n("m_ater")};
+  const sum=mix.pro+mix.anual+mix.fund+mix.ater;
+  $("o_mixWarn").textContent=sum===100?"Suma 100%. Correcto.":`Suma ${sum}%. Ajusta para que dé 100.`;
+  $("o_mixWarn").style.color=sum===100?"var(--jade)":"var(--seal)";
+  const k=sum||100;
+  const pr={pro:n("p_pro"),anual:n("p_anual"),fund:n("p_fund"),ater:n("p_ater")};
+
+  /* ticket promedio del primer pago */
+  const ticket=(mix.pro*pr.pro+mix.anual*pr.anual+mix.fund*pr.fund+mix.ater*pr.ater)/k;
+  const varUnit=ticket*pct+fix+inf;
+  const contrib=ticket-varUnit;
+  $("o_ticket").textContent=m2(ticket);
+  $("o_margen").textContent=Math.round(contrib/ticket*100)+"%";
+  $("o_margenN").textContent=`Quedan ${m2(contrib)} limpios de cada venta`;
+
+  /* recurrente: solo los planes que se repiten */
+  const mrr100=(mix.pro/k*100*pr.pro)+(mix.anual/k*100*pr.anual/12);
+  $("o_mrr").textContent=m$(mrr100);
+
+  /* punto de equilibrio */
+  const be=contrib>0?Math.ceil(fijo/contrib):Infinity;
+  $("o_be").textContent=isFinite(be)?be:"—";
+  $("o_beN").textContent=isFinite(be)?`clientes al mes para cubrir ${m$(fijo)} de costos fijos`:"El margen es negativo: revisa precios";
+  const beMes=contrib>0?Math.ceil(fijo/(mrr100/100*(1-pct)||contrib)):Infinity;
+  $("beNote").innerHTML=`<b>Lo que esto significa</b>Con ${m$(fijo)} de costo fijo al mes y ${m2(contrib)} de contribución por cliente, necesitas <strong>${isFinite(be)?be:"—"} clientes nuevos al mes</strong> para no perder dinero. Si solo contaras el ingreso recurrente, harían falta cerca de ${isFinite(beMes)?beMes:"—"} suscriptores activos sostenidos. La diferencia entre esos dos números es exactamente la razón por la que el plan Fundador existe: convierte meses de espera en caja de hoy.`;
+
+  /* ---------- CAC ---------- */
+  const horasMes=n("h_sem")*4.33;
+  const costoTiempo=horasMes*n("h_val");
+  const cliMes=Math.max(1,n("h_cli"));
+  const cac=(costoTiempo+n("h_ads"))/cliMes;
+  $("o_cac").textContent=m2(cac);
+  $("o_cacN").textContent=`${Math.round(horasMes)} h/mes valuadas en ${m$(costoTiempo)} entre ${cliMes} clientes`;
+
+  /* LTV por tipo, ponderado */
+  const ltvPro=pr.pro*n("r_meses");
+  const ltvAnual=pr.anual*(1+n("r_anual")/100);
+  const ltvFund=pr.fund;
+  const ltvAter=pr.ater+(n("r_ater")/100)*pr.pro*n("r_meses");
+  const ltv=((mix.pro*ltvPro+mix.anual*ltvAnual+mix.fund*ltvFund+mix.ater*ltvAter)/k)*(1-pct);
+  $("o_ltv").textContent=m2(ltv);
+  const ratio=cac>0?ltv/cac:99;
+  $("o_ratio").textContent=ratio.toFixed(1)+"x";
+  const kr=$("k_ratio");kr.className="kpi "+(ratio>=3?"good":ratio>=1.5?"warn":"bad");
+  $("o_ratioN").textContent=ratio>=3?"Saludable: puedes escalar":ratio>=1.5?"Ajustado: sube precio o baja horas":"No viable: cada cliente destruye valor";
+  const payback=ticket>0?cac/contrib:0;
+  $("o_payback").textContent=payback<=1?"1er pago":payback.toFixed(1)+" pagos";
+  $("cacNote").innerHTML=`<b>Cómo leer esto</b>Un CAC de ${m2(cac)} no sale de tu bolsillo, sale de tu calendario. La pregunta útil no es si puedes pagarlo, es si ${Math.round(horasMes)} horas al mes produciendo ${cliMes} clientes es el mejor uso de tu tiempo. Si el ratio baja de 3x, tienes dos palancas y solo dos: subir el precio o conseguir más clientes con las mismas horas. Bajar el precio para vender más casi siempre empeora este número.`;
+
+  /* ---------- sprint 15 días ---------- */
+  const meta=n("s_meta"),dias=Math.max(1,n("s_dias"));
+  const ventas=Math.ceil(meta/ticket);
+  $("o_sVentas").textContent=ventas;
+  $("o_sVentasN").textContent=`a ${m2(ticket)} de ticket promedio`;
+  const vDia=ventas/dias;
+  $("o_sDia").textContent=vDia.toFixed(1);
+  const capOrg=n("s_vis")*n("s_conv")/100;
+  const capTot=(capOrg+n("s_mano"))*dias;
+  const ingCap=capTot*ticket;
+  $("o_sCap").textContent=m$(ingCap);
+  $("o_sCapN").textContent=`${capTot.toFixed(0)} ventas: ${(capOrg*dias).toFixed(0)} orgánicas + ${(n("s_mano")*dias).toFixed(0)} a mano`;
+  const gap=meta-ingCap;
+  $("o_sGap").textContent=gap<=0?"Cubierta":m$(gap);
+  $("k_sGap").className="kpi "+(gap<=0?"good":gap<meta*0.3?"warn":"bad");
+  $("o_sGapN").textContent=gap<=0?`Te sobran ${m$(-gap)} sobre la meta`:`Faltan ${Math.ceil(gap/ticket)} ventas más`;
+
+  /* curva día a día: el orgánico crece, la venta a mano es constante */
+  let acum=0;const serie=[];
+  for(let d=1;d<=15;d++){
+    if(d<=15-dias){serie.push(0);continue;}
+    const i=d-(15-dias);
+    const rampa=Math.min(1,0.35+0.65*(i/dias)*1.6);
+    acum+=(capOrg*rampa+n("s_mano"))*ticket;
+    serie.push(acum);
+  }
+  const maxV=Math.max(meta,acum,1);
+  $("s_bars").innerHTML=serie.map((v,i)=>{
+    const cls=v>=meta?"":v>=meta*0.6?"w":"s";
+    return `<i class="${cls}" style="height:${Math.max(3,v/maxV*100)}%" title="Día ${i+1}: ${m$(v)}"></i>`;}).join("");
+  $("s_labs").innerHTML=serie.map((v,i)=>`<span>${i+1}</span>`).join("");
+  const pctMeta=Math.min(100,acum/meta*100);
+  $("s_meter").innerHTML=`<i style="width:${pctMeta}%;background:${acum>=meta?"var(--jade)":"var(--seal)"}"></i>`;
+  $("s_pct").textContent=Math.round(pctMeta)+"% DE LA META AL DÍA 15 — "+m$(acum);
+  $("s_metaLb").textContent="META "+m$(meta);
+  $("sprintNote").className="note "+(acum>=meta?"g":"r");
+  $("sprintNote").innerHTML=acum>=meta
+    ?`<b>El sprint cierra</b>Con ${n("s_vis")} visitas diarias, ${n("s_conv")}% de conversión y ${n("s_mano")} ventas a mano por día, llegas a ${m$(acum)} en 15 días. El día que cruzas la meta es alrededor del ${serie.findIndex(v=>v>=meta)+1}. Ojo con una cosa: esto asume que el producto ya cobra desde el día 3. Si la pasarela no está lista, todos estos números se corren.`
+    :`<b>Con estos números no llega</b>Terminas en ${m$(acum)} de ${m$(meta)}. Tienes tres palancas: subir las visitas diarias de ${n("s_vis")} a ${Math.ceil(n("s_vis")*meta/Math.max(acum,1))}, subir el ticket promedio empujando Fundador en lugar de Pro mensual, o sumar ${Math.ceil((meta-acum)/ticket/dias)} ventas a mano más por día. La tercera es la única que controlas al 100%.`;
+
+  /* mix del sprint */
+  const aporte={
+    fund:mix.fund/k*ventas*pr.fund,
+    ater:mix.ater/k*ventas*pr.ater,
+    pro:mix.pro/k*ventas*pr.pro,
+    anual:mix.anual/k*ventas*pr.anual
+  };
+  $("mixTable").innerHTML=`
+    <tr><td><b>Fundador ${m$(pr.fund)}</b></td><td>Pago único con escasez real. Es el único producto que entrega en 15 días el valor de una anualidad completa.</td><td class="n">${m$(aporte.fund)}</td></tr>
+    <tr><td><b>Plan Aterrizaje ${m$(pr.ater)}</b></td><td>Resuelve ansiedad, no curiosidad. Se le vende a quien ya calculó y sigue dudando: es el momento de máxima intención.</td><td class="n">${m$(aporte.ater)}</td></tr>
+    <tr><td><b>Pro mensual ${m$(pr.pro)}</b></td><td>Aporta poco en 15 días pero construye el recurrente que sostiene el mes 2. No lo empujes a costa del Fundador.</td><td class="n">${m$(aporte.pro)}</td></tr>
+    <tr><td><b>Pro anual ${m$(pr.anual)}</b></td><td>El puente entre los dos: caja hoy y retención después. Ofrécelo a quien dude del vitalicio.</td><td class="n">${m$(aporte.anual)}</td></tr>
+    <tr class="tot"><td>Total</td><td></td><td class="n">${m$(aporte.fund+aporte.ater+aporte.pro+aporte.anual)}</td></tr>`;
+
+  /* ---------- veredicto ---------- */
+  const meses=contrib>0?(fijo/contrib)/Math.max(cliMes,1):99;
+  $("veredictoH").textContent=ratio>=3&&acum>=meta
+    ?"El modelo aguanta y el sprint cierra."
+    :ratio>=3?"El modelo aguanta, pero el sprint se queda corto."
+    :"El modelo necesita un ajuste antes de acelerar.";
+  $("veredictoP").innerHTML=`Costo fijo de <strong>${m$(fijo)}</strong> al mes, punto de equilibrio en <strong>${isFinite(be)?be:"—"} clientes</strong>, CAC de <strong>${m2(cac)}</strong> pagado en horas y un ratio de <strong>${ratio.toFixed(1)}x</strong>. ${acum>=meta?`El sprint de 15 días llega a ${m$(acum)}.`:`El sprint de 15 días se queda en ${m$(acum)} y necesita ${Math.ceil((meta-acum)/ticket)} ventas más.`} El riesgo de este negocio nunca fue el costo: es conseguir atención.`;
+  $("esc1").textContent=`Nadie compra en 15 días. Pierdes ${m$(fijo/2)} y dos semanas de tu tiempo. Sigues con el dominio, el código y una lista de correos. El costo de equivocarse es tan bajo que no intentarlo es la decisión cara.`;
+  $("esc2").textContent=`Llegas a ${m$(acum)} con ${capTot.toFixed(0)} ventas. Cubres el año de costos fijos en la primera semana y el resto es margen para pagar la API de vuelos y las tiendas de apps cuando hagan falta.`;
+  $("esc3").textContent=`Un video con alcance alto multiplica las visitas por cinco durante tres días. Con la conversión actual eso son ${Math.round(n("s_vis")*5*3*n("s_conv")/100)} ventas extra, alrededor de ${m$(Math.round(n("s_vis")*5*3*n("s_conv")/100)*ticket)}. Por eso el canal principal es video y no publicidad pagada.`;
+}
+document.querySelectorAll("input").forEach(i=>i.addEventListener("input",calc));
+calc();
+</script>
+</body>
+</html>

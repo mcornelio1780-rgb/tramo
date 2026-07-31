@@ -1,0 +1,25 @@
+# Nunca subir claves
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Dependencias y builds
+node_modules/
+.netlify/
+.vercel/
+dist/
+build/
+.cache/
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+
+# Editores
+.vscode/
+.idea/
+*.swp
