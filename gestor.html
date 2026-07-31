@@ -481,10 +481,12 @@ function pintaEquiv(){$("gusd").value="$"+((+$("gmon").value||0)/(RATES[$("gcur"
 function addGasto(){
   const m=+$("gmon").value;if(!m){toast(t("add.needAmount"));return;}
   const c=CATS.find(x=>x.k===$("gcat").value);
-  gastos.push({d:+$("gdia").value,k:c.k,s:c.sub?$("gsub").value:undefined,m,cur:$("gcur").value,n:$("gnot").value.trim()});
+  const g={d:+$("gdia").value,k:c.k,s:c.sub?$("gsub").value:undefined,m,cur:$("gcur").value,n:$("gnot").value.trim()};
+  gastos.push(g);
   $("gnot").value="";recalc();toast(t("add.saved"));
+  dbInsertGasto(g);
 }
-function delGasto(i){gastos.splice(i,1);recalc();}
+function delGasto(i){const g=gastos[i];gastos.splice(i,1);recalc();dbDeleteGasto(g);}
 
 function recalc(){
   const total=+$("total").value,dtot=+$("dtot").value,dhoy=Math.min(+$("dhoy").value,dtot),col=+$("colchon").value/100;
@@ -546,6 +548,7 @@ function guardarPerfil(){
   const d={};PF.forEach(k=>d[k]=$(k).value);PFC.forEach(k=>d[k]=$(k).checked);
   if(d.pf_nwa&&!d.pf_tel){toast(t("pf.needTel"));return;}
   store.set("tramo_perfil",JSON.stringify(d));recalc();toast(t("pf.saved"));
+  dbSaveProfile();
 }
 function exportar(){
   const f=[["day","category","subtype","amount","currency","usd","note"]]
@@ -556,7 +559,7 @@ function exportar(){
 }
 function borrarTodo(){
   if(!confirm(t("dp.confirm")))return;
-  gastos=[];store.set("tramo_perfil","{}");PF.forEach(k=>{if($(k).type!=="number")$(k).value="";});recalc();toast(t("dp.done"));
+  gastos=[];store.set("tramo_perfil","{}");PF.forEach(k=>{if($(k).type!=="number")$(k).value="";});recalc();toast(t("dp.done"));dbClearGastos();
 }
 
 const PLANES=[{k:"pro",pr:"$9",per:"per.mo",ciclo:"m"},{k:"anual",pr:"$49",per:"per.yr",ciclo:"a"},{k:"fundador",pr:"$79",per:"per.once",ciclo:"u"}];
@@ -593,6 +596,67 @@ function checkout(q){
   store.set("tramo_pagos",JSON.stringify(pg));
   pintaPago();toast(q==="metodo"?t("bl.methodOk"):t("bl.planOk"));
 }
+
+/* ===================== Sincronización con Supabase =====================
+   Con sesión (TRAMO.sb + uid) el gestor lee/escribe en las tablas del esquema
+   (perfiles, planes, gastos). En modo local todo esto es no-op y el gestor
+   funciona igual que antes, contra localStorage/memoria. */
+const TRAMO={sb:null,uid:null,planId:null};
+window.TRAMO=TRAMO;
+function perfilToUI(p){
+  const m={pf_nombre:p.nombre,pf_tel:p.telefono,pf_pais:p.pais,pf_moneda:p.moneda_base,pf_pass:p.pasaporte,pf_umbral:p.umbral_sobre,pf_desvio:p.umbral_desvio};
+  for(const k in m){if(m[k]!=null&&$(k))$(k).value=m[k];}
+  if($("pf_nmail"))$("pf_nmail").checked=p.avisos_mail!==false;
+  if($("pf_nwa"))$("pf_nwa").checked=!!p.avisos_whatsapp;
+  if($("pf_nrec"))$("pf_nrec").checked=p.avisos_diario!==false;
+}
+async function dbLoad(){
+  if(!TRAMO.sb||!TRAMO.uid)return;
+  const {data:perf}=await TRAMO.sb.from("perfiles").select("*").eq("id",TRAMO.uid).maybeSingle();
+  if(perf)perfilToUI(perf);
+  let {data:planes}=await TRAMO.sb.from("planes").select("*").eq("usuario_id",TRAMO.uid).eq("activo",true).order("creado_en",{ascending:false}).limit(1);
+  let plan=planes&&planes[0];
+  if(!plan){
+    const {data}=await TRAMO.sb.from("planes").insert({usuario_id:TRAMO.uid,destino_texto:$("ciudad").value,presupuesto:Math.max(1,+$("total").value||1),dias_total:Math.max(1,+$("dtot").value||1),colchon_pct:+$("colchon").value||10,activo:true}).select().single();
+    plan=data;
+  }
+  if(plan){
+    TRAMO.planId=plan.id;
+    if(plan.destino_texto)$("ciudad").value=plan.destino_texto;
+    if(plan.presupuesto!=null)$("total").value=plan.presupuesto;
+    if(plan.dias_total!=null)$("dtot").value=plan.dias_total;
+    if(plan.colchon_pct!=null)$("colchon").value=plan.colchon_pct;
+    const {data:gs}=await TRAMO.sb.from("gastos").select("*").eq("plan_id",plan.id).order("dia",{ascending:true}).order("id",{ascending:true});
+    gastos=(gs||[]).map(r=>({id:r.id,d:r.dia,k:r.categoria,s:r.subtipo||undefined,m:Number(r.monto),cur:r.moneda,n:r.nota||""}));
+  }
+  recalc();
+}
+let _planTimer=null;
+function dbSavePlanSoon(){if(!TRAMO.sb||!TRAMO.planId)return;clearTimeout(_planTimer);_planTimer=setTimeout(dbSavePlan,900);}
+async function dbSavePlan(){
+  if(!TRAMO.sb||!TRAMO.planId)return;
+  try{await TRAMO.sb.from("planes").update({destino_texto:$("ciudad").value,presupuesto:Math.max(1,+$("total").value||1),dias_total:Math.max(1,+$("dtot").value||1),colchon_pct:+$("colchon").value||10}).eq("id",TRAMO.planId);}catch(e){}
+}
+async function dbInsertGasto(g){
+  if(!TRAMO.sb||!TRAMO.planId)return;
+  try{const {data}=await TRAMO.sb.from("gastos").insert({plan_id:TRAMO.planId,usuario_id:TRAMO.uid,dia:g.d,categoria:g.k,subtipo:g.s||null,monto:g.m,moneda:g.cur||"USD",monto_usd:usd(g),nota:g.n||null}).select("id").single();
+    if(data)g.id=data.id;}catch(e){}
+}
+async function dbDeleteGasto(g){
+  if(!TRAMO.sb||!g||g.id==null)return;
+  try{await TRAMO.sb.from("gastos").delete().eq("id",g.id);}catch(e){}
+}
+async function dbSaveProfile(){
+  if(!TRAMO.sb||!TRAMO.uid)return;
+  try{await TRAMO.sb.from("perfiles").upsert({id:TRAMO.uid,nombre:$("pf_nombre").value,correo:$("pf_mail").value,telefono:(($("pf_cod").value||"")+" "+$("pf_tel").value).trim(),pais:$("pf_pais").value,moneda_base:$("pf_moneda").value,pasaporte:$("pf_pass").value,idioma:lang,avisos_mail:$("pf_nmail").checked,avisos_whatsapp:$("pf_nwa").checked,avisos_diario:$("pf_nrec").checked,umbral_sobre:+$("pf_umbral").value||85,umbral_desvio:+$("pf_desvio").value||3});}catch(e){}
+}
+async function dbClearGastos(){
+  if(!TRAMO.sb||!TRAMO.planId)return;
+  try{await TRAMO.sb.from("gastos").delete().eq("plan_id",TRAMO.planId);}catch(e){}
+}
+TRAMO.onLogin=async function(sb,user){const same=TRAMO.uid===user.id;TRAMO.sb=sb;TRAMO.uid=user.id;if(!same){try{await dbLoad();}catch(e){}}};
+TRAMO.onLogout=function(){TRAMO.sb=null;TRAMO.uid=null;TRAMO.planId=null;};
+["total","dtot","colchon","ciudad"].forEach(i=>{const el=$(i);if(el)el.addEventListener("input",dbSavePlanSoon);});
 
 function applyLang(){
   document.documentElement.lang=lang;RN=null;
@@ -661,9 +725,11 @@ applyLang();
       const mail=byId("pf_mail");
       if(mail){mail.value=USER.email||mail.value;mail.readOnly=true;mail.style.background="#EFEFE9";}
       try{const d=JSON.parse(store.get("tramo_perfil")||"{}");d.pf_mail=USER.email;store.set("tramo_perfil",JSON.stringify(d));}catch(e){}
+      if(window.TRAMO&&window.TRAMO.onLogin)window.TRAMO.onLogin(sb,USER);
     }
   }
   function showGate(){
+    if(window.TRAMO&&window.TRAMO.onLogout)window.TRAMO.onLogout();
     USER=null; byId("userBox").style.display="none";
     document.body.classList.add("locked");
     byId("gateAuth").style.display=""; byId("gateLocal").style.display="none";
