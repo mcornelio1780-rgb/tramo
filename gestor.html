@@ -124,6 +124,11 @@ body.locked .wrap,body.locked footer{display:none}
 .userbox .em{font-family:var(--mono);font-size:11px;color:#8FA39B;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .btn.logout{width:auto;display:inline-block;padding:6px 12px;font-size:12px;background:transparent;color:var(--paper);border-color:rgba(255,255,255,.35)}
 .btn.logout:hover{background:var(--seal);border-color:var(--seal);color:#fff}
+#gatePay .payrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px dashed var(--line)}
+#gatePay .payrow:last-of-type{border-bottom:0}
+#gatePay .payrow b{display:block;font-size:14.5px}
+#gatePay .payrow span{font-family:var(--mono);font-size:11px;color:var(--muted)}
+#gatePay .btn.sm{width:auto;flex:none}
 </style>
 </head>
 <body class="locked">
@@ -267,6 +272,14 @@ body.locked .wrap,body.locked footer{display:none}
       <div class="msg ok on" id="gateLocalMsg"></div>
       <button class="btn" id="auLocal"></button>
     </div>
+    <div id="gatePay" style="display:none">
+      <p class="gs" id="paySub"></p>
+      <div id="payPlans"></div>
+      <div class="msg" id="payNote"></div>
+      <div class="alt" style="display:flex;justify-content:space-between;gap:12px">
+        <button id="payRetry"></button><button id="payLogout"></button>
+      </div>
+    </div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -301,6 +314,13 @@ const L={
 "au.localSub":["Todavía no conectas tu base de datos (Supabase), así que las cuentas están desactivadas. Puedes probar el gestor en este navegador; los datos no se sincronizan entre dispositivos.","You haven't connected your database (Supabase) yet, so accounts are off. You can try the manager in this browser; data won't sync across devices.","Você ainda não conectou seu banco (Supabase), então as contas estão desativadas. Pode testar o gestor neste navegador; os dados não sincronizam entre dispositivos."],
 "au.localBtn":["Entrar en modo local","Enter local mode","Entrar em modo local"],
 "au.error":["No se pudo completar. Revisa los datos e intenta de nuevo.","Couldn't complete. Check the details and try again.","Não foi possível. Verifique os dados e tente de novo."],
+"au.payTitle":["Activa tu plan","Activate your plan","Ative seu plano"],
+"au.paySub":["El gestor es la parte de pago. Elige un plan para entrar; con tu compra, tu cuenta se activa sola en segundos.","The manager is the paid part. Pick a plan to get in; your purchase activates your account automatically within seconds.","O gestor é a parte paga. Escolha um plano para entrar; sua compra ativa sua conta automaticamente em segundos."],
+"au.payBtn":["Obtener acceso","Get access","Obter acesso"],
+"au.paySoon":["Pagos en breve","Payments soon","Pagamentos em breve"],
+"au.payUnset":["Los pagos todavía no están activos. Vuelve muy pronto.","Payments aren't live yet. Check back very soon.","Os pagamentos ainda não estão ativos. Volte muito em breve."],
+"au.payRetry":["Ya pagué — reintentar","I already paid — retry","Já paguei — tentar de novo"],
+"au.payWait":["Aún no vemos tu pago. Si acabas de comprar, espera unos segundos y reintenta.","We don't see your payment yet. If you just bought, wait a few seconds and retry.","Ainda não vemos seu pagamento. Se acabou de comprar, espere alguns segundos e tente de novo."],
 "h1":["Tu presupuesto, día por día.","Your budget, day by day.","Seu orçamento, dia a dia."],
 "sub":["Esta es la parte que se paga. Carga tu viaje, anota lo que gastas en cualquier moneda y el número de arriba te dice cuánto puedes gastar hoy sin quedarte corto antes del vuelo de vuelta.","This is the part you pay for. Load your trip, log what you spend in any currency, and the number above tells you how much you can spend today without running short before the flight home.","Esta é a parte que se paga. Carregue sua viagem, anote o que gasta em qualquer moeda e o número acima diz quanto você pode gastar hoje sem ficar sem dinheiro antes do voo de volta."],
 "tab.mgr":["Gestor","Manager","Gestor"],"tab.profile":["Perfil","Profile","Perfil"],"tab.billing":["Facturación","Billing","Faturamento"],
@@ -654,8 +674,41 @@ async function dbClearGastos(){
   if(!TRAMO.sb||!TRAMO.planId)return;
   try{await TRAMO.sb.from("gastos").delete().eq("plan_id",TRAMO.planId);}catch(e){}
 }
-TRAMO.onLogin=async function(sb,user){const same=TRAMO.uid===user.id;TRAMO.sb=sb;TRAMO.uid=user.id;if(!same){try{await dbLoad();}catch(e){}}};
+TRAMO.payUrl="";
+/* ¿Este usuario tiene un plan de pago activo? Lee su fila en 'suscripciones'
+   (protegida por RLS: solo ve la suya). free/inactiva NO da acceso. */
+async function esPro(){
+  if(!TRAMO.sb||!TRAMO.uid)return false;
+  try{const {data}=await TRAMO.sb.from("suscripciones").select("plan,estado").eq("usuario_id",TRAMO.uid).maybeSingle();
+    return !!(data&&data.estado==="activa"&&["pro","anual","fundador"].includes(data.plan));}catch(e){return false;}
+}
+function unlockApp(){document.body.classList.remove("locked");$("gatePay").style.display="none";}
+function showPaywall(){
+  document.body.classList.add("locked");
+  $("gateAuth").style.display="none";$("gateLocal").style.display="none";$("gatePay").style.display="";
+  $("gateTitle").textContent=t("au.payTitle");$("gateSub").style.display="none";
+  $("paySub").textContent=t("au.paySub");
+  const url=TRAMO.payUrl||"";
+  $("payPlans").innerHTML=PLANES.map(p=>`<div class="payrow"><div><b>${t("p."+p.k)}</b><span>${p.pr} ${t(p.per)}</span></div>`+
+    (url?`<a class="btn sm" href="${url}" target="_blank" rel="noopener">${t("au.payBtn")}</a>`:`<button class="btn sm" disabled style="opacity:.5">${t("au.paySoon")}</button>`)+`</div>`).join("");
+  const note=$("payNote");
+  if(!url){note.className="msg on";note.textContent=t("au.payUnset");}else note.className="msg";
+  $("payRetry").textContent=t("au.payRetry");
+  $("payLogout").textContent=t("au.logout");
+}
+TRAMO.onLogin=async function(sb,user){
+  const same=TRAMO.uid===user.id;TRAMO.sb=sb;TRAMO.uid=user.id;
+  if(!same){try{await dbLoad();}catch(e){}}
+  if(await esPro())unlockApp();else showPaywall();
+};
 TRAMO.onLogout=function(){TRAMO.sb=null;TRAMO.uid=null;TRAMO.planId=null;};
+async function paywallRetry(){
+  const note=$("payNote");
+  if(await esPro()){unlockApp();toast(t("au.welcome"));}
+  else{note.className="msg on";note.textContent=t("au.payWait");}
+}
+$("payRetry").addEventListener("click",paywallRetry);
+$("payLogout").addEventListener("click",()=>$("navLogout").click());
 ["total","dtot","colchon","ciudad"].forEach(i=>{const el=$(i);if(el)el.addEventListener("input",dbSavePlanSoon);});
 
 function applyLang(){
@@ -718,7 +771,7 @@ applyLang();
   }
 
   function showApp(){
-    document.body.classList.remove("locked");
+    /* El desbloqueo lo decide TRAMO.onLogin según la suscripción (muro de pago). */
     if(USER){
       byId("userBox").style.display="flex";
       byId("navEmail").textContent=USER.email||"";
@@ -732,12 +785,13 @@ applyLang();
     if(window.TRAMO&&window.TRAMO.onLogout)window.TRAMO.onLogout();
     USER=null; byId("userBox").style.display="none";
     document.body.classList.add("locked");
-    byId("gateAuth").style.display=""; byId("gateLocal").style.display="none";
+    byId("gateAuth").style.display=""; byId("gateLocal").style.display="none"; byId("gatePay").style.display="none";
+    byId("gateSub").style.display="";
     setMode("login"); clearMsg(); refreshGate();
   }
   function showLocal(){
     document.body.classList.add("locked");
-    byId("gateAuth").style.display="none"; byId("gateLocal").style.display="";
+    byId("gateAuth").style.display="none"; byId("gateLocal").style.display=""; byId("gatePay").style.display="none";
     refreshGate();
   }
   function setMode(m){
@@ -792,6 +846,7 @@ applyLang();
     refreshGate();
     let cfg=null;
     try{const r=await fetch("/api/config");if(r.ok)cfg=await r.json();}catch(e){}
+    if(window.TRAMO)window.TRAMO.payUrl=(cfg&&cfg.payUrl)||"";
     if(!cfg||!cfg.url||!cfg.anonKey||!window.supabase){showLocal();return;}
     try{ sb=window.supabase.createClient(cfg.url,cfg.anonKey); }
     catch(e){ showLocal(); return; }

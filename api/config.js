@@ -9,7 +9,9 @@
 export default async () => {
   const body = {
     url: process.env.SUPABASE_URL || "",
-    anonKey: process.env.SUPABASE_ANON_KEY || ""
+    anonKey: process.env.SUPABASE_ANON_KEY || "",
+    // Enlace de pago (Gumroad) para el muro de pago del gestor. Público.
+    payUrl: process.env.GUMROAD_URL || ""
   };
   return new Response(JSON.stringify(body), {
     status: 200,
