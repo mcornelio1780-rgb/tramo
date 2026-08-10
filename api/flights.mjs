@@ -115,4 +115,4 @@ export default async (req) => {
   return json(band);
 };
 
-export const config = { runtime: "nodejs" };
+export const config = { runtime: "edge" };

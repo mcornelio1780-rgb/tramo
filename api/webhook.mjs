@@ -177,4 +177,4 @@ export default async (req) => {
   }
 };
 
-export const config = { runtime: "nodejs" };
+export const config = { runtime: "edge" };

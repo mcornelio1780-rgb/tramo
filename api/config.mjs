@@ -1,25 +1,15 @@
 /* =============================================================================
-   TRAMO — /api/config
+   TRAMO — /api/config   (función serverless de Vercel, formato Node req/res)
    Entrega al navegador la configuración PÚBLICA de Supabase + enlace de pago.
 
    La URL y la clave anon son públicas por diseño: la seguridad la dan las
-   políticas RLS del esquema, no esconder la clave. La service_role NUNCA
-   se expone aquí (solo la usa el webhook, en el servidor).
+   políticas RLS del esquema. La service_role NUNCA se expone aquí.
    ========================================================================== */
-export default async () => {
-  const body = {
+export default function handler(req, res) {
+  res.setHeader("Cache-Control", "public, max-age=300");
+  res.status(200).json({
     url: process.env.SUPABASE_URL || "",
     anonKey: process.env.SUPABASE_ANON_KEY || "",
-    // Enlace de pago (Gumroad) para el muro de pago del gestor. Público.
     payUrl: process.env.GUMROAD_URL || ""
-  };
-  return new Response(JSON.stringify(body), {
-    status: 200,
-    headers: {
-      "content-type": "application/json",
-      "cache-control": "public, max-age=300"
-    }
   });
-};
-
-export const config = { runtime: "nodejs" };
+}

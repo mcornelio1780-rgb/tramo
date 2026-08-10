@@ -80,4 +80,4 @@ export default async (req) => {
   return json({ error: "Usa ?q=ciudad o ?route=origen|destino" }, 400);
 };
 
-export const config = { runtime: "nodejs" };
+export const config = { runtime: "edge" };
