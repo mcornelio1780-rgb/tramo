@@ -684,7 +684,8 @@ function paintNav() {
                <span class="tramo-tier ${pro || session.passes.length ? "paid" : "free"}">${tier}</span>
                <button class="tramo-btn gh" data-act="out">${t("lg.out")}</button>
              </div>`
-          : `<button class="tramo-btn" data-act="in">${t("lg.free")}</button>`}
+          : `<button class="tramo-btn gh" data-act="in">${t("lg.in")}</button>
+             <button class="tramo-btn" data-act="in">${t("lg.free")}</button>`}
     </div>
     <div class="tools">
       ${TOOLS.map(x => `<a class="tool ${x.id === ACTIVE ? "on" : ""}" href="${x.href}">
