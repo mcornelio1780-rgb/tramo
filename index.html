@@ -4593,6 +4593,8 @@ if($("heroInstall"))$("heroInstall").onclick=()=>T.install();
 T.mountNav("calc");
 applyLang();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="auth.js"></script>
 <script>
 /* Registra el service worker: esto es lo que hace la web instalable. */
 if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("sw.js").catch(()=>{})});}

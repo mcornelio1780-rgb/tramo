@@ -10,10 +10,10 @@
    - Recursos (JS, íconos, manifest): caché al instante + refresco por detrás.
    - APIs: siempre red primero; los precios y la config no deben quedar viejos.
    ========================================================================== */
-const CACHE = "tramo-v5";
+const CACHE = "tramo-v6";
 const APP = [
   "/", "/index.html", "/rutas.html", "/gestor.html", "/movil.html", "/tramo-core.js",
-  "/manifest.webmanifest", "/icon.svg", "/icon-192.png", "/icon-512.png"
+  "/manifest.webmanifest", "/auth.js", "/icon.svg", "/icon-192.png", "/icon-512.png"
 ];
 
 /* Guarda una copia SIN marca de redirección (una respuesta redirigida no puede

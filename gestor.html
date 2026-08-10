@@ -138,61 +138,9 @@ td.n,th.n{font-family:var(--mono);text-align:right;white-space:nowrap;padding-ri
 footer{background:var(--ink);color:#8496A8;padding:28px 0;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;line-height:1.9}
 @media(max-width:920px){.grid{grid-template-columns:1fr}.r3,.steps,.tot{grid-template-columns:1fr}.steps div{border-right:0;border-bottom:1px dashed var(--line-strong)}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
-/* --- portón de acceso + muro de pago (login/Supabase) --- */
-.tgate{position:fixed;inset:0;z-index:9999;background:var(--paper);display:none;align-items:center;justify-content:center;padding:24px;overflow:auto}
-.tgate.on{display:flex}
-.tgate-card{background:var(--card);border:1.5px solid var(--ink);border-radius:var(--r);max-width:410px;width:100%;box-shadow:6px 6px 0 var(--seal);padding:26px}
-.tgate-brand{display:flex;align-items:center;gap:9px;margin-bottom:16px}
-.tgate-brand svg{width:28px;height:28px}.tgate-brand b{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:.15em}
-.tgate h3{font-family:var(--display);font-weight:800;font-size:22px;margin:0 0 6px;letter-spacing:-.02em}
-.tgate .tgs{color:var(--ink-soft);font-size:14px;margin:0 0 18px}
-.tgate-tabs{display:flex;gap:4px;margin-bottom:16px;border:1.5px solid var(--ink);border-radius:100px;padding:3px}
-.tgate-tabs button{flex:1;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;padding:8px;border:0;background:transparent;border-radius:100px;cursor:pointer;color:var(--muted)}
-.tgate-tabs button.on{background:var(--ink);color:var(--paper)}
-.tgate .tf{margin-bottom:12px}
-.tgate label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:700}
-.tgate input{width:100%;font-family:var(--mono);font-size:14px;padding:9px 10px;border:1.5px solid var(--line-strong);background:#fff;color:var(--ink);border-radius:var(--r)}
-.tgate .tmsg{font-size:13px;padding:10px 12px;border-radius:var(--r);margin-bottom:12px;display:none}
-.tgate .tmsg.on{display:block}
-.tgate .tmsg.err{background:rgba(206,43,82,.08);border-left:3px solid var(--seal);color:var(--seal)}
-.tgate .tmsg.ok{background:rgba(15,107,88,.08);border-left:3px solid var(--jade);color:var(--jade)}
-.tgate .talt{text-align:center;margin-top:14px;font-size:13px}
-.tgate .talt button{background:none;border:0;color:var(--ink-soft);text-decoration:underline;cursor:pointer;font-family:var(--body);font-size:13px;padding:0}
-.tgate .payrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px dashed var(--line)}
-.tgate .payrow:last-of-type{border-bottom:0}
-.tgate .payrow b{display:block;font-size:14.5px}.tgate .payrow span{font-family:var(--mono);font-size:11px;color:var(--muted)}
-.tgate .btn.sm{padding:7px 13px;font-size:13px}
-.tlogout-chip{position:fixed;bottom:16px;right:16px;z-index:9000;display:none;font-family:var(--mono);font-size:11px;letter-spacing:.08em;background:var(--ink);color:var(--paper);border:1.5px solid var(--ink);border-radius:100px;padding:8px 14px;cursor:pointer;box-shadow:2px 2px 0 rgba(17,28,46,.2)}
-.tlogout-chip:hover{background:var(--seal);border-color:var(--seal)}
 </style>
 </head>
 <body>
-<div class="tgate" id="tgate">
-  <div class="tgate-card">
-    <div class="tgate-brand"><svg viewBox="0 0 40 40"><path d="M7 9v22M33 9v22M7 20h8M25 20h8" stroke="#111C2E" stroke-width="3" stroke-linecap="round"/><path d="M20 13l5 7-5 7-5-7z" fill="#CE2B52"/></svg><b>TRAMO</b></div>
-    <div id="tgAuth">
-      <h3 id="tgTitle"></h3><p class="tgs" id="tgSub"></p>
-      <div class="tgate-tabs"><button id="tgLoginTab" class="on"></button><button id="tgSignupTab"></button></div>
-      <div class="tmsg" id="tgMsg"></div>
-      <div class="tf"><label id="tgLbEmail"></label><input type="email" id="tgEmail" autocomplete="email"></div>
-      <div class="tf"><label id="tgLbPass"></label><input type="password" id="tgPass" autocomplete="current-password"></div>
-      <button class="btn" id="tgSubmit" style="width:100%"></button>
-      <div class="talt"><button id="tgMagic"></button></div>
-    </div>
-    <div id="tgLocal" style="display:none">
-      <h3 id="tgLocalTitle"></h3>
-      <div class="tmsg ok on" id="tgLocalMsg"></div>
-      <button class="btn" id="tgLocalBtn" style="width:100%"></button>
-    </div>
-    <div id="tgPay" style="display:none">
-      <h3 id="tgPayTitle"></h3><p class="tgs" id="tgPaySub"></p>
-      <div id="tgPlans"></div>
-      <div class="tmsg" id="tgPayNote"></div>
-      <div class="talt" style="display:flex;justify-content:space-between;gap:12px"><button id="tgRetry"></button><button id="tgLogout"></button></div>
-    </div>
-  </div>
-</div>
-<button class="tlogout-chip" id="tgChip"></button>
 <div class="wrap">
   <h1 data-i="h1"></h1>
   <p class="sub" data-i="sub"></p>
@@ -4283,112 +4231,7 @@ T.onChange(applyLang);
 applyLang();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<script>
-/* ===================== Portón de acceso + muro de pago =====================
-   Bloque autónomo: exige cuenta (Supabase Auth) y un plan de pago activo para
-   usar el gestor. Si Supabase no está configurado, cae a "modo local". No toca
-   la zona CORE; usa globales del núcleo (lang/LI/store/toast/t/PLANES) si existen. */
-(function(){
-  var LI2=(typeof LI==="number")?LI:0;
-  var AL={
-    gateTitle:["Entra a tu gestor","Sign in to your manager","Entre no seu gestor"],
-    gateSub:["El gestor es la parte de pago. Crea tu cuenta o inicia sesión para continuar.","The manager is the paid part. Create your account or sign in to continue.","O gestor é a parte paga. Crie sua conta ou entre para continuar."],
-    login:["Iniciar sesión","Sign in","Entrar"],signup:["Crear cuenta","Sign up","Criar conta"],
-    email:["Correo","Email","E-mail"],pass:["Contraseña","Password","Senha"],
-    enter:["Entrar","Enter","Entrar"],create:["Crear cuenta","Create account","Criar conta"],
-    logout:["Cerrar sesión","Log out","Sair"],
-    magic:["Enviarme un enlace mágico","Email me a magic link","Enviar-me um link mágico"],
-    magicSent:["Te enviamos un enlace a tu correo. Ábrelo para entrar.","We sent a link to your email. Open it to sign in.","Enviamos um link para seu e-mail. Abra-o para entrar."],
-    checkMail:["Cuenta creada. Revisa tu correo para confirmarla y luego inicia sesión.","Account created. Check your email to confirm it, then sign in.","Conta criada. Verifique seu e-mail para confirmá-la e depois entre."],
-    needBoth:["Pon tu correo y tu contraseña.","Enter your email and password.","Coloque seu e-mail e sua senha."],
-    passShort:["La contraseña necesita al menos 6 caracteres.","Password needs at least 6 characters.","A senha precisa de ao menos 6 caracteres."],
-    welcome:["Sesión iniciada","Signed in","Sessão iniciada"],bye:["Sesión cerrada","Signed out","Sessão encerrada"],
-    error:["No se pudo completar. Revisa los datos e intenta de nuevo.","Couldn't complete. Check the details and try again.","Não foi possível. Verifique os dados e tente de novo."],
-    localTitle:["Modo local (sin cuenta)","Local mode (no account)","Modo local (sem conta)"],
-    localSub:["Todavía no conectas tu base de datos (Supabase), así que las cuentas están desactivadas. Puedes probar el gestor en este navegador.","You haven't connected your database (Supabase) yet, so accounts are off. You can try the manager in this browser.","Você ainda não conectou seu banco (Supabase), então as contas estão desativadas. Pode testar o gestor neste navegador."],
-    localBtn:["Entrar en modo local","Enter local mode","Entrar em modo local"],
-    payTitle:["Activa tu plan","Activate your plan","Ative seu plano"],
-    paySub:["El gestor es la parte de pago. Elige un plan; con tu compra, tu cuenta se activa sola en segundos.","The manager is the paid part. Pick a plan; your purchase activates your account within seconds.","O gestor é a parte paga. Escolha um plano; sua compra ativa sua conta em segundos."],
-    payBtn:["Obtener acceso","Get access","Obter acesso"],paySoon:["Pagos en breve","Payments soon","Pagamentos em breve"],
-    payUnset:["Los pagos todavía no están activos. Vuelve muy pronto.","Payments aren't live yet. Check back very soon.","Os pagamentos ainda não estão ativos. Volte muito em breve."],
-    retry:["Ya pagué — reintentar","I already paid — retry","Já paguei — tentar de novo"],
-    payWait:["Aún no vemos tu pago. Si acabas de comprar, espera unos segundos y reintenta.","We don't see your payment yet. If you just bought, wait a few seconds and retry.","Ainda não vemos seu pagamento. Se acabou de comprar, espere alguns segundos e tente de novo."]
-  };
-  function at(k){var a=AL[k];return a?(a[LI2]||a[0]):k;}
-  function $(id){return document.getElementById(id);}
-  var sb=null,USER=null,mode="login",PAYURL="";
-  var gate=$("tgate"),chip=$("tgChip");
-  function toastX(m){try{if(typeof toast==="function"){toast(m);}}catch(e){}}
-  function msg(txt,kind){var e=$("tgMsg");e.textContent=txt;e.className="tmsg on "+(kind||"err");}
-  function clearMsg(){var e=$("tgMsg");e.className="tmsg";e.textContent="";}
-  function lock(){gate.classList.add("on");document.documentElement.style.overflow="hidden";chip.style.display="none";}
-  function unlock(){gate.classList.remove("on");document.documentElement.style.overflow="";if(USER)chip.style.display="inline-block";}
-  function paintCommon(){
-    $("tgLoginTab").textContent=at("login");$("tgSignupTab").textContent=at("signup");
-    $("tgLbEmail").textContent=at("email");$("tgLbPass").textContent=at("pass");
-    $("tgMagic").textContent=at("magic");$("tgSubmit").textContent=mode==="login"?at("enter"):at("create");
-    $("tgLocalBtn").textContent=at("localBtn");$("tgRetry").textContent=at("retry");$("tgLogout").textContent=at("logout");chip.textContent=at("logout");
-  }
-  function setMode(m){mode=m;$("tgLoginTab").classList.toggle("on",m==="login");$("tgSignupTab").classList.toggle("on",m==="signup");$("tgPass").setAttribute("autocomplete",m==="login"?"current-password":"new-password");clearMsg();$("tgSubmit").textContent=m==="login"?at("enter"):at("create");}
-  function showAuth(){lock();$("tgAuth").style.display="";$("tgLocal").style.display="none";$("tgPay").style.display="none";$("tgTitle").textContent=at("gateTitle");$("tgSub").textContent=at("gateSub");setMode("login");clearMsg();paintCommon();}
-  function showLocal(){lock();$("tgAuth").style.display="none";$("tgLocal").style.display="";$("tgPay").style.display="none";$("tgLocalTitle").textContent=at("localTitle");$("tgLocalMsg").textContent=at("localSub");paintCommon();}
-  function showPay(){
-    lock();$("tgAuth").style.display="none";$("tgLocal").style.display="none";$("tgPay").style.display="";
-    $("tgPayTitle").textContent=at("payTitle");$("tgPaySub").textContent=at("paySub");
-    var plans=(typeof PLANES!=="undefined"?PLANES:[{k:"pro",pr:"$9",per:"per.mo"},{k:"anual",pr:"$49",per:"per.yr"}]).filter(function(p){return p.k!=="free";});
-    var tf=(typeof t==="function")?t:function(k){return k;};
-    $("tgPlans").innerHTML=plans.map(function(p){
-      var right=PAYURL?'<a class="btn sm" href="'+PAYURL+'" target="_blank" rel="noopener">'+at("payBtn")+'</a>':'<button class="btn sm" disabled style="opacity:.5">'+at("paySoon")+'</button>';
-      return '<div class="payrow"><div><b>'+tf("p."+p.k)+'</b><span>'+p.pr+' '+tf(p.per)+'</span></div>'+right+'</div>';
-    }).join("");
-    var note=$("tgPayNote");if(!PAYURL){note.className="tmsg on";note.textContent=at("payUnset");}else note.className="tmsg";
-    paintCommon();
-  }
-  async function esPro(){
-    if(!sb||!USER)return false;
-    try{var r=await sb.from("suscripciones").select("plan,estado").eq("usuario_id",USER.id).maybeSingle();var d=r.data;return !!(d&&d.estado==="activa"&&["pro","anual","fundador"].indexOf(d.plan)>=0);}catch(e){return false;}
-  }
-  async function gateByPlan(){if(await esPro())unlock();else showPay();}
-  async function submit(){
-    if(!sb)return;var email=$("tgEmail").value.trim(),pass=$("tgPass").value;
-    if(!email||!pass){msg(at("needBoth"));return;}if(pass.length<6){msg(at("passShort"));return;}
-    $("tgSubmit").disabled=true;
-    try{
-      if(mode==="login"){var r=await sb.auth.signInWithPassword({email:email,password:pass});if(r.error)throw r.error;}
-      else{var r2=await sb.auth.signUp({email:email,password:pass});if(r2.error)throw r2.error;if(!r2.data.session)msg(at("checkMail"),"ok");}
-    }catch(e){msg((e&&e.message)||at("error"));}finally{$("tgSubmit").disabled=false;}
-  }
-  async function magic(){
-    if(!sb)return;var email=$("tgEmail").value.trim();if(!email){msg(at("needBoth"));return;}
-    try{var r=await sb.auth.signInWithOtp({email:email,options:{emailRedirectTo:location.href.split("#")[0]}});if(r.error)throw r.error;msg(at("magicSent"),"ok");}catch(e){msg((e&&e.message)||at("error"));}
-  }
-  async function logout(){if(sb)await sb.auth.signOut();USER=null;chip.style.display="none";toastX(at("bye"));showAuth();}
-  async function retry(){var note=$("tgPayNote");if(await esPro()){unlock();toastX(at("welcome"));}else{note.className="tmsg on";note.textContent=at("payWait");}}
-  $("tgLoginTab").addEventListener("click",function(){setMode("login");});
-  $("tgSignupTab").addEventListener("click",function(){setMode("signup");});
-  $("tgSubmit").addEventListener("click",submit);
-  $("tgMagic").addEventListener("click",magic);
-  $("tgEmail").addEventListener("keydown",function(e){if(e.key==="Enter")$("tgPass").focus();});
-  $("tgPass").addEventListener("keydown",function(e){if(e.key==="Enter")submit();});
-  $("tgLocalBtn").addEventListener("click",function(){gate.classList.remove("on");document.documentElement.style.overflow="";});
-  $("tgRetry").addEventListener("click",retry);
-  $("tgLogout").addEventListener("click",logout);
-  chip.addEventListener("click",logout);
-  async function init(){
-    lock();showAuth();
-    var cfg=null;
-    try{var r=await fetch("/api/config");if(r.ok)cfg=await r.json();}catch(e){}
-    PAYURL=(cfg&&cfg.payUrl)||"";
-    if(!cfg||!cfg.url||!cfg.anonKey||!window.supabase){showLocal();return;}
-    try{sb=window.supabase.createClient(cfg.url,cfg.anonKey);}catch(e){showLocal();return;}
-    sb.auth.onAuthStateChange(function(ev,session){
-      if(session&&session.user){USER=session.user;if(ev==="SIGNED_IN")toastX(at("welcome"));gateByPlan();}
-      else if(ev==="INITIAL_SESSION"||ev==="SIGNED_OUT"){showAuth();}
-    });
-  }
-  init();
-})();
-</script>
+<script src="auth.js"></script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("sw.js").catch(()=>{})});}</script>
 </body>
 </html>
