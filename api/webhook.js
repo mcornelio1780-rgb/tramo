@@ -19,18 +19,15 @@
 
    2) MERCHANT OF RECORD  (Polar / Lemon Squeezy, para migrar después)
       Envían JSON firmado con HMAC-SHA256. Se conserva ese camino intacto.
-      Configurar en el panel del proveedor:
-        URL:    https://TU-DOMINIO/api/webhook
-        Evento: order_created / subscription_created / subscription_updated
    ========================================================================== */
 
 const PLAN_POR_PRODUCTO = {
   // Gumroad: usa el "permalink" del producto (el slug corto de su URL).
-  // MoR: usa el variant_name / product_id. En ambos casos, estos identificadores.
+  // MoR: usa el variant_name / product_id.
   "tramo-pro-mensual": "pro",
   "tramo-pro-anual": "anual",
   "tramo-fundador": "fundador",
-  "tramo-aterrizaje": "pro"
+  "tramo-pase-ciudad": "pro"
 };
 
 /* ---- Escritura en Supabase (idéntico para ambos proveedores) ------------- */
@@ -61,7 +58,6 @@ async function firmaValida(req, cuerpo) {
   );
   const mac = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(cuerpo));
   const esperado = [...new Uint8Array(mac)].map(b => b.toString(16).padStart(2, "0")).join("");
-  // Comparación de tiempo constante
   if (esperado.length !== firma.length) return false;
   let dif = 0;
   for (let i = 0; i < esperado.length; i++) dif |= esperado.charCodeAt(i) ^ firma.charCodeAt(i);
@@ -69,8 +65,7 @@ async function firmaValida(req, cuerpo) {
 }
 
 /* ---- Verificación Gumroad: confirmar la venta contra la API de Gumroad ---
-   Devuelve true/false si hay token; null si no hay token (para usar el
-   respaldo del secreto en la URL). */
+   Devuelve true/false si hay token; null si no hay token. */
 async function ventaGumroadValida(saleId) {
   const token = process.env.GUMROAD_ACCESS_TOKEN;
   if (!token) return null;
@@ -84,9 +79,7 @@ async function ventaGumroadValida(saleId) {
     if (!r.ok) return false;
     const j = await r.json().catch(() => null);
     return !!(j && j.success && j.sale);
-  } catch {
-    return false;
-  }
+  } catch { return false; }
 }
 
 function parseForm(cuerpo) {
@@ -102,7 +95,6 @@ export default async (req) => {
   const cuerpo = await req.text();
   const tipo = (req.headers.get("content-type") || "").toLowerCase();
 
-  // Campos normalizados que rellena cada rama
   let correo, variante, subId, pagoId, monto, moneda, estado, proveedor, metodo;
 
   if (tipo.includes("form-urlencoded")) {
@@ -110,7 +102,6 @@ export default async (req) => {
     const d = parseForm(cuerpo);
     const idVenta = d.sale_id || d.subscription_id || d.order_number || "";
 
-    // Autenticidad: API de Gumroad (si hay token) o secreto en la URL.
     let verificado = await ventaGumroadValida(idVenta);
     if (verificado === null) {
       const key = new URL(req.url).searchParams.get("key");
@@ -121,9 +112,9 @@ export default async (req) => {
     const reembolsado = d.refunded === "true" || d.disputed === "true";
     correo    = d.email;
     variante  = d.product_permalink || d.product_name;
-    subId     = d.subscription_id || d.sale_id;   // clave de la suscripción
-    pagoId    = d.sale_id || d.subscription_id;    // clave única de cada cobro
-    monto     = Number(d.price || 0) / 100;        // Gumroad manda centavos
+    subId     = d.subscription_id || d.sale_id;
+    pagoId    = d.sale_id || d.subscription_id;
+    monto     = Number(d.price || 0) / 100;
     moneda    = (d.currency || "USD").toUpperCase();
     estado    = reembolsado ? "reembolsado" : "active";
     proveedor = "gumroad";
@@ -152,8 +143,6 @@ export default async (req) => {
   const plan   = PLAN_POR_PRODUCTO[variante] || "pro";
   const activa = ["active", "paid", "completed"].includes(estado);
 
-  /* Buscamos el usuario por correo. Si aún no existe cuenta, guardamos el
-     pago igual: al registrarse con ese correo, el plan queda activado. */
   const q = await fetch(
     `${process.env.SUPABASE_URL}/rest/v1/perfiles?correo=eq.${encodeURIComponent(correo)}&select=id`,
     { headers: { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}` } }
@@ -171,8 +160,6 @@ export default async (req) => {
         actualizado_en: new Date().toISOString()
       }], "usuario_id");
 
-      // Solo registramos un pago cuando entra dinero (no en reembolsos).
-      // on_conflict evita duplicados si el proveedor reintenta el aviso.
       if (activa) {
         await supabase("pagos", [{
           usuario_id: perfil.id,
@@ -186,7 +173,6 @@ export default async (req) => {
     }
     return ok({ recibido: true, plan, correo, usuario: perfil?.id || null });
   } catch (e) {
-    /* Devolvemos 500 a propósito: el proveedor reintentará el envío. */
     return ok({ error: String(e.message) }, 500);
   }
 };

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TRAMO — Research de Itinio, precios y estrategia de app</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M7 9v22M33 9v22M7 20h8M25 20h8' stroke='%23111C2E' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M20 13l5 7-5 7-5-7z' fill='%23CE2B52'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=Public+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#111C2E;--ink-soft:#33415A;--muted:#6E7A8C;--paper:#E9EAE3;--card:#FBFBF8;--line:#C7CABE;--line-strong:#9AA096;--seal:#CE2B52;--jade:#0F6B58;--mint:#4BD6A8;--ochre:#B08429;
+--display:"Bricolage Grotesque","Arial Black",sans-serif;--body:"Public Sans",system-ui,sans-serif;--mono:"JetBrains Mono",monospace;--r:3px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.55;font-size:16px}
+.wrap{max-width:1020px;margin:0 auto;padding:0 24px}
+nav{background:var(--ink);color:var(--paper);padding:12px 0;position:sticky;top:0;z-index:20}
+.nav-in{max-width:1020px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:15px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--paper);margin-right:auto}
+.brand svg{width:26px;height:26px}.brand b{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:.15em}
+nav a.lnk{color:#8FA39B;text-decoration:none;font-size:13px}nav a.lnk:hover{color:var(--mint)}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(2rem,4.6vw,3.1rem);letter-spacing:-.035em;line-height:1;margin:14px 0 12px}
+h2{font-family:var(--display);font-weight:800;font-size:clamp(1.45rem,2.9vw,2rem);letter-spacing:-.025em;line-height:1.06;margin:0 0 8px}
+h3{font-family:var(--display);font-weight:700;font-size:17.5px;margin:0 0 8px}
+.kick{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--seal);font-weight:700}
+.lede{font-size:17.5px;color:var(--ink-soft);max-width:66ch;margin:0}
+.doc-head{padding:40px 0 28px;border-bottom:1.5px solid var(--ink)}
+section{padding:42px 0;border-bottom:1px solid var(--line)}
+.snum{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--muted);display:block;margin-bottom:8px}
+p{margin:0 0 14px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.box{background:var(--card);border:1.5px solid var(--ink);border-radius:var(--r);padding:18px}
+.box.dark{background:var(--ink);color:var(--paper)}.box.dark h3{color:var(--mint)}
+.box.dash{background:transparent;border-style:dashed;border-color:var(--seal)}
+.box.g{border-color:var(--jade);background:rgba(15,107,88,.05)}
+.mono-lb{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700;display:block;margin-bottom:7px}
+.big{font-family:var(--display);font-weight:800;font-size:34px;letter-spacing:-.035em;line-height:1}
+.big.m{color:var(--jade)}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:14px 0}
+th{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 10px 8px 0;border-bottom:1.5px solid var(--ink)}
+td{padding:9px 10px 9px 0;border-bottom:1px dashed var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:var(--mono);white-space:nowrap;padding-right:0}
+tr.tot td{border-bottom:0;border-top:1.5px solid var(--ink);font-weight:700;font-family:var(--mono)}
+.yes{color:var(--jade);font-weight:700}.no{color:var(--seal);font-weight:700}
+ul{margin:0 0 14px;padding-left:20px}li{margin-bottom:7px}
+ul.clean{list-style:none;padding:0}
+ul.clean li{padding-left:22px;position:relative}
+ul.clean li::before{content:"";position:absolute;left:0;top:8px;width:8px;height:8px;background:var(--seal);transform:rotate(45deg)}
+.callout{background:var(--ink);color:var(--paper);padding:24px;border-radius:var(--r);margin:20px 0}
+.q{font-family:var(--display);font-size:19.5px;line-height:1.35;border-left:3px solid var(--mint);padding-left:18px;margin:0 0 8px;font-weight:700;letter-spacing:-.01em}
+.callout p{color:#A9B6C4;margin:0}
+.note{border-left:3px solid var(--ochre);background:rgba(176,132,41,.08);padding:14px 16px;font-size:14.5px;margin:16px 0}
+.note b{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ochre);display:block;margin-bottom:4px}
+.note.r{border-color:var(--seal);background:rgba(206,43,82,.07)}.note.r b{color:var(--seal)}
+.note.g{border-color:var(--jade);background:rgba(15,107,88,.07)}.note.g b{color:var(--jade)}
+code{font-family:var(--mono);font-size:13px;background:#DEDFD6;padding:2px 5px;border-radius:2px}
+.tier{background:var(--card);border:1.5px solid var(--ink);border-radius:var(--r);padding:20px;display:flex;flex-direction:column}
+.tier.hi{background:var(--ink);color:var(--paper);box-shadow:6px 6px 0 var(--seal)}
+.tier .tn{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.tier.hi .tn{color:var(--mint)}
+.tier .pr{font-family:var(--display);font-weight:800;font-size:34px;letter-spacing:-.035em;margin:8px 0 2px;line-height:1}
+.tier .pr span{font-family:var(--body);font-size:13px;font-weight:400;letter-spacing:0;color:var(--muted)}
+.tier.hi .pr span{color:#8FA39B}
+.tier .pd{font-size:13px;color:var(--ink-soft);margin:6px 0 12px;min-height:34px}
+.tier.hi .pd{color:#A9B6C4}
+.tier ul{list-style:none;padding:0;margin:0;flex:1}
+.tier li{font-size:13.5px;padding:6px 0 6px 18px;position:relative;border-bottom:1px dashed var(--line);margin:0}
+.tier.hi li{border-color:rgba(255,255,255,.14)}
+.tier li::before{content:"→";position:absolute;left:0;font-family:var(--mono);color:var(--seal);font-size:11px}
+.tier.hi li::before{color:var(--mint)}
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1.5px solid var(--ink);margin:18px 0}
+.flow div{padding:16px 14px;border-right:1px dashed var(--line-strong)}
+.flow div:last-child{border-right:0}
+.flow .n{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--seal);font-weight:700;display:block;margin-bottom:7px}
+.flow h4{font-family:var(--display);font-weight:700;font-size:15.5px;margin:0 0 5px}
+.flow p{font-size:13px;color:var(--ink-soft);margin:0}
+footer{background:var(--ink);color:#8496A8;padding:32px 0;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;line-height:1.9}
+footer a{color:var(--paper)}
+@media(max-width:860px){.g2,.g3,.flow{grid-template-columns:1fr}.flow div{border-right:0;border-bottom:1px dashed var(--line-strong)}}
+</style>
+</head>
+<body>
+<nav><div class="nav-in">
+  <a class="brand" href="index.html"><svg viewBox="0 0 40 40"><path d="M7 9v22M33 9v22M7 20h8M25 20h8" stroke="#E9EAE3" stroke-width="3" stroke-linecap="round"/><path d="M20 13l5 7-5 7-5-7z" fill="#CE2B52"/></svg><b>TRAMO</b></a>
+  <a class="lnk" href="#itinio">Itinio</a><a class="lnk" href="#hueco">El hueco</a>
+  <a class="lnk" href="#precios">Precios nuevos</a><a class="lnk" href="#app">App con $0</a>
+  <a class="lnk" href="#login">Login</a><a class="lnk" href="rutas.html">Ver el módulo →</a>
+</div></nav>
+
+<div class="wrap">
+<header class="doc-head">
+  <span class="kick">Documento interno · Research competitivo · Agosto 2026</span>
+  <h1>Itinio arma rutas preciosas. Ninguna tiene precio.</h1>
+  <p class="lede">Ese es el hueco entero, y es exactamente donde TRAMO ya vive. Este documento tiene lo que hace Itinio, lo que no hace, la nueva estructura de precios que sale de ahí, y cómo se lanza a tiendas con presupuesto cero.</p>
+</header>
+
+<section id="itinio">
+  <span class="snum">01 — QUÉ ES ITINIO, CON DATOS</span>
+  <h2>Ficha técnica.</h2>
+  <div class="note r"><b>Primero: una corrección importante</b>Itinio <strong>no está solo en Apple</strong>. Está también en Google Play, con más de 10,000 descargas, 4.8 estrellas y 298 reseñas, actualizada el 4 de agosto de 2026. La ventaja de plataforma que creías tener no existe. La ventaja real es otra, y es mejor: está más abajo.</div>
+  <table>
+    <thead><tr><th>Dato</th><th>Valor</th></tr></thead>
+    <tbody>
+      <tr><td>Nombre y categoría</td><td>itinio — Recomendaciones locales / Viajes</td></tr>
+      <tr><td>Plataformas</td><td>iOS, iPadOS, macOS con chip M1, visionOS <strong>y Android</strong></td></tr>
+      <tr><td>Tracción</td><td>10,000+ descargas en Google Play · 4.8 estrellas con 298 reseñas · en Apple todavía sin reseñas suficientes para mostrar promedio</td></tr>
+      <tr><td>Antigüedad</td><td>Versión 1.0 el 29 de abril de 2026. Es una app de tres meses.</td></tr>
+      <tr><td>Idiomas</td><td>Inglés y español. Sin portugués.</td></tr>
+      <tr><td>Equipo</td><td>Desarrollador individual registrado en España (Boadilla del Monte, Madrid)</td></tr>
+      <tr><td>Ciudades</td><td>Madrid y Barcelona en su web; Londres y Ámsterdam mencionadas en reseñas y notas de versión. Del orden de <strong>4 a 6 ciudades</strong>.</td></tr>
+      <tr><td>Precio</td><td>Gratis con compras dentro de la app: Explorer a $24.99 y a $14.99, City Pass a $7.99</td></tr>
+      <tr><td>Privacidad</td><td>En Apple declara no recolectar datos. En Google declara recolectar información personal y financiera.</td></tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:26px">Qué hace bien, y hay que reconocerlo</h3>
+  <div class="g2">
+    <div class="box g">
+      <h3>Lo que copiaría sin dudar</h3>
+      <ul class="clean" style="font-size:14.5px">
+        <li><strong>Rutas enriquecidas entre dos puntos.</strong> Le dices cuánto tiempo extra tienes y qué te apetece, y en vez de la ruta más rápida te propone una con paradas interesantes de camino. Es su mejor idea y es genuinamente buena.</li>
+        <li><strong>Preferencias antes de generar.</strong> Eliges qué te interesa y la ruta sale personalizada de entrada, sin editar veinte veces.</li>
+        <li><strong>Recomendaciones de guías locales.</strong> Curaduría humana por ciudad, no una lista sacada de un mapa.</li>
+        <li><strong>Exportar la ruta completa a Google Maps</strong> sin límite de paradas. Detalle pequeño, fricción enorme resuelta.</li>
+        <li><strong>Componente social.</strong> Se describen como "Strava para viajar": compartes tus rutas y copias las de tus amigos.</li>
+        <li><strong>Fichas de sitio con precios.</strong> Rediseñaron las fichas para incluir el precio de cada lugar. Van en la dirección correcta, pero se quedan a mitad de camino.</li>
+      </ul>
+    </div>
+    <div class="box dash">
+      <h3>Lo que no hace</h3>
+      <ul class="clean" style="font-size:14.5px">
+        <li><strong>No hay presupuesto.</strong> Muestra el precio de un sitio suelto, pero nunca suma el día, nunca lo compara con lo que puedes gastar y nunca te avisa de que te pasaste.</li>
+        <li><strong>No sabe cuánto dinero tienes.</strong> Nunca te lo pregunta. Es un planificador de qué hacer, no de si puedes.</li>
+        <li><strong>No hay gestión durante el viaje.</strong> Cuando aterrizas, la app ya cumplió su función.</li>
+        <li><strong>No hay vuelos ni costo de vida.</strong> Empieza cuando ya estás en la ciudad.</li>
+        <li><strong>Es para escapadas de ciudad, no para nómadas.</strong> Cuatro días en Madrid, no dos meses en Medellín.</li>
+        <li><strong>Cobertura mínima.</strong> Cuatro a seis ciudades europeas. Nada en Latinoamérica ni Asia.</li>
+        <li><strong>Sin portugués.</strong> Brasil entero fuera.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note"><b>Lectura del precio</b>Un City Pass a $7.99 por una sola ciudad es caro para lo que entrega, y su plan Explorer a $24.99 es un pago único bastante alto para una app de tres meses sin reputación. Que hayan bajado a $14.99 sugiere que el de $24.99 no convertía. Ahí hay espacio para entrar por debajo.</div>
+</section>
+
+<section id="hueco">
+  <span class="snum">02 — EL HUECO</span>
+  <h2>Ellos responden "qué hago". Nosotros ya respondemos "cuánto me alcanza". Falta unir las dos.</h2>
+  <p>Puesto en una frase: <strong>Itinio hace el itinerario sin el dinero. TRAMO hace el dinero sin el itinerario.</strong> El producto que gana es el que hace los dos, y de las dos mitades la difícil es la nuestra. Armar una lista de sitios bonitos lo hace cualquiera con una API de mapas; saber cuántos días te alcanzan con tu rango de presupuesto y llevarte la cuenta mientras viajas es un motor que ya está construido.</p>
+  <div class="callout">
+    <p class="q">La ruta deja de ser una lista de sitios y pasa a ser un pronóstico de gasto que se puede corregir.</p>
+    <p>Ese es el círculo que ningún planificador cierra: <strong>plan → precio → gasto real → ajuste del plan.</strong> Itinio se queda en el primer paso. Las apps de gastos empiezan en el tercero. TRAMO es el único que los tiene los cuatro.</p>
+  </div>
+  <div class="flow">
+    <div><span class="n">PASO 01</span><h4>Cuánto te alcanza</h4><p>Rango de presupuesto, vuelo como banda, días posibles por ciudad. Ya funciona.</p></div>
+    <div><span class="n">PASO 02</span><h4>Qué hacer, con precio</h4><p>Ruta día a día donde cada parada cuesta algo y el día entero se compara con tu presupuesto. Nuevo.</p></div>
+    <div><span class="n">PASO 03</span><h4>Qué gastaste de verdad</h4><p>Anotas sobre la marcha, en cualquier moneda. Ya funciona.</p></div>
+    <div><span class="n">PASO 04</span><h4>Ajusta el plan</h4><p>Si te pasaste el martes, el miércoles la ruta viene más barata. Nadie hace esto.</p></div>
+  </div>
+  <h3 style="margin-top:24px">Comparación honesta</h3>
+  <table>
+    <thead><tr><th>Función</th><th class="n">Itinio</th><th class="n">TRAMO hoy</th><th class="n">TRAMO con rutas</th></tr></thead>
+    <tbody>
+      <tr><td>Itinerario día a día</td><td class="n yes">Sí</td><td class="n no">No</td><td class="n yes">Sí</td></tr>
+      <tr><td>Rutas enriquecidas entre puntos</td><td class="n yes">Sí</td><td class="n no">No</td><td class="n yes">Sí</td></tr>
+      <tr><td>Recomendaciones locales curadas</td><td class="n yes">Sí</td><td class="n no">No</td><td class="n yes">Sí</td></tr>
+      <tr><td><strong>Costo por actividad</strong></td><td class="n" style="color:var(--ochre);font-weight:700">Parcial</td><td class="n no">No</td><td class="n yes">Sí</td></tr>
+      <tr><td><strong>Suma del día contra tu presupuesto</strong></td><td class="n no">No</td><td class="n no">No</td><td class="n yes">Sí</td></tr>
+      <tr><td><strong>Cuántos días te alcanza el dinero</strong></td><td class="n no">No</td><td class="n yes">Sí</td><td class="n yes">Sí</td></tr>
+      <tr><td><strong>Banda de precio de vuelo</strong></td><td class="n no">No</td><td class="n yes">Sí</td><td class="n yes">Sí</td></tr>
+      <tr><td><strong>Gestión de gastos en viaje</strong></td><td class="n no">No</td><td class="n yes">Sí</td><td class="n yes">Sí</td></tr>
+      <tr><td><strong>Multi-moneda</strong></td><td class="n no">No</td><td class="n yes">Sí</td><td class="n yes">Sí</td></tr>
+      <tr><td>Compartir rutas con amigos</td><td class="n yes">Sí</td><td class="n no">No</td><td class="n" style="color:var(--muted)">Después</td></tr>
+      <tr><td>Ciudades cubiertas</td><td class="n">4–6</td><td class="n">46</td><td class="n">46</td></tr>
+      <tr><td>Idiomas</td><td class="n">2</td><td class="n">3</td><td class="n">3</td></tr>
+      <tr><td>Perfil objetivo</td><td class="n">Turista</td><td class="n">Nómada</td><td class="n">Ambos</td></tr>
+    </tbody>
+  </table>
+  <div class="note g"><b>La ventaja que sí tienes</b>No es la plataforma: es el orden en que construiste. Ellos tienen que inventar todo el motor de presupuesto, vuelos y multi-moneda para alcanzarte. Tú solo tienes que añadir una lista de actividades con precio, que es un trabajo de datos, no de ingeniería. Estás mucho más cerca de su producto que ellos del tuyo.</div>
+</section>
+
+<section id="precios">
+  <span class="snum">03 — LA NUEVA ESTRUCTURA DE PRECIOS</span>
+  <h2>Entra el pase de ciudad, y cambia el sprint de 15 días.</h2>
+  <p>El pase de ciudad es la pieza que faltaba, y no por copiar a Itinio: por matemática de tu sprint. Un producto de $4.99 con decisión de tres segundos convierte muchísimo mejor que uno de $79 con decisión de tres días. Necesitas volumen rápido, y esto lo da.</p>
+  <div class="g3" style="margin-bottom:16px">
+    <div class="tier"><span class="tn">Explorador</span><div class="pr">$0</div><p class="pd">Decidir si el viaje es posible.</p>
+      <ul><li>Calculadora ilimitada</li><li>46 ciudades comparadas</li><li>Banda de vuelo</li><li><strong>Día 1 de ruta completo</strong> en cualquier ciudad</li></ul></div>
+    <div class="tier"><span class="tn">Pase de ciudad — NUEVO</span><div class="pr">$4.99 <span>único</span></div><p class="pd">Un destino resuelto, para siempre.</p>
+      <ul><li>Todos los días de ruta de esa ciudad</li><li>Precios de cada actividad</li><li>Alternativas gratis ilimitadas</li><li>Exportar a Google Maps</li><li>Sin suscripción</li></ul></div>
+    <div class="tier hi"><span class="tn">Pro</span><div class="pr">$9 <span>/mes · $49 año</span></div><p class="pd">Para quien ya tiene fecha.</p>
+      <ul><li>Rutas de todas las ciudades</li><li>Gestor de presupuesto completo</li><li>Ruta que se ajusta a lo que ya gastaste</li><li>Multi-moneda y alertas</li><li>Simulador de cambio de ciudad</li></ul></div>
+  </div>
+  <div class="box dash"><strong>Fundador — $79 de por vida, 100 cupos.</strong> Todo lo de Pro más todos los pases de ciudad, presentes y futuros, para siempre. Con el pase de ciudad en la mezcla, el vitalicio pasa a tener un ancla mucho más clara: son dieciséis pases de ciudad al precio de ocho.</div>
+
+  <h3 style="margin-top:26px">Por qué $4.99 y no $7.99 como ellos</h3>
+  <ul class="clean" style="font-size:15px">
+    <li><strong>Porque es la puerta, no el negocio.</strong> El pase existe para que la gente pague algo por primera vez. El negocio sigue siendo el gestor recurrente. Cobrar $7.99 protege un margen que no necesitas y frena la conversión que sí necesitas.</li>
+    <li><strong>Porque nuestro pase entrega más.</strong> El suyo desbloquea sitios; el nuestro desbloquea sitios con precio y el día cuadrado contra el presupuesto. Cobrar menos por más es un mensaje que se entiende sin explicarlo.</li>
+    <li><strong>Porque es el escalón hacia Pro.</strong> Quien compra dos pases ya gastó $10 y entiende que Pro le sale mejor. Es el mejor argumento de venta que existe y lo paga el propio cliente.</li>
+  </ul>
+
+  <h3 style="margin-top:22px">Impacto en el sprint de 15 días</h3>
+  <table>
+    <thead><tr><th>Producto</th><th class="n">Precio</th><th class="n">Unidades</th><th class="n">Ingreso</th><th>Rol</th></tr></thead>
+    <tbody>
+      <tr><td>Pase de ciudad</td><td class="n">$4.99</td><td class="n">120</td><td class="n">$599</td><td>Volumen y prueba social. Decisión instantánea.</td></tr>
+      <tr><td>Pase de ciudad</td><td class="n">$4.99</td><td class="n">110</td><td class="n">$549</td><td>Ya vio el día 1 gratis y quiere el resto.</td></tr>
+      <tr><td>Pro mensual</td><td class="n">$9</td><td class="n">45</td><td class="n">$405</td><td>Construye el recurrente del mes 2.</td></tr>
+      <tr><td>Pro anual</td><td class="n">$49</td><td class="n">6</td><td class="n">$294</td><td>Caja hoy y retención después.</td></tr>
+      <tr><td>Fundador</td><td class="n">$79</td><td class="n">26</td><td class="n">$2,054</td><td>El grueso. Escasez real con cupos.</td></tr>
+      <tr class="tot"><td>Total</td><td class="n"></td><td class="n">211</td><td class="n">$3,898</td><td></td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:14.5px;color:var(--ink-soft)">Con el pase de ciudad el número de transacciones sube de 75 a 211, pero la barrera por transacción baja muchísimo. Y hay un efecto que no aparece en la tabla: cada persona que paga $4.99 entra a la lista de clientes, no a la de curiosos. A esa lista se le puede vender Pro el mes siguiente.</p>
+  <div class="note"><b>Lo que hay que vigilar</b>Que el pase canibalice a Pro. Se controla con una regla simple: el pase da rutas, nunca gestor. Quien quiera administrar su dinero durante el viaje tiene que pasar a Pro sí o sí. Si en la semana 3 ves más de 4 pases por cada Pro vendido, sube el pase a $6.99 en vez de tocar el precio de Pro.</div>
+</section>
+
+<section id="app">
+  <span class="snum">04 — LA APP, CON PRESUPUESTO CERO</span>
+  <h2>Web instalable primero, Android por $25, iPhone al final.</h2>
+  <p>Esta es la parte donde la gente quema dinero sin necesidad. El orden correcto ahorra los primeros meses completos.</p>
+  <table>
+    <thead><tr><th>Fase</th><th>Qué es</th><th class="n">Costo</th><th class="n">Cuándo</th><th>Qué cubre</th></tr></thead>
+    <tbody>
+      <tr><td><b>1. Web instalable</b></td><td>La misma web con un archivo de manifiesto y un service worker. Se instala desde el navegador, tiene icono propio, pantalla completa y funciona sin conexión.</td><td class="n" style="color:var(--jade)">$0</td><td class="n">Esta semana</td><td>El 90% de lo que la gente llama "app". Anotar gastos en el avión ya funciona.</td></tr>
+      <tr><td><b>2. Android</b></td><td>Se envuelve la misma web en una aplicación nativa mínima y se publica.</td><td class="n">$25 único</td><td class="n">Tras 20 ventas</td><td>Estar en Google Play. Mismo código, cero mantenimiento extra.</td></tr>
+      <tr><td><b>3. iPhone</b></td><td>Misma envoltura, tienda de Apple.</td><td class="n">$99 al año</td><td class="n">Tras 60 ventas</td><td>Solo si los datos dicen que hace falta. Ojo con la comisión de Apple.</td></tr>
+    </tbody>
+  </table>
+  <div class="note r"><b>La trampa de la comisión</b>Si vendes suscripciones <strong>dentro</strong> de la app de iPhone, Apple se lleva su comisión, que en el primer tramo ronda el 15% y sube al 30%. Sobre $9 al mes es dinero real. La salida legal es que el pago se haga en la web y la app solo lo reconozca: el usuario compra Pro en tramo.app desde el navegador, y la app le da acceso. Es exactamente lo que hacen las apps grandes de suscripción.</div>
+  <div class="g2">
+    <div class="box"><h3>Por qué la web instalable te alcanza más de lo que crees</h3>
+      <ul class="clean" style="font-size:14.5px">
+        <li>Se instala en el escritorio del teléfono con icono, sin pasar por tienda</li>
+        <li>Funciona sin conexión: crítico para anotar gastos en un avión o sin datos en el extranjero</li>
+        <li>Se actualiza sola, sin esperar revisión de Apple</li>
+        <li>Cero comisión de tienda sobre tus ventas</li>
+        <li>Un solo código para todo, y sigue siendo el que ya está escrito</li>
+      </ul>
+    </div>
+    <div class="box dark"><h3>Lo que sí pierdes sin app nativa</h3>
+      <ul class="clean" style="font-size:14.5px;color:#A9B6C4">
+        <li style="color:#A9B6C4">Aparecer cuando alguien busca en la tienda. Es tráfico gratis que no tendrás.</li>
+        <li style="color:#A9B6C4">Notificaciones automáticas en iPhone son más limitadas que en Android.</li>
+        <li style="color:#A9B6C4">La percepción: "no tienen app" suena a menos serio, aunque técnicamente sea mejor.</li>
+        <li style="color:#A9B6C4">Reseñas de tienda como prueba social. Itinio tiene 298 y eso vende.</li>
+      </ul>
+    </div>
+  </div>
+  <p style="margin-top:16px;font-size:14.5px"><strong>Recomendación concreta:</strong> haz la web instalable ya, porque es gratis y es un archivo. Paga los $25 de Google en cuanto tengas veinte ventas, porque es único y te da presencia en tienda. Deja Apple para cuando el ingreso mensual pase de $500, porque son $99 al año que hoy no puedes justificar.</p>
+</section>
+
+<section id="login">
+  <span class="snum">05 — ENTRAR CON GOOGLE</span>
+  <h2>Tenías razón, faltaba. Ya está puesto.</h2>
+  <p>El módulo de rutas ya trae el acceso con Google, con Apple y con enlace por correo. Los tres van por el mismo sistema de autenticación de la base de datos, así que no hay que construir formularios de contraseña ni guardar contraseñas de nadie.</p>
+  <div class="g3">
+    <div class="box"><span class="mono-lb">Google</span><h3>El que más convierte</h3><p style="font-size:14px;margin:0">Dos toques y dentro. En Android es prácticamente obligatorio. Se configura en la consola de Google Cloud y se pega la clave en el panel de autenticación.</p></div>
+    <div class="box"><span class="mono-lb">Apple</span><h3>Obligatorio si vas a iPhone</h3><p style="font-size:14px;margin:0">Apple exige ofrecer su acceso si ofreces otros accesos sociales. Necesita la cuenta de desarrollador de $99, así que se activa cuando llegue esa fase.</p></div>
+    <div class="box"><span class="mono-lb">Enlace por correo</span><h3>El colchón</h3><p style="font-size:14px;margin:0">Sin contraseñas, sin fricción y sin depender de nadie. Es el que siempre funciona y el más barato de mantener.</p></div>
+  </div>
+  <div class="note g"><b>Dónde poner el muro de registro</b>No al entrar. Ni al calcular. El registro aparece justo cuando la persona intenta ver el día 2 de su ruta, o sea cuando ya vio el valor completo del día 1 y quiere más. Ese es el momento de máxima intención y el único donde pedir el correo no cuesta conversión.</div>
+</section>
+
+<section id="siguiente" style="border-bottom:0">
+  <span class="snum">06 — QUÉ SIGUE</span>
+  <h2>El trabajo real es de datos, no de código.</h2>
+  <p>El módulo de rutas ya funciona con cinco ciudades y sesenta actividades con precio. Escalarlo a las 46 ciudades del calculador es llenar una tabla, y se puede hacer por lotes mientras vendes.</p>
+  <table>
+    <thead><tr><th>Tarea</th><th class="n">Esfuerzo</th><th>Por qué importa</th></tr></thead>
+    <tbody>
+      <tr><td>Llevar de 5 a 12 ciudades</td><td class="n">2 tardes</td><td>Cubre los destinos que más se buscan en el calculador. Suficiente para vender pases.</td></tr>
+      <tr><td>Web instalable</td><td class="n">2 horas</td><td>Un manifiesto y un service worker. Es lo que convierte la web en "app".</td></tr>
+      <tr><td>Acceso con Google real</td><td class="n">1 hora</td><td>Ya está la interfaz; falta conectar el proveedor en la base de datos.</td></tr>
+      <tr><td>Pase de ciudad en la pasarela</td><td class="n">1 hora</td><td>Un producto de $4.99 y una línea en el webhook.</td></tr>
+      <tr><td>Ruta que reacciona al gasto real</td><td class="n">1 día</td><td>Es la función que nadie más puede copiar sin construir todo el gestor. Es el foso.</td></tr>
+      <tr><td>Exportar a Google Maps</td><td class="n">2 horas</td><td>Itinio lo tiene y resuelve fricción real. Es una URL con paradas.</td></tr>
+      <tr><td>Compartir rutas</td><td class="n">1 día</td><td>Su "Strava para viajar". Es crecimiento gratis, pero va después de vender.</td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <p class="q">Ellos tienen que construir un motor. Tú tienes que llenar una tabla.</p>
+    <p>Esa asimetría es toda la estrategia. Mientras ellos escriben el cálculo de presupuesto, vuelos y multi-moneda desde cero, tú añades ciudades a un archivo de datos. Por eso el siguiente paso no es programar más: es sentarte a llenar siete ciudades con actividades y precios.</p>
+  </div>
+</section>
+</div>
+
+<footer><div class="wrap">
+TRAMO&lt;&lt;RESEARCH&lt;ITINIO&lt;&lt;AGO2026&lt;&lt;<br>
+<a href="rutas.html">Módulo de rutas</a> · <a href="index.html">Calculadora</a> · <a href="gestor.html">Gestor</a><a class="lnk" href="movil.html">Móvil</a> · <a href="plan-negocio.html">Plan de negocio</a> · Documento interno
+</div></footer>
+</body>
+</html>

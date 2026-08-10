@@ -1,6 +1,6 @@
 /* =============================================================================
    TRAMO — /api/config
-   Entrega al navegador la configuración PÚBLICA de Supabase.
+   Entrega al navegador la configuración PÚBLICA de Supabase + enlace de pago.
 
    La URL y la clave anon son públicas por diseño: la seguridad la dan las
    políticas RLS del esquema, no esconder la clave. La service_role NUNCA

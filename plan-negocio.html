@@ -124,7 +124,7 @@ footer a{color:var(--paper)}
   <table>
     <thead><tr><th>Flujo</th><th>Qué es</th><th class="n">Precio</th><th class="n">Margen</th><th>Cuándo</th></tr></thead>
     <tbody>
-      <tr><td><b>1. Pago único</b></td><td>Miembro Fundador (Pro vitalicio, 100 cupos) y Plan Aterrizaje (destino resuelto)</td><td class="n">$79 / $39</td><td class="n">~94%</td><td>Semana 1</td></tr>
+      <tr><td><b>1. Pago único</b></td><td>Miembro Fundador (Pro vitalicio, 100 cupos) y pase de ciudad (una ruta resuelta para siempre)</td><td class="n">$79 / $4.99</td><td class="n">~94%</td><td>Semana 1</td></tr>
       <tr><td><b>2. Suscripción</b></td><td>Pro: gestor con sobres, alertas, multi-moneda, avisos</td><td class="n">$9/mes · $49/año</td><td class="n">~92%</td><td>Semana 2</td></tr>
       <tr><td><b>3. Afiliados</b></td><td>Seguro de nómada, eSIM, banco multi-moneda, alojamiento, vuelos</td><td class="n">4–30%</td><td class="n">100%</td><td>Semana 1</td></tr>
       <tr><td><b>4. B2B (después)</b></td><td>Colivings y coworkings destacados, marcados como pauta</td><td class="n">$99/mes</td><td class="n">~97%</td><td>Mes 3+</td></tr>
@@ -142,7 +142,7 @@ footer a{color:var(--paper)}
       <span class="mono-lb" style="margin:0">Producto</span><span class="mono-lb" style="margin:0;text-align:right">Unidades</span><span class="mono-lb" style="margin:0;text-align:right">Ingreso</span>
     </div>
     <div class="simrow"><div class="lb">Miembro Fundador<small>PAGO ÚNICO $79</small></div><input type="number" id="q1" value="25" min="0" max="100"><div class="out" id="o1"></div></div>
-    <div class="simrow"><div class="lb">Plan Aterrizaje<small>PAGO ÚNICO $39</small></div><input type="number" id="q2" value="16" min="0"><div class="out" id="o2"></div></div>
+    <div class="simrow"><div class="lb">Pase de ciudad<small>PAGO ÚNICO $4.99</small></div><input type="number" id="q2" value="120" min="0"><div class="out" id="o2"></div></div>
     <div class="simrow"><div class="lb">Pro mensual<small>$9 — primer mes</small></div><input type="number" id="q3" value="30" min="0"><div class="out" id="o3"></div></div>
     <div class="simrow"><div class="lb">Pro anual<small>$49</small></div><input type="number" id="q4" value="4" min="0"><div class="out" id="o4"></div></div>
     <div class="simrow"><div class="lb">Afiliados<small>SEGURO · ESIM · BANCO · VUELOS</small></div><input type="number" id="q5" value="180" min="0"><div class="out" id="o5"></div></div>
@@ -287,7 +287,7 @@ footer a{color:var(--paper)}
   <div class="grid2">
     <div class="box dark"><h3>Qué se empuja</h3><ul class="clean" style="font-size:14.5px;color:#A9B6C4">
       <li style="color:#A9B6C4">Fundador a $79 con cupos que se agotan de verdad: es lo único que entrega en 15 días el valor de una anualidad</li>
-      <li style="color:#A9B6C4">Plan Aterrizaje a $39 a quien ya calculó y sigue dudando: máxima intención de compra</li>
+      <li style="color:#A9B6C4">Pase de ciudad a $4.99 a quien ya vio el día 1 gratis y quiere el resto: máxima intención de compra</li>
       <li style="color:#A9B6C4">Venta a mano todos los días: es la única palanca que controlas al 100%</li>
     </ul></div>
     <div class="box dash"><h3>Qué se posterga</h3><ul class="clean" style="font-size:14.5px">
@@ -350,7 +350,7 @@ footer a{color:var(--paper)}
     <ul style="font-size:14.5px">
       <li>Apagar todo canal bajo el 15% del total. Todo el tiempo al que más trajo.</li>
       <li>Cierre real de cupos fundador con fecha. Después el precio sube a $99 y se queda ahí.</li>
-      <li>Empujar Plan Aterrizaje a quien calculó pero no compró: resuelve la ansiedad, no solo la duda.</li>
+      <li>Empujar el pase de ciudad a quien calculó pero no compró: cuesta menos que un café y resuelve el destino entero.</li>
       <li><strong>Meta:</strong> $3,000+ cobrados, 40 planes activos en el gestor, decisión con datos.</li>
     </ul>
   </div></div>
@@ -474,7 +474,7 @@ TRAMO&lt;&lt;PLAN&lt;DE&lt;NEGOCIO&lt;&lt;V3&lt;&lt;JUL2026&lt;&lt;&lt;&lt;&lt;&
 
 <script>
 const $=i=>document.getElementById(i);
-const P={q1:79,q2:39,q3:9,q4:49,q5:1};
+const P={q1:79,q2:4.99,q3:9,q4:49,q5:1};
 function calc(){
   let t=0;
   ["q1","q2","q3","q4","q5"].forEach((k,i)=>{

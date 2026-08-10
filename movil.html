@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TRAMO — Cómo se ve en el teléfono</title>
+<link rel="icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=Public+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#111C2E;--ink-soft:#33415A;--muted:#6E7A8C;--paper:#E9EAE3;--card:#FBFBF8;--line:#C7CABE;--line-strong:#9AA096;--seal:#CE2B52;--jade:#0F6B58;--mint:#4BD6A8;--ochre:#B08429;
+--display:"Bricolage Grotesque","Arial Black",sans-serif;--body:"Public Sans",system-ui,sans-serif;--mono:"JetBrains Mono",monospace;--r:3px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.55}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+nav{background:var(--ink);color:var(--paper);padding:12px 0}
+.nav-in{max-width:1240px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:15px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--paper);margin-right:auto}
+.brand svg{width:26px;height:26px}.brand b{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:.15em}
+nav a.lnk{color:#8FA39B;text-decoration:none;font-size:13px}nav a.lnk:hover{color:var(--mint)}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(1.9rem,4.4vw,2.9rem);letter-spacing:-.034em;line-height:1.02;margin:34px 0 10px}
+.lede{color:var(--ink-soft);max-width:66ch;margin:0 0 8px;font-size:17px}
+.kick{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--seal);font-weight:700}
+h2{font-family:var(--display);font-weight:800;font-size:clamp(1.4rem,2.8vw,1.9rem);letter-spacing:-.025em;margin:0 0 8px}
+section{padding:40px 0;border-bottom:1px solid var(--line)}
+.snum{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--muted);display:block;margin-bottom:8px}
+/* ---- teléfono ---- */
+.phones{display:flex;gap:34px;flex-wrap:wrap;justify-content:center;padding:10px 0 4px}
+.pcol{display:flex;flex-direction:column;align-items:center;gap:12px}
+.pcap{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);text-align:center;max-width:300px;line-height:1.7}
+.pcap b{color:var(--ink);display:block;font-family:var(--display);font-size:15px;letter-spacing:-.01em;text-transform:none;margin-bottom:3px}
+.phone{width:300px;height:620px;background:var(--ink);border-radius:38px;padding:10px;box-shadow:0 18px 40px rgba(17,28,46,.28);position:relative;flex:none}
+.notch{position:absolute;top:16px;left:50%;transform:translateX(-50%);width:92px;height:22px;background:#000;border-radius:12px;z-index:12}
+.screen{background:var(--paper);border-radius:29px;height:100%;overflow:hidden;position:relative;display:flex;flex-direction:column}
+.sbar{background:var(--ink);color:#8FA39B;font-family:var(--mono);font-size:9px;letter-spacing:.06em;padding:9px 16px 5px;display:flex;justify-content:space-between;flex:none;padding-top:26px}
+.mnav{background:var(--ink);color:var(--paper);padding:6px 12px 8px;flex:none}
+.mnav .top{display:flex;align-items:center;gap:7px}
+.mnav .top svg{width:19px;height:19px}
+.mnav .top b{font-family:var(--display);font-weight:800;font-size:14px;letter-spacing:.14em;margin-right:auto}
+.mtier{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;border:1px solid var(--mint);color:var(--mint);padding:2px 6px;border-radius:100px}
+.mav{width:19px;height:19px;border-radius:50%;background:var(--mint);color:var(--ink);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700}
+.mtabs{display:flex;gap:0;margin-top:7px;border-top:1px solid rgba(255,255,255,.12);padding-top:5px}
+.mtab{flex:1;text-align:center;font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#5F7285;padding:4px 2px 5px;border-bottom:2px solid transparent}
+.mtab.on{color:var(--paper);border-bottom-color:var(--seal)}
+.body{flex:1;overflow-y:auto;padding:12px}
+.body::-webkit-scrollbar{width:0}
+.mh{font-family:var(--display);font-weight:800;font-size:17px;letter-spacing:-.02em;line-height:1.1;margin:2px 0 8px}
+.mh em{font-style:normal;color:var(--seal)}
+.mp{font-size:10.5px;color:var(--ink-soft);margin:0 0 10px;line-height:1.45}
+.mcard{background:var(--card);border:1.2px solid var(--ink);border-radius:3px;margin-bottom:9px}
+.mcard .hd{background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;padding:6px 9px;display:flex;justify-content:space-between}
+.mcard .bd{padding:9px}
+.mlb{font-family:var(--mono);font-size:7px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;display:block;margin-bottom:3px}
+.minp{border:1.2px solid var(--line-strong);background:#fff;border-radius:2px;padding:6px 7px;font-family:var(--mono);font-size:10px;margin-bottom:7px;display:flex;align-items:center;gap:5px}
+.minp svg{width:10px;height:10px;opacity:.5;flex:none}
+.minp .ph{color:var(--muted)}
+.mrow{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.mbtn{background:var(--seal);color:#fff;border:0;border-radius:2px;padding:8px;font-size:10.5px;font-weight:700;width:100%;text-align:center;font-family:var(--body)}
+.mbtn.gh{background:transparent;color:var(--ink);border:1.2px solid var(--ink)}
+.mbtn.dk{background:var(--ink);color:var(--paper)}
+.mchips{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px}
+.mchip{font-size:8.5px;padding:3px 7px;border:1.2px solid var(--line-strong);border-radius:100px;background:#fff}
+.mchip.on{background:var(--seal);border-color:var(--seal);color:#fff;font-weight:600}
+.mdark{background:var(--ink);color:var(--paper);border-radius:3px;padding:11px}
+.mdark .k{font-family:var(--mono);font-size:7px;letter-spacing:.14em;text-transform:uppercase;color:#8496A8;margin-bottom:4px}
+.mdark .v{font-family:var(--display);font-weight:800;font-size:29px;letter-spacing:-.035em;line-height:.95;color:var(--mint)}
+.mdark .sd{font-family:var(--mono);font-size:8.5px;color:#A9B6C4;line-height:1.7;margin-top:6px}
+.mdark .sd b{color:var(--paper)}
+.mmeter{height:6px;background:rgba(255,255,255,.16);border-radius:3px;margin-top:8px;overflow:hidden}
+.mmeter i{display:block;height:100%;border-radius:3px}
+.mstat{border-left:2.5px solid var(--jade);background:var(--card);padding:8px 9px;font-size:9.5px;line-height:1.45;margin:8px 0}
+.mstat b{display:block;font-family:var(--mono);font-size:7px;letter-spacing:.12em;text-transform:uppercase;color:var(--jade);margin-bottom:2px}
+.mstat.w{border-color:var(--ochre)}.mstat.w b{color:var(--ochre)}
+.mdays{display:flex;border-bottom:1.2px solid var(--ink);margin-bottom:6px}
+.mday{flex:1;text-align:center;font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;padding:6px 2px;color:var(--muted);border-bottom:2px solid transparent}
+.mday.on{color:var(--ink);border-bottom-color:var(--seal)}
+.mday span{display:block;font-size:8px;letter-spacing:0;margin-top:1px}
+.mstop{display:grid;grid-template-columns:34px 1fr auto;gap:7px;padding:8px 0;border-bottom:1px dashed var(--line)}
+.mstop .tm{font-family:var(--mono);font-size:9px;font-weight:700}
+.mstop .tm small{display:block;font-weight:400;color:var(--muted);font-size:7px}
+.mstop .ct{font-family:var(--mono);font-size:6.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.mstop .ct .hr{color:var(--jade);text-transform:none}
+.mstop h5{font-family:var(--display);font-weight:700;font-size:11.5px;margin:2px 0 2px}
+.mstop p{font-size:8.5px;color:var(--ink-soft);margin:0;line-height:1.4}
+.mstop .pz{font-family:var(--mono);font-size:9.5px;font-weight:700;text-align:right;white-space:nowrap}
+.mstop .pz.fr{color:var(--jade)}
+.mleg{border-left:1.5px dotted var(--line-strong);margin-left:15px;padding:5px 0 5px 10px;display:flex;gap:3px;flex-wrap:wrap;align-items:center}
+.mmodo{font-family:var(--mono);font-size:6.5px;letter-spacing:.03em;color:var(--muted);border:1px solid var(--line);padding:1px 5px;border-radius:100px;background:#fff}
+.mmodo.on{border-color:var(--jade);color:var(--jade);font-weight:700}
+.mdst{font-family:var(--mono);font-size:6.5px;color:var(--line-strong)}
+.mest{font-family:var(--mono);font-size:6px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--ochre);color:var(--ochre);padding:1px 4px;border-radius:100px}
+.menv{padding:7px 0;border-bottom:1px dashed var(--line)}
+.menv .tp{display:flex;justify-content:space-between;font-size:9.5px;font-weight:600;gap:6px}
+.menv .am{font-family:var(--mono);font-size:8.5px;color:var(--muted);white-space:nowrap}
+.mpb{height:4px;background:#DEDFD6;border-radius:2px;margin-top:4px;overflow:hidden}
+.mpb i{display:block;height:100%;border-radius:2px}
+.mlock{border:1.2px dashed var(--line-strong);border-radius:3px;padding:12px;text-align:center;background:repeating-linear-gradient(45deg,transparent,transparent 7px,rgba(17,28,46,.04) 7px,rgba(17,28,46,.04) 14px)}
+.mlock h5{font-family:var(--display);font-weight:800;font-size:12px;margin:0 0 4px}
+.mlock p{font-size:8.5px;color:var(--ink-soft);margin:0 0 8px;line-height:1.4}
+.mtrip{border:1.2px solid var(--line-strong);border-radius:3px;padding:8px;background:#fff;margin-bottom:6px}
+.mtrip.on{border-color:var(--ink);box-shadow:2px 2px 0 rgba(17,28,46,.14)}
+.mtrip .nm{font-family:var(--display);font-weight:700;font-size:12px}
+.mtrip .dt{font-family:var(--mono);font-size:7.5px;color:var(--muted);margin-top:2px}
+.mtrip .rw{display:flex;justify-content:space-between;align-items:flex-end;margin-top:5px;gap:6px}
+.mtrip .am{font-family:var(--mono);font-size:10px;font-weight:700}
+.mbadge{font-family:var(--mono);font-size:6.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--jade);color:var(--jade);padding:2px 5px;border-radius:100px}
+.mbadge.p{border-color:var(--line-strong);color:var(--muted)}
+.mgbtn{width:100%;display:flex;align-items:center;justify-content:center;gap:7px;font-size:10.5px;font-weight:600;padding:8px;border:1.2px solid var(--line-strong);background:#fff;border-radius:2px;margin-bottom:6px}
+.mgbtn svg{width:13px;height:13px}
+.mfoot{background:var(--ink);display:flex;flex:none;border-top:1px solid rgba(255,255,255,.1)}
+.mfoot div{flex:1;text-align:center;padding:8px 2px 11px;font-family:var(--mono);font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:#5F7285}
+.mfoot div.on{color:var(--mint)}
+.mfoot .ic{display:block;font-size:13px;margin-bottom:2px;line-height:1}
+/* explicación */
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.box{background:var(--card);border:1.5px solid var(--ink);border-radius:var(--r);padding:18px}
+.box.dark{background:var(--ink);color:var(--paper)}.box.dark h3{color:var(--mint)}
+.box h3{font-family:var(--display);font-weight:700;font-size:17px;margin:0 0 8px}
+.box p{font-size:14px;color:var(--ink-soft);margin:0}
+.box.dark p{color:#A9B6C4}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:14px 0}
+th{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 10px 8px 0;border-bottom:1.5px solid var(--ink)}
+td{padding:9px 10px 9px 0;border-bottom:1px dashed var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:var(--mono);white-space:nowrap;padding-right:0}
+ul.clean{list-style:none;padding:0;margin:0}
+ul.clean li{padding-left:22px;position:relative;margin-bottom:8px;font-size:14.5px;color:var(--ink-soft)}
+ul.clean li::before{content:"";position:absolute;left:0;top:8px;width:8px;height:8px;background:var(--seal);transform:rotate(45deg)}
+.note{border-left:3px solid var(--ochre);background:rgba(176,132,41,.08);padding:14px 16px;font-size:14.5px;margin:16px 0}
+.note b{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ochre);display:block;margin-bottom:4px}
+footer{background:var(--ink);color:#8496A8;padding:30px 0;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;line-height:1.9}
+footer a{color:var(--paper)}
+@media(max-width:860px){.g3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav><div class="nav-in">
+  <a class="brand" href="index.html"><svg viewBox="0 0 40 40"><path d="M7 9v22M33 9v22M7 20h8M25 20h8" stroke="#E9EAE3" stroke-width="3" stroke-linecap="round"/><path d="M20 13l5 7-5 7-5-7z" fill="#CE2B52"/></svg><b>TRAMO</b></a>
+  <a class="lnk" href="index.html">Calculadora</a><a class="lnk" href="rutas.html">Rutas</a>
+  <a class="lnk" href="gestor.html">Gestor</a><a class="lnk" href="research-itinio.html">Research</a>
+</div></nav>
+
+<div class="wrap">
+  <span class="kick" style="display:block;margin-top:34px">Vista previa · Documento interno</span>
+  <h1>Cómo se ve TRAMO en el teléfono.</h1>
+  <p class="lede">Es la misma web, no otra aplicación. Se instala desde el navegador, queda con icono propio en la pantalla de inicio y funciona sin conexión. Estas cuatro pantallas son las que verá alguien que la instale.</p>
+</div>
+
+<section class="wrap">
+  <div class="phones">
+
+    <!-- 1. CALCULADORA -->
+    <div class="pcol">
+      <div class="phone"><div class="notch"></div><div class="screen">
+        <div class="sbar"><span>9:41</span><span>▮▮▮ ⌁ 84%</span></div>
+        <div class="mnav">
+          <div class="top"><svg viewBox="0 0 40 40"><path d="M7 9v22M33 9v22M7 20h8M25 20h8" stroke="#E9EAE3" stroke-width="3" stroke-linecap="round"/><path d="M20 13l5 7-5 7-5-7z" fill="#CE2B52"/></svg><b>TRAMO</b><span class="mav">M</span><span class="mtier">GRATIS</span></div>
+          <div class="mtabs"><div class="mtab on">Calc</div><div class="mtab">Rutas</div><div class="mtab">Gestor</div></div>
+        </div>
+        <div class="body">
+          <h2 class="mh">No preguntes cuánto cuesta. Pregunta <em>cuántos días te alcanza.</em></h2>
+          <div class="mcard"><div class="hd"><span>Calculadora</span><span style="color:#4BD6A8">Gratis</span></div><div class="bd">
+            <span class="mlb">Tu rango (USD)</span>
+            <div class="mrow"><div class="minp">$ 4,000</div><div class="minp">$ 7,000</div></div>
+            <div class="mrow"><div><span class="mlb">Días</span><div class="minp">45</div></div>
+              <div><span class="mlb">Temporada</span><div class="minp">Media</div></div></div>
+            <span class="mlb">Sales desde · 208 ciudades</span>
+            <div class="minp"><svg viewBox="0 0 16 16"><circle cx="7" cy="7" r="5" fill="none" stroke="#111C2E" stroke-width="1.8"/><path d="M11 11l4 4" stroke="#111C2E" stroke-width="1.8"/></svg>Lima · Perú · LIM</div>
+            <span class="mlb">A dónde</span>
+            <div class="minp"><svg viewBox="0 0 16 16"><circle cx="7" cy="7" r="5" fill="none" stroke="#111C2E" stroke-width="1.8"/><path d="M11 11l4 4" stroke="#111C2E" stroke-width="1.8"/></svg>País · Portugal</div>
+            <div class="mchips"><span class="mchip on">Gastar poco</span><span class="mchip on">Comunidad</span><span class="mchip">Playa</span></div>
+            <button class="mbtn">Calcular cuántos días</button>
+          </div></div>
+          <div class="mdark">
+            <div class="k">Vuelo LIM → LIS · ida y vuelta</div>
+            <div class="v" style="font-size:22px">$925–$1,313</div>
+            <div class="sd">Usamos <b>$1,313</b> con tu mínimo<br><span style="color:#F0B95B">Estimación local</span></div>
+          </div>
+          <div class="mstat" style="margin-top:8px"><b>Alcanza · 2 ciudades</b>Sí: 45 días te alcanzan en Porto y Lisboa. En Porto llegas hasta 62 días.</div>
+          <div class="mcard"><div class="bd" style="padding:8px 9px">
+            <div style="font-family:var(--display);font-weight:700;font-size:12.5px">Porto</div>
+            <div style="font-family:var(--mono);font-size:7px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase">Portugal · Europa</div>
+            <div style="font-family:var(--display);font-weight:800;font-size:24px;color:var(--jade);letter-spacing:-.03em;margin-top:4px">33–80 <span style="font-size:9px;color:var(--muted);font-family:var(--body);font-weight:400">días</span></div>
+            <div style="font-family:var(--mono);font-size:7.5px;color:var(--muted);margin-top:3px">$62.9/día · tarifa mensual</div>
+          </div></div>
+        </div>
+        <div class="mfoot"><div class="on"><span class="ic">◧</span>Calc</div><div><span class="ic">◈</span>Rutas</div><div><span class="ic">◑</span>Gestor</div></div>
+      </div></div>
+      <p class="pcap"><b>Calculadora</b>Gratis e ilimitada, sin cuenta. El vuelo se muestra como banda, no como número suelto.</p>
+    </div>
+
+    <!-- 2. RUTAS -->
+    <div class="pcol">
+      <div class="phone"><div class="notch"></div><div class="screen">
+        <div class="sbar"><span>9:41</span><span>▮▮▮ ⌁ 84%</span></div>
+        <div class="mnav">
+          <div class="top"><svg viewBox="0 0 40 40"><path d="M7 9v22M33 9v22M7 20h8M25 20h8" stroke="#E9EAE3" stroke-width="3" stroke-linecap="round"/><path d="M20 13l5 7-5 7-5-7z" fill="#CE2B52"/></svg><b>TRAMO</b><span class="mav">M</span><span class="mtier">GRATIS</span></div>
+          <div class="mtabs"><div class="mtab">Calc</div><div class="mtab on">Rutas</div><div class="mtab">Gestor</div></div>
+        </div>
+        <div class="body">
+          <div class="mdark">
+            <div class="k">Costo del día 1 · Pekín</div>
+            <div class="v">$48–$111</div>
+            <div class="sd">Tu presupuesto: <b>$35</b><br>7 paradas · 2 gratis · 14.7 km<br>Traslados: <b>$3</b></div>
+            <div class="mmeter"><i style="width:100%;background:#CE2B52"></i></div>
+          </div>
+          <div class="mstat w" style="border-color:var(--seal)"><b style="color:var(--seal)">Te pasas del presupuesto</b>Aunque pidas lo más barato te pasas $13. Cambia una parada de pago por una gratis.</div>
+          <div class="mdays"><div class="mday on">Día 1<span>$48–111</span></div><div class="mday">Día 2<span>🔒</span></div><div class="mday">Día 3<span>🔒</span></div></div>
+          <div class="mstop"><div class="tm">09:00<small>110 min</small></div>
+            <div><div class="ct">Museo · <span class="hr">10:00–18:00</span> <span class="mest">Est.</span></div><h5>Museo Nacional de China</h5><p>Museo registrado en el mapa. Confirma horario antes de ir.</p></div>
+            <div class="pz">$8–19</div></div>
+          <div class="mleg"><span class="mmodo on">Transporte 21 min · $1</span><span class="mmodo">A pie 53 min</span><span class="mmodo">Taxi 15 min · $8</span><span class="mmodo">Bici 23 min · $1</span><span class="mdst">4.1 km</span></div>
+          <div class="mstop"><div class="tm">12:00<small>80 min</small></div>
+            <div><div class="ct">Restaurante · <span class="hr">12:00–23:00</span> <span class="mest">Est.</span></div><h5>Restaurante Jiaozi Wang</h5><p>Restaurante del barrio. Precio estimado según el país.</p></div>
+            <div class="pz">$12–29</div></div>
+          <div class="mleg"><span class="mmodo on">A pie 18 min</span><span class="mmodo">Transporte 12 min · $1</span><span class="mmodo">Taxi 9 min · $5</span><span class="mdst">1.4 km</span></div>
+          <div class="mstop"><div class="tm">13:38<small>110 min</small></div>
+            <div><div class="ct">Museo · <span class="hr">08:30–17:00</span></div><h5>Ciudad Prohibida</h5><p>Horario confirmado en el mapa. Compra la entrada antes.</p></div>
+            <div class="pz">$8–19</div></div>
+          <div class="mleg"><span class="mmodo on">Transporte 19 min · $1</span><span class="mmodo">A pie 46 min</span><span class="mmodo">Taxi 14 min · $7</span><span class="mdst">3.5 km</span></div>
+          <div class="mstop"><div class="tm">17:20<small>70 min</small></div>
+            <div><div class="ct">Mercado · <span class="hr">08:30–18:00</span></div><h5>Mercado de Panjiayuan</h5><p>Lo barato de la ciudad suele estar aquí.</p></div>
+            <div class="pz">$5–12</div></div>
+          <div class="mstop"><div class="tm">20:44<small>60 min</small></div>
+            <div><div class="ct">Mirador · <span class="hr">06:00–22:00</span> <span class="mest">Est.</span></div><h5>Mirador Jingshan</h5><p>Punto de vista marcado en el mapa. Sin entrada.</p></div>
+            <div class="pz fr">Gratis</div></div>
+          <div class="mlock" style="margin-top:10px"><h5>Los días 2 al 3 están listos</h5><p>El día 1 es gratis siempre. El resto con el pase o Pro.</p>
+            <button class="mbtn" style="margin-bottom:5px">Pase de Pekín — $4.99</button>
+            <button class="mbtn gh">Pro — $9/mes</button></div>
+        </div>
+        <div class="mfoot"><div><span class="ic">◧</span>Calc</div><div class="on"><span class="ic">◈</span>Rutas</div><div><span class="ic">◑</span>Gestor</div></div>
+      </div></div>
+      <p class="pcap"><b>Rutas con precio</b>Cualquier ciudad del mundo. Cada parada con horario y rango de precio, y cada tramo con las cuatro formas de llegar y lo que cuesta cada una.</p>
+    </div>
+
+    <!-- 3. GESTOR -->
+    <div class="pcol">
+      <div class="phone"><div class="notch"></div><div class="screen">
+        <div class="sbar"><span>9:41</span><span>▮▮▮ ⌁ 84%</span></div>
+        <div class="mnav">
+          <div class="top"><svg viewBox="0 0 40 40"><path d="M7 9v22M33 9v22M7 20h8M25 20h8" stroke="#E9EAE3" stroke-width="3" stroke-linecap="round"/><path d="M20 13l5 7-5 7-5-7z" fill="#CE2B52"/></svg><b>TRAMO</b><span class="mav">M</span><span class="mtier">PRO</span></div>
+          <div class="mtabs"><div class="mtab">Calc</div><div class="mtab">Rutas</div><div class="mtab on">Gestor</div></div>
+        </div>
+        <div class="body">
+          <div class="mdark">
+            <div class="k">Puedes gastar hoy — día 12 de 45</div>
+            <div class="v">$41.20</div>
+            <div class="sd">Restante real: <b>$2,847</b><br>Días por delante: <b>34</b> · Ritmo: <b>$38</b></div>
+          </div>
+          <div class="mstat"><b>Vas bien</b>A este ritmo terminas con $312 sin usar, más el colchón de $450.</div>
+          <div class="mcard"><div class="hd"><span>Anotar gasto</span><span style="color:#4BD6A8">Cambio del día</span></div><div class="bd">
+            <span class="mlb">Fecha</span><div class="minp">09 ago 2026</div>
+            <span class="mlb">Categoría</span><div class="minp">Comida</div>
+            <div class="mrow"><div><span class="mlb">Monto</span><div class="minp">45,000</div></div>
+              <div><span class="mlb">Moneda</span><div class="minp">COP</div></div></div>
+            <div class="minp" style="background:#EFEFE9"><span class="ph">= $11.11 USD</span></div>
+            <button class="mbtn">Anotar gasto</button>
+          </div></div>
+          <div class="mcard"><div class="hd"><span>Sobres</span><span>27% del total</span></div><div class="bd">
+            <div class="menv"><div class="tp"><span>Estadía</span><span class="am">$550 de $1,539</span></div><div class="mpb"><i style="width:36%;background:#0F6B58"></i></div></div>
+            <div class="menv"><div class="tp"><span>Comida</span><span class="am">$312 de $851</span></div><div class="mpb"><i style="width:37%;background:#B08429"></i></div></div>
+            <div class="menv"><div class="tp"><span>Traslados</span><span class="am">$65 de $365</span></div><div class="mpb"><i style="width:18%;background:#4A7FC1"></i></div></div>
+            <div class="menv" style="border-bottom:0"><div class="tp"><span>Ocio</span><span class="am">$127 de $486</span></div><div class="mpb"><i style="width:26%;background:#CE2B52"></i></div>
+              <div style="font-family:var(--mono);font-size:7px;color:var(--jade);margin-top:3px">Pronóstico de tu ruta: $51–$93</div></div>
+          </div></div>
+        </div>
+        <div class="mfoot"><div><span class="ic">◧</span>Calc</div><div><span class="ic">◈</span>Rutas</div><div class="on"><span class="ic">◑</span>Gestor</div></div>
+      </div></div>
+      <p class="pcap"><b>Gestor</b>La pantalla que se abre a diario. Anotar un gasto son tres toques, y funciona sin señal.</p>
+    </div>
+
+    <!-- 4. VIAJES + CUENTA -->
+    <div class="pcol">
+      <div class="phone"><div class="notch"></div><div class="screen">
+        <div class="sbar"><span>9:41</span><span>▮▮▮ ⌁ 84%</span></div>
+        <div class="mnav">
+          <div class="top"><svg viewBox="0 0 40 40"><path d="M7 9v22M33 9v22M7 20h8M25 20h8" stroke="#E9EAE3" stroke-width="3" stroke-linecap="round"/><path d="M20 13l5 7-5 7-5-7z" fill="#CE2B52"/></svg><b>TRAMO</b><span class="mav">M</span><span class="mtier">PRO</span></div>
+          <div class="mtabs"><div class="mtab">Calc</div><div class="mtab">Rutas</div><div class="mtab on">Gestor</div></div>
+        </div>
+        <div class="body">
+          <div style="font-family:var(--mono);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:7px">Mis viajes</div>
+          <div style="font-family:var(--mono);font-size:8px;letter-spacing:.16em;color:var(--muted);margin:8px 0 6px">2026</div>
+          <div class="mtrip on"><div class="nm">Medellín, Colombia</div><div class="dt">29 jul → 11 sep · 45d · 22 reg.</div>
+            <div class="rw"><span class="mbadge">En curso</span><span class="am">$1,229 <span style="color:var(--muted);font-weight:400">de $4,500</span></span></div></div>
+          <div class="mtrip"><div class="nm">Lisboa, Portugal</div><div class="dt">14 mar → 28 abr · 46d · 61 reg.</div>
+            <div class="rw"><span class="mbadge p">Terminado</span><span class="am">$3,940 <span style="color:var(--muted);font-weight:400">de $4,200</span></span></div></div>
+          <div style="font-family:var(--mono);font-size:8px;letter-spacing:.16em;color:var(--muted);margin:12px 0 6px">2025</div>
+          <div class="mtrip"><div class="nm">Florianópolis, Brasil</div><div class="dt">03 nov → 02 dic · 30d · 44 reg.</div>
+            <div class="rw"><span class="mbadge p">Terminado</span><span class="am">$2,180 <span style="color:var(--muted);font-weight:400">de $2,500</span></span></div></div>
+          <div class="mcard" style="margin-top:10px"><div class="hd">Totales</div><div class="bd">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+              <div style="border:1.2px solid var(--line-strong);border-radius:2px;padding:7px;background:#fff"><div style="font-family:var(--mono);font-size:6.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Viajes</div><div style="font-family:var(--display);font-weight:800;font-size:16px">3</div></div>
+              <div style="border:1.2px solid var(--line-strong);border-radius:2px;padding:7px;background:#fff"><div style="font-family:var(--mono);font-size:6.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Días fuera</div><div style="font-family:var(--display);font-weight:800;font-size:16px">121</div></div>
+              <div style="border:1.2px solid var(--line-strong);border-radius:2px;padding:7px;background:#fff"><div style="font-family:var(--mono);font-size:6.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Gasto total</div><div style="font-family:var(--display);font-weight:800;font-size:16px">$7,349</div></div>
+              <div style="border:1.2px solid var(--line-strong);border-radius:2px;padding:7px;background:#fff"><div style="font-family:var(--mono);font-size:6.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Por día</div><div style="font-family:var(--display);font-weight:800;font-size:16px">$61</div></div>
+            </div>
+            <button class="mbtn gh" style="margin-top:8px">Descargar todo (CSV)</button>
+          </div></div>
+        </div>
+        <div class="mfoot"><div><span class="ic">◧</span>Calc</div><div><span class="ic">◈</span>Rutas</div><div class="on"><span class="ic">◑</span>Gestor</div></div>
+      </div></div>
+      <p class="pcap"><b>Historial de viajes</b>Cada viaje guardado con sus fechas. El CSV sale listo para el contador.</p>
+    </div>
+
+  </div>
+</section>
+
+<section class="wrap">
+  <span class="snum">01 — POR QUÉ ESTA VERSIÓN Y NO UNA APP NATIVA</span>
+  <h2>Es la misma web. Ahí está toda la ventaja.</h2>
+  <div class="g3">
+    <div class="box"><h3>Un solo código</h3><p>La pantalla del teléfono y la del escritorio salen del mismo archivo. No hay dos versiones que mantener ni funciones que se quedan atrás en una de las dos.</p></div>
+    <div class="box"><h3>Sin conexión</h3><p>Al instalarla se guarda en el teléfono. Puedes anotar un gasto en un avión, en el metro o sin datos en el extranjero, que es justo cuando más falta hace.</p></div>
+    <div class="box dark"><h3>Sin comisión de tienda</h3><p>Si vendes suscripciones dentro de una app de iPhone, Apple se lleva entre el 15% y el 30%. Cobrando en la web, ese dinero se queda contigo.</p></div>
+  </div>
+  <div class="note"><b>La contrapartida honesta</b>Sin app en las tiendas pierdes dos cosas reales: aparecer cuando alguien busca en la tienda, que es tráfico gratis, y las reseñas como prueba social. Por eso el plan no es quedarse aquí para siempre: es empezar aquí porque cuesta cero, y pagar los $25 de Google Play en cuanto haya veinte ventas.</div>
+</section>
+
+<section class="wrap">
+  <span class="snum">02 — CÓMO SE INSTALA</span>
+  <h2>Dos toques, sin pasar por ninguna tienda.</h2>
+  <table>
+    <thead><tr><th>Sistema</th><th>Qué hace el usuario</th><th class="n">Resultado</th></tr></thead>
+    <tbody>
+      <tr><td><b>Android</b></td><td>Aparece solo un aviso de instalación al segundo o tercer uso, o desde el menú del navegador</td><td class="n">Icono propio</td></tr>
+      <tr><td><b>iPhone</b></td><td>Botón compartir, luego «Añadir a pantalla de inicio». Apple no permite el aviso automático</td><td class="n">Icono propio</td></tr>
+      <tr><td><b>Escritorio</b></td><td>Un icono de instalación en la barra de direcciones</td><td class="n">Ventana propia</td></tr>
+    </tbody>
+  </table>
+  <ul class="clean" style="margin-top:18px">
+    <li>El botón <strong>Instalar la app</strong> ya está en la barra superior de las tres pantallas, y desaparece solo cuando ya está instalada.</li>
+    <li>En iPhone no existe la instalación automática, así que ahí el botón explica los dos pasos en lugar de instalar directamente. Es una limitación de Apple, no un descuido.</li>
+    <li>Una vez instalada se actualiza sola. No hay que esperar revisión de nadie ni pedirle al usuario que descargue nada.</li>
+  </ul>
+</section>
+
+<section class="wrap">
+  <span class="snum">04 — DE DÓNDE SALEN LOS DATOS</span>
+  <h2>Cualquier ciudad del mundo, sin pagar una sola API.</h2>
+  <table>
+    <thead><tr><th>Qué</th><th>Fuente</th><th class="n">Costo</th><th>Precisión</th></tr></thead>
+    <tbody>
+      <tr><td>Encontrar la ciudad</td><td>Open-Meteo Geocoding</td><td class="n">$0, sin clave</td><td>Nombre, país, coordenadas y población de prácticamente cualquier localidad</td></tr>
+      <tr><td>Sitios de la ruta</td><td>OpenStreetMap vía Overpass</td><td class="n">$0, sin clave</td><td>Sitios reales con categoría y coordenadas; el horario viene cuando alguien lo cargó</td></tr>
+      <tr><td>Costo de vida</td><td>46 ciudades medidas + índice de 148 países</td><td class="n">$0</td><td>Medido donde lo tenemos, estimado y etiquetado donde no</td></tr>
+      <tr><td>Precio de las paradas</td><td>Estimado del país y la categoría</td><td class="n">$0</td><td>El mapa no publica precios; siempre se marca como estimación</td></tr>
+      <tr><td>Precio de vuelos</td><td>Motor propio calibrado</td><td class="n">$0</td><td>Banda de precio; con SerpApi conectada pasa a precio real</td></tr>
+    </tbody>
+  </table>
+  <div class="note"><b>Por qué esto importa para el sprint</b>Sin ninguna clave configurada, alguien en Lima puede buscar Ulán Bator, ver cuántos días le alcanza y recibir una ruta con sitios reales. Eso significa que puedes lanzar sin pagar infraestructura y sin que el producto se vea vacío en las 190 ciudades que no alcanzaste a curar. La contrapartida: los precios de esas paradas son estimaciones, y el producto lo dice en cada una en lugar de fingir que son datos medidos.</div>
+</section>
+
+<section class="wrap" style="border-bottom:0">
+  <span class="snum">05 — LO QUE CAMBIA EN PANTALLA PEQUEÑA</span>
+  <h2>Menos columnas, mismo contenido.</h2>
+  <table>
+    <thead><tr><th>Elemento</th><th>Escritorio</th><th>Teléfono</th></tr></thead>
+    <tbody>
+      <tr><td>Navegación entre herramientas</td><td>Pestañas con descripción bajo el logo</td><td>Pestañas compactas arriba y barra fija abajo</td></tr>
+      <tr><td>Formulario y resultado</td><td>Dos columnas lado a lado</td><td>Una columna: primero el resultado, luego el formulario</td></tr>
+      <tr><td>Correo en la barra</td><td>Visible junto al avatar</td><td>Se oculta y queda solo el avatar</td></tr>
+      <tr><td>Paradas de la ruta</td><td>Hora, descripción y precio en tres columnas</td><td>Hora y descripción arriba, precio debajo</td></tr>
+      <tr><td>Opciones de transporte</td><td>Las cuatro en una línea</td><td>Las cuatro en línea, con salto si no caben</td></tr>
+      <tr><td>Tabla de movimientos</td><td>Cinco columnas con moneda original</td><td>Se recorta a fecha, categoría e importe</td></tr>
+    </tbody>
+  </table>
+  <div class="note"><b>Nota de diseño</b>Nada se esconde detrás de un menú de hamburguesa. En una herramienta que se usa mientras caminas por una ciudad, cada toque de más es un motivo para no anotar el gasto, y un gasto no anotado rompe todo el cálculo.</div>
+</section>
+
+<footer><div class="wrap">TRAMO&lt;&lt;VISTA&lt;MOVIL&lt;&lt;<br>
+<a href="index.html">Calculadora</a> · <a href="rutas.html">Rutas</a> · <a href="gestor.html">Gestor</a> · <a href="research-itinio.html">Research</a></div></footer>
+</body>
+</html>

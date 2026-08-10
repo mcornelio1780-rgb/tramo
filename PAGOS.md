@@ -130,7 +130,7 @@ El repositorio ya trae `api/webhook.js`. Es la pieza que escucha al proveedor
 de pago y activa el plan Pro del usuario automáticamente.
 
 1. En tu proveedor, crea cuatro productos con estos identificadores:
-   `tramo-pro-mensual`, `tramo-pro-anual`, `tramo-fundador`, `tramo-aterrizaje`
+   `tramo-pro-mensual`, `tramo-pro-anual`, `tramo-fundador`, `tramo-pase-ciudad`
 2. Configura el webhook apuntando a `https://tu-dominio/api/webhook`
 3. Copia el secreto de firma del webhook a la variable `PAYMENT_WEBHOOK_SECRET`
 4. Haz una compra de prueba y mira el evento en el panel del proveedor

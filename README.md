@@ -12,7 +12,10 @@ primera vez.
 | Archivo | Qué es | Idioma |
 |---|---|---|
 | `index.html` | Landing + calculadora. Motor completo en JS plano. | ES / EN / PT |
+| `rutas.html` | **Nuevo.** Rutas día a día con el precio de cada parada, comparadas contra tu presupuesto. Acceso con Google/Apple/correo. | ES / EN / PT |
 | `gestor.html` | Gestor: sobres, subtipos de transporte, perfil, facturación. | ES / EN / PT |
+| `research-itinio.html` | Interno: análisis de Itinio, precios nuevos, estrategia de app. | ES |
+| `manifest.webmanifest`, `sw.js`, `icon.svg` | Web instalable (PWA): icono propio y funciona sin conexión. | — |
 | `plan-negocio.html` | Interno: modelo, precios, sprint de 15 días, APIs, Supabase. | ES |
 | `punto-equilibrio.html` | Interno: costos, punto de equilibrio, CAC, sprint de 15 días. | ES |
 | `api/` | Funciones para Vercel. | — |
@@ -102,6 +105,90 @@ es pública por diseño; la seguridad la dan las políticas. La `service_role`
 nunca va al navegador: solo la usa el webhook de pagos.
 
 ---
+
+## Archivos
+
+| Archivo | Qué es |
+|---|---|
+| `tramo-core.js` | **Núcleo compartido**: sesión, navegación entre las tres herramientas, idioma, instalación, buscador de ciudades. Es la única fuente de verdad. |
+| `build.js` | Copia el núcleo dentro de los tres HTML. Ejecútalo tras cada cambio del núcleo. |
+| `index.html` | Calculadora y portada |
+| `rutas.html` | Rutas con precio, horarios, distancias y transporte multimodal. 7 ciudades curadas: Lima, Medellín, Lisboa, CDMX, Bangkok, Barcelona, Buenos Aires |
+| `gestor.html` | Gestor con historial de viajes |
+| `movil.html` | Vista previa de las pantallas en teléfono (interno) |
+| `plan-negocio.html`, `punto-equilibrio.html`, `research-itinio.html` | Documentos internos |
+
+## Si editas el núcleo
+
+El núcleo vive en `tramo-core.js`, pero va **incrustado** dentro de cada HTML para
+que cada archivo funcione con doble clic, sin servidor. Después de tocar el núcleo:
+
+```bash
+node build.js
+```
+
+Eso reescribe el bloque entre las marcas `<!--CORE:inicio-->` y `<!--CORE:fin-->`
+de `index.html`, `rutas.html` y `gestor.html`. No edites nada dentro de esas marcas:
+se sobrescribe en la siguiente ejecución.
+
+## El flujo del producto
+
+| Pantalla | Qué hace | Precio |
+|---|---|---|
+| `index.html` | Calcula cuántos días te alcanza el presupuesto, desde cualquier ciudad del mundo | Gratis e ilimitado, sin cuenta |
+| `rutas.html` | Qué hacer en la ciudad, con el precio de cada parada y el día cuadrado contra tu presupuesto | Día 1 gratis · resto con pase $4.99 o Pro |
+| `gestor.html` | Administra el dinero durante el viaje: sobres, límite diario, alertas | Pro $9/mes |
+
+**Todos se registran**, gratis o de pago. El plan solo cambia a qué tienen acceso.
+La sesión se comparte entre las tres pantallas y se cierra desde la barra superior,
+que está en todas.
+
+## El gestor guarda viajes, no un solo viaje
+
+Cada viaje es un registro con destino, fecha de ida, fecha de vuelta, presupuesto y
+sus propios gastos. Junio en Brasil y septiembre en Portugal quedan separados y se
+exportan por separado. Cada gasto guarda su fecha real, su moneda original y el
+equivalente en dólares del día, que son las columnas que un contador necesita.
+
+Un usuario nuevo **no recibe datos de ejemplo**: recibe un onboarding de tres pasos
+y un gestor vacío. Los datos de ejemplo existen, pero solo si los pide.
+
+## De dónde salen los datos, sin pagar nada
+
+| Qué | Fuente | Clave | Costo |
+|---|---|---|---|
+| Encontrar cualquier ciudad | **2.765 ciudades dentro del archivo** (244 países) | no | $0 |
+| Ciudades fuera de esa lista | Open-Meteo Geocoding | no | $0 |
+| Sitios de la ruta | OpenStreetMap vía Overpass | no | $0 |
+| Costo de vida | 46 ciudades medidas + índice de 148 países | — | $0 |
+| Precio de las paradas | Estimado por país y categoría | — | $0 |
+| Vuelos | Motor propio calibrado | no | $0 |
+
+**La búsqueda de ciudades funciona sin conexión.** La base va dentro del propio
+archivo: todas las capitales, las cuatro mayores de cada país y todas las que
+pasan de 250.000 habitantes, con los exónimos que la gente escribe de verdad
+(*pekin* encuentra Beijing, *burdeos* encuentra Bordeaux, *londres* encuentra
+London). La consulta externa solo añade lo que falte, y si no hay red no se nota.
+
+Los sitios de la ruta sí necesitan internet en las ciudades que no están curadas,
+porque vienen del mapa abierto. Cuando no hay red, la pantalla lo dice con esas
+palabras y ofrece las ciudades curadas, que funcionan en un avión.
+
+Lo estimado se marca como estimado en la propia pantalla; nunca se presenta como
+dato medido.
+
+Si conectas `GOOGLE_MAPS_KEY` y `SERPAPI_KEY`, las funciones de `api/` sustituyen
+las estimaciones por datos en vivo sin tocar el resto del código.
+
+## Buscador de origen
+
+Cubre **208 ciudades en 117 países** sin conexión, y cualquier otra del planeta
+mediante geocodificación. Escribe ciudad, país o código IATA. Detecta tu ciudad
+automáticamente por zona horaria, sin pedir permiso de ubicación.
+
+Cuando eliges una ciudad fuera de la lista, TRAMO busca el aeropuerto conocido
+más cercano de ese país (148 países mapeados) y lo usa como referencia para el
+precio del vuelo, avisándolo en pantalla.
 
 ## Verificación del motor de vuelos
 

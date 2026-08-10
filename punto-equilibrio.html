@@ -122,7 +122,7 @@ footer a{color:var(--paper)}
         <div class="row"><div class="lb">Pro mensual</div><input type="number" id="p_pro" value="9" step="1"></div>
         <div class="row"><div class="lb">Pro anual</div><input type="number" id="p_anual" value="49" step="1"></div>
         <div class="row"><div class="lb">Fundador (vitalicio)</div><input type="number" id="p_fund" value="79" step="1"></div>
-        <div class="row"><div class="lb">Plan Aterrizaje (único)</div><input type="number" id="p_ater" value="39" step="1"></div>
+        <div class="row"><div class="lb">Pase de ciudad (único)</div><input type="number" id="p_ater" value="4.99" step="0.5"></div>
       </div>
     </div>
   </div>
@@ -148,10 +148,10 @@ footer a{color:var(--paper)}
   <div class="card">
     <h4>Mezcla de ventas: de cada 100 clientes, cuántos compran qué</h4>
     <div class="g4">
-      <div class="row" style="grid-template-columns:1fr 70px"><div class="lb">Pro mensual</div><input type="number" id="m_pro" value="40"></div>
-      <div class="row" style="grid-template-columns:1fr 70px"><div class="lb">Pro anual</div><input type="number" id="m_anual" value="10"></div>
-      <div class="row" style="grid-template-columns:1fr 70px"><div class="lb">Fundador</div><input type="number" id="m_fund" value="30"></div>
-      <div class="row" style="grid-template-columns:1fr 70px"><div class="lb">Aterrizaje</div><input type="number" id="m_ater" value="20"></div>
+      <div class="row" style="grid-template-columns:1fr 70px"><div class="lb">Pro mensual</div><input type="number" id="m_pro" value="26"></div>
+      <div class="row" style="grid-template-columns:1fr 70px"><div class="lb">Pro anual</div><input type="number" id="m_anual" value="7"></div>
+      <div class="row" style="grid-template-columns:1fr 70px"><div class="lb">Fundador</div><input type="number" id="m_fund" value="12"></div>
+      <div class="row" style="grid-template-columns:1fr 70px"><div class="lb">Pase de ciudad</div><input type="number" id="m_ater" value="55"></div>
     </div>
     <p class="out" style="text-align:left;font-size:12px;color:var(--muted);margin:8px 0 0" id="o_mixWarn"></p>
   </div>
@@ -180,7 +180,7 @@ footer a{color:var(--paper)}
       <h4>Retención</h4>
       <div class="row"><div class="lb">Meses que dura un cliente mensual<small>VIAJE PROMEDIO DE UN NÓMADA</small></div><input type="number" id="r_meses" value="5" step="1"></div>
       <div class="row"><div class="lb">Renovación del plan anual (%)</div><input type="number" id="r_anual" value="45" step="5"></div>
-      <div class="row"><div class="lb">Compradores de Aterrizaje que pasan a Pro (%)</div><input type="number" id="r_ater" value="22" step="1"></div>
+      <div class="row"><div class="lb">Compradores del pase que pasan a Pro (%)</div><input type="number" id="r_ater" value="14" step="1"></div>
     </div>
   </div>
   <div class="g4" style="margin-top:16px">
@@ -195,7 +195,7 @@ footer a{color:var(--paper)}
 <section id="sprint">
   <span class="snum">04 — EL SPRINT DE 15 DÍAS</span>
   <h2>De $3,000 a $5,000 en quince días.</h2>
-  <p style="color:var(--ink-soft);max-width:70ch">Quince días es la mitad del plazo del plan de negocio, así que el mix cambia: no hay tiempo de construir recurrencia. Casi todo el ingreso tiene que venir de pagos únicos, y eso significa Fundador y Aterrizaje empujados con urgencia real.</p>
+  <p style="color:var(--ink-soft);max-width:70ch">Quince días es la mitad del plazo del plan de negocio, así que el mix cambia: no hay tiempo de construir recurrencia. Casi todo el ingreso tiene que venir de pagos únicos, y eso significa Fundador empujado con urgencia real y el pase de ciudad vendido por volumen.</p>
   <div class="g2">
     <div class="card">
       <h4>Tu meta</h4>
@@ -370,7 +370,7 @@ function calc(){
   };
   $("mixTable").innerHTML=`
     <tr><td><b>Fundador ${m$(pr.fund)}</b></td><td>Pago único con escasez real. Es el único producto que entrega en 15 días el valor de una anualidad completa.</td><td class="n">${m$(aporte.fund)}</td></tr>
-    <tr><td><b>Plan Aterrizaje ${m$(pr.ater)}</b></td><td>Resuelve ansiedad, no curiosidad. Se le vende a quien ya calculó y sigue dudando: es el momento de máxima intención.</td><td class="n">${m$(aporte.ater)}</td></tr>
+    <tr><td><b>Pase de ciudad ${m$(pr.ater)}</b></td><td>Cuesta menos que un café y se compra en el momento de máxima intención: cuando ya vio el día 1 gratis y quiere el resto. Es volumen, no margen.</td><td class="n">${m$(aporte.ater)}</td></tr>
     <tr><td><b>Pro mensual ${m$(pr.pro)}</b></td><td>Aporta poco en 15 días pero construye el recurrente que sostiene el mes 2. No lo empujes a costa del Fundador.</td><td class="n">${m$(aporte.pro)}</td></tr>
     <tr><td><b>Pro anual ${m$(pr.anual)}</b></td><td>El puente entre los dos: caja hoy y retención después. Ofrécelo a quien dude del vitalicio.</td><td class="n">${m$(aporte.anual)}</td></tr>
     <tr class="tot"><td>Total</td><td></td><td class="n">${m$(aporte.fund+aporte.ater+aporte.pro+aporte.anual)}</td></tr>`;

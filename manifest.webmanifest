@@ -1,0 +1,22 @@
+{
+  "name": "TRAMO — cuántos días te alcanza",
+  "short_name": "TRAMO",
+  "description": "Calculadora de presupuesto, rutas con precio y gestor de gastos para nómadas digitales.",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#E9EAE3",
+  "theme_color": "#111C2E",
+  "lang": "es",
+  "categories": ["travel", "finance", "productivity"],
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Calculadora", "url": "/index.html#calc" },
+    { "name": "Rutas", "url": "/rutas.html" },
+    { "name": "Gestor", "url": "/gestor.html" }
+  ]
+}
