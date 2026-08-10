@@ -88,9 +88,14 @@
     var cfg = null;
     try { var r = await fetch("/api/config"); if (r.ok) cfg = await r.json(); } catch (e) {}
     if (!cfg || !cfg.url || !cfg.anonKey) return; // sin config del servidor: queda el prototipo local
+    // Blindaje: quita barras finales y espacios (una URL con "/" al final genera
+    // rutas "//auth/v1/..." que Supabase rechaza con "Invalid path" / "No API key").
+    var url = String(cfg.url).trim().replace(/\/+$/, "");
+    var key = String(cfg.anonKey).trim();
+    if (!url || !key) return;
     var lib = await cargarLib();
     if (!lib) return;
-    try { sb = lib.createClient(cfg.url, cfg.anonKey); } catch (e) { return; }
+    try { sb = lib.createClient(url, key); } catch (e) { return; }
     listo = true;
     // La sesión real manda: limpia cualquier usuario de prototipo y refleja Supabase.
     sb.auth.onAuthStateChange(function (ev, ses) {
