@@ -71,7 +71,11 @@
     if (!m) return false;
     var botones = m.querySelectorAll("[data-via]");
     if (!botones.length) return false;
-    botones.forEach(function (b) { b.onclick = function () { accion(b.dataset.via); }; });
+    botones.forEach(function (b) {
+      // Apple aún no está activado (requiere Apple Developer): se oculta por ahora.
+      if (b.dataset.via === "apple") { b.style.display = "none"; return; }
+      b.onclick = function () { accion(b.dataset.via); };
+    });
     return true;
   }
 
