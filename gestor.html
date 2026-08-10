@@ -4200,15 +4200,26 @@ function pintaPago(){
 }
 function prox(p){const d=new Date();p==="anual"?d.setFullYear(d.getFullYear()+1):d.setMonth(d.getMonth()+1);
   return d.toLocaleDateString(T.loc(),{day:"2-digit",month:"short",year:"numeric"});}
+/* Checkouts de Polar (públicos). El plan real lo activa el webhook tras pagar. */
+const POLAR_LINKS={
+  pro:"https://buy.polar.sh/polar_cl_QsNMZzkmD5fJXIDLpvCsaQDar8g8WG45lgFxt4fQTHf",
+  anual:"https://buy.polar.sh/polar_cl_HHRhAACt5yNzbOVmpr1JAOuU0jmu2WczmbnQ71WGciY",
+  fundador:"https://buy.polar.sh/polar_cl_69C3suIqmADeVoMbALSr4sHoGHhyij3Jrb9dK36NIpa"
+};
 function cambiarPlan(k){
-  if(k==="free"){T.session.setPlan("free");pintaPago();return;}
+  if(k==="free"){
+    T.toast(["Para bajar de plan, cancela tu suscripción desde el portal/correo de Polar.","To downgrade, cancel your subscription from your Polar portal/email.","Para reduzir o plano, cancele sua assinatura pelo portal/e-mail da Polar."][T.LI||0]);
+    return;
+  }
+  /* Exige sesión (para tener el correo) y abre el checkout de Polar. Al pagar,
+     Polar avisa a /api/webhook y el plan queda activo en Supabase. */
   T.requireAuth(()=>{
-    const p=PLANES.find(x=>x.k===k);
-    if(!confirm(t("bl.checkout",{n:t("p."+k),p:p.pr,per:t(p.per)})))return;
-    T.store.set("tramo_metodo","4242");T.session.setPlan(k);
-    const pg=T.store.getJSON("tramo_pagos",[]);
-    pg.unshift({f:new Date().toLocaleDateString(T.loc(),{day:"2-digit",month:"short",year:"numeric"}),k,m:"•••• 4242",a:p.pr});
-    T.store.setJSON("tramo_pagos",pg);T.toast(t("bl.ok"));pintaPago();});
+    const url=POLAR_LINKS[k];
+    if(!url)return;
+    const email=T.session.user||"";
+    const sep=url.indexOf("?")>=0?"&":"?";
+    location.href=url+sep+"customer_email="+encodeURIComponent(email);
+  });
 }
 $("updCard").onclick=()=>cambiarPlan(T.session.plan==="free"?"pro":T.session.plan);
 
