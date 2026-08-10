@@ -6,10 +6,10 @@
    Estrategia: la app se guarda al instalar; las llamadas a las APIs
    siempre van a la red y solo caen al caché si no hay señal.
    ========================================================================== */
-const CACHE="tramo-v3";
+const CACHE="tramo-v4";
 const APP = [
-  "/", "/index.html", "/rutas.html", "/gestor.html", "/tramo-core.js",
-  "/manifest.webmanifest", "/icon.svg"
+  "/", "/index.html", "/rutas.html", "/gestor.html", "/movil.html", "/tramo-core.js",
+  "/manifest.webmanifest", "/icon.svg", "/icon-192.png", "/icon-512.png"
 ];
 
 self.addEventListener("install", (e) => {
